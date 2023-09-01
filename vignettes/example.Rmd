@@ -1,0 +1,244 @@
+---
+title: "Example use of psm3mkv"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example use of psm3mkv}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This vignette walks through evaluating the partitioned survival model (PSM) and state transition model structures (either clock reset, STM-CR, or clock forward types, STM-CF) to a dataset derived from the *bosms3* dataset that comes with the *flexsurv* package.[1] A review of PSMs and STMs in oncology cost-effectiveness models is provided by Woods et al.[2]
+
+```{r packages, message=FALSE}
+# Load psm3mkv itself
+library(psm3mkv)
+
+# Other packages
+library(dplyr) # for data wrangling
+library(boot) # for bootstrapping
+library(ggsci) # for nice graphics
+```
+
+## Obtaining a suitable dataset
+
+First we create a suitable patient-level dataset using *create_dummydata()*. Here we load data derived from the *bosms3* dataset with the *flexsurv* package.[2]
+
+```{r dataset}
+# Create and review the dummy dataset
+bosonc <- create_dummydata("flexbosms")
+head(bosonc)
+summary(bosonc)
+```
+
+The dataset contains TTP, PFS and OS data for `r length(bosonc$ptid)` patients.
+
+## Fit survival curves to the relevant endpoints
+
+The three cost-effectiveness model structures we are considering rely on modeling not only of PFS, TTP and OS, but additionally three other endpoints:
+
+* pre-progression death (PPD),
+* post progression survival as a function of time from baseline (known as 'clock forward', PPS-CF), and
+* post-progression survival as a function of time from progression (known as 'clock reset', PPS-CR).
+
+Once we have a suitable dataset, we will fit statistical models to these six endpoints.
+
+### Parametric distributions
+
+Let us start by considering parametric distributions. This uses the function *fit_ends_mods_par()*, so called because it cycles through fitting endpoints and models. The original dataset contained only three of these endpoints, the other three endpoints are calculated within the function.
+
+```{r fit_ends_mods_par}
+# Create a vector of distributions of interest (flexsurv notation)
+alldists <- c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz", "gengamma")
+
+# Fit all distributions to all endpoints (except gengamma to PPD and TTP)
+allfits_par <- fit_ends_mods_par(bosonc,
+                            cuttime=0,
+                            ppd.dist=alldists[1:6],
+                            ttp.dist=alldists[1:6],
+                            pfs.dist=alldists,
+                            os.dist=alldists,
+                            pps_cf.dist=alldists,
+                            pps_cr.dist=alldists)
+
+# Example 1 - PFS endpoint, distribution 2 (weibullPH)
+allfits_par$pfs[[2]]$result
+
+# Example 2 - Parameter values for PPS-CF and PPS-CR endpoints for distribution 3 (llogis)
+allfits_par$pps_cf[[3]]$result$res
+allfits_par$pps_cr[[3]]$result$res
+```
+
+We have fitted multiple parametric distributions to each endpoint. We only need to retain the best-fitting distribution, which we select using *find_bestfit_par()* on the basis of the distribution having the lowest Akaike Information Criterion (AIC).
+
+```{r find_bestfit_par}
+# Pick out best distribution according to min AIC
+fitpar.ppd <- find_bestfit_par(allfits_par$ppd, "aic")
+fitpar.ttp <- find_bestfit_par(allfits_par$ttp, "aic")
+fitpar.pfs <- find_bestfit_par(allfits_par$pfs, "aic")
+fitpar.os <- find_bestfit_par(allfits_par$os, "aic")
+fitpar.pps_cf <- find_bestfit_par(allfits_par$pps_cf, "aic")
+fitpar.pps_cr <- find_bestfit_par(allfits_par$pps_cr, "aic")
+
+# Inspect the selection for PFS
+fitpar.pfs
+```
+
+### Royston-Parmar splines models
+
+An alternative approach to parametric modeling is the use of Royston-Parmar splines.[3] We can follow a similar approach, again using *flexsurv* [2] to identify the best-fitting spline distributions. To the six endpoints, we fit 9 spline models: 1, 2 or 3 (internal) knots with either odds, hazard or normal scales. This uses *fit_ends_mods_spl()*.
+
+```{r fit_ends_mods_spl}
+# Fit 1-3 knot splines with all 3 scales (odds, hazard, normal) to each endpoint
+allfits_spl <- fit_ends_mods_spl(bosonc)
+
+# Example - PFS endpoint - 1 knot, odds scale
+allfits_spl$pfs[[2]]$result
+allfits_spl$pfs[[2]]$result$aux$scale # Scale
+allfits_spl$pfs[[2]]$result$aux$knots # Knot locations (log time)
+```
+
+We have fitted multiple splines to each endpoint. We only need to retain the best-fitting distribution, which we select on the basis of the distribution having the lowest Akaike Information Criterion (AIC). We use *find_bestfit_spl()* for this.
+
+```{r find_bestfit_spl}
+# Pick out best distribution according to min AIC
+fitspl.ppd <- find_bestfit_spl(allfits_spl$ppd, "aic")
+fitspl.ttp <- find_bestfit_spl(allfits_spl$ttp, "aic")
+fitspl.pfs <- find_bestfit_spl(allfits_spl$pfs, "aic")
+fitspl.os <- find_bestfit_spl(allfits_spl$os, "aic")
+fitspl.pps_cf <- find_bestfit_spl(allfits_spl$pps_cf, "aic")
+fitspl.pps_cr <- find_bestfit_spl(allfits_spl$pps_cr, "aic")
+
+# Inspect the selection for PFS
+fitspl.pfs
+```
+
+### Combine the best fits
+
+Finally, we select our preferred curves for each endpoint. These may or may not be those selected as the minimum AIC and may be parametric fits or spline fits. This list is deliberately programmed manually - and carefully. Our example does not use the best fits in each case but merely illustrates the options available to the modeler.
+
+```{r bring_together_fits}
+# Bring together our preferred fits for each endpoint in a list
+params <- list(ppd = fitpar.ppd$fit,
+               ttp = fitpar.ttp$fit,
+               pfs = fitspl.pfs$fit,
+               os = fitspl.os$fit,
+               pps_cf = allfits_par$pps_cf[[2]]$result,
+               pps_cr = allfits_spl$pps_cr[[2]]$result
+               )
+```
+
+Let us count how many parameters we are using in each model.
+
+```{r count_params}
+# Pull out number of parameters used for each endpoint
+count_npar <- purrr::map_vec(1:6, ~params[[.x]]$npars)
+
+# PSM uses PFS (3) and OS (4) endpoints
+sum(count_npar[c(3,4)])
+
+# STM_CF uses PPD (1), TTP (2) and PPS_CF (5) endpoints
+sum(count_npar[c(1,2,5)])
+
+# STM_CR uses PPD (1), TTP (2) and PPS_CR (6) endpoints
+sum(count_npar[c(1,2,6)])
+```
+
+
+## Comparing likelihood values for the three model structures
+
+Given the selected survival modeling of each endpoint, we can now calculate and compare the (log-)likelihood of each of the three model structures. We can also check this output to ensure that the number of parameters used in each model structure matches what we derived earlier.
+
+```{r calc_likes}
+ll_all <- calc_likes(bosonc, params)
+ll_all
+```
+
+In this case, the model structures could be fitted to 203 of the 204 patients. Among the 203 patients where models could be fitted, the STM-CR model has the greatest likelihood (best fitting) and also the lowest AIC (most efficient). (Since these are not nested models, and statistical distributions under the null hypothesis are not easily formed, we cannot readily derive a p-value for the statistical significance of this difference.)
+
+## Comparing the implied (restricted) mean durations
+
+In order to understand the degree of structural uncertainty (sensitivity to the choice of model structure), we calculate the (restricted) mean durations in progression-free (PF) and progressed disease (PD) states by model type. To do this, we call the *calc_allrmds()* function with the dataset and statistical distributions we wish to consider for each endpoint. The function also allows specification of the patient subset to use (*inclset*, important for bootstrapping later) and the time horizon. The units for the time horizon are `r round(365.25/7, 2)` times shorter than the units for the output because - the time horizon can be considered to be in units of years, whereas the output is in units of weeks.
+
+```{r calc_allrmds}
+# Call the RMD functions
+rmd_all <- calc_allrmds(bosonc, dpam=params)
+
+# Then review the mean duration in PF, PD and total alive (OS)
+rmd_all$results
+```
+
+The two STMs estimate a duration in the PF state slightly longer than the PSM. The PSM also estimates the least time in the PD state and alive overall than the other models. The STM-CF provides the longest estimate of time in the PD state and overall.
+
+The above output can be bootstrapped to generate standard errors. Here we use just 10 boostrap samples (`R=10`) just to illustrate the process. In practice, we would want to use far more than 10 samples.
+
+```{r boot}
+# Bootstrap to calculate SE over R bootstrap samples
+bootsims <- 10 # Number of simulations
+bootlys <- boot(data = bosonc,
+                statistic = calc_allrmds_boot,
+                R = 10,
+                cuttime = 0,
+                Ty = 10,
+                dpam = params
+                )
+bootlys
+```
+Note that the percentiles information reported indicates that in a small number of samples, the restricted mean duration in PD was restricted to be negative in the PSM. This indicates an inconsistency between the statistical models used in this case for modeling PFS and OS, and may be an additional reason why STMs may be preferred in this case.
+
+## Visual inspection of model fits
+
+Creating the four graphics of model fit is straightforward.
+
+```{r graph_gen}
+# Generate graphs (can take time)
+ptdgraphs <- graph_survs(bosonc, params)
+```
+
+We can then compare state membership probabilities for the PF and PD states.
+
+```{r graph_pf}
+# State membership probabilities for PF state
+ptdgraphs$graph$pf + scale_color_npg()
+```
+
+The PF curves fully overlap with each other in the observed period, and appear to fit well visually to the observed PF data.
+
+```{r graph_pd}
+# State membership probabilities for PD state
+ptdgraphs$graph$pd + scale_color_npg()
+```
+
+There are big differences in the fit between the models to the PD membership probability. The best visual fit comes from the PSM. Both STMs estimate a higher probability of PD membership at later times than was observed. The highest probabilities are from the STM-CF model.
+
+Next, we can look at probabilities of being alive (i.e: membership in either PF or PD state).
+
+```{r graph_os}
+# State membership probabilities for OS
+ptdgraphs$graph$os + scale_color_npg()
+```
+
+Again, all three models fit fairly well up to 15 weeks. The closest visual fit to the OS curve is from the PSM. This is not surprising because the PSM involves fitting the OS endpoint directly. Following from the PD membership graphics, both STMs appear to over-estimate OS at longer durations relative to the observed data. However, recall that overall the PSM had the worse fit to the data according to likelihood, AIC and BIC.
+
+Finally we can look at probabilities of post-progression survival. This is observed and fitted for the STMs not the the PSM. The STM-CR estimate follows directly from the fitted PPS-CR survival curve. The STM-CF estimate is derived based on the average, across patients, of patients' expected PPS-CF survival relative to their TTP timepoint.
+
+```{r graph_pps}
+# Probabilities of PPS
+ptdgraphs$graph$pps + scale_color_npg()
+```
+
+## References
+
+1. Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M, Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State Models. Available at: https://cran.r-project.org/web/packages/flexsurv/index.html.
+
+2. Woods BS, Sideris E, Palmer S, Latimer N, Soares M. Partitioned Survival and State Transition Models for Healthcare Decision Making in Oncology: Where Are We Now? Value in Health 23(12):1613-21; 2020. DOI: 10.1016/j.jval.2020.08.2094
+
+3. Royston P and Parmar M. Flexible parametric proportional-hazards and proportional-odds models for censored survival data, with application to prognostic modelling and estimation of treatment effects. Statistics in Medicine 21(1):2175-2197; 2002. DOI: 10.1002/sim.1203
