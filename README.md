@@ -4,9 +4,10 @@
 # psm3mkv: A package to evaluate the fit and efficiency of three state oncology cost-effectiveness model structures <img src="man/figures/logo.png" align="right" width="120"/>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/merck-gen/bards-baamr-psm3mkv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/merck-gen/bards-baamr-psm3mkv/actions/workflows/R-CMD-check.yaml)
+
+[![R-CMD-check](https://github.com/Merck/psm3mkv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Merck/psm3mkv/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/merck-gen/bards-baamr-psm3mkv/branch/main/graph/badge.svg)](https://app.codecov.io/gh/merck-gen/bards-baamr-psm3mkv?branch=main)
+coverage](https://codecov.io/gh/Merck/psm3mkv/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Merck/psm3mkv?branch=main)
 <!-- badges: end -->
 
 The goal of *psm3mkv* is to evaluate the efficiency and fit of certain
