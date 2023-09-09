@@ -313,12 +313,12 @@ give_noparams_par <- function(dist) {
 #' give_noparams(type="par", spec=list(dist="weibullPH"))
 #' give_noparams(type="spl", spec=list(gamma=c(1.1,2.1,3.1)))
 give_noparams <- function(type, spec) {
-  type <- base::tolower(base::substr(type, 1, 3))
+  type <- tolower(substr(type, 1, 3))
   if (type=="spl") {
     length(spec$gamma)
   }
   else if (type=="par") {
-    give_noparams_par(dist=spec$dist)
+    psm3mkv::give_noparams_par(dist=spec$dist)
   }
   else {
     NA
