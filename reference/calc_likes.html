@@ -27,6 +27,9 @@
     <a class="dropdown-item" href="../articles/example.html">Example use of psm3mkv</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -125,11 +128,39 @@ The contribution of each patient group to the calculation of log-likelihood for 
 <span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">calc_likes</span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::summarise(lldata, npts = n(), ll = sum(llike), .by = c("valid",     "outcome", "methno", "methname")):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `npts = n()`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In group 1: `valid = TRUE`, `outcome = 4`, `methno = 1`, `methname =</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span>   "psm_simple"`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `n()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "n"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $detailed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   valid outcome  npts   ll_1   ll_2   ll_3   ll_4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> FALSE       4     1   <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> TRUE        1    72  -<span style="color: #BB0000;">64.8</span>  -<span style="color: #BB0000;">64.8</span>  -<span style="color: #BB0000;">65.2</span>  -<span style="color: #BB0000;">65.2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> TRUE        2    29 -<span style="color: #BB0000;">152.</span>  -<span style="color: #BB0000;">147.</span>  -<span style="color: #BB0000;">147.</span>  -<span style="color: #BB0000;">147.</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> TRUE        3    35 -<span style="color: #BB0000;">151.</span>  -<span style="color: #BB0000;">150.</span>  -<span style="color: #BB0000;">148.</span>  -<span style="color: #BB0000;">148.</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> TRUE        4    67 -<span style="color: #BB0000;">469.</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> TRUE        4    68   <span style="color: #BB0000;">NA</span>   -<span style="color: #BB0000;">473.</span>  -<span style="color: #BB0000;">473.</span>  -<span style="color: #BB0000;">470.</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $valid</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   methno methname    npts_TRUE npts_FALSE ll_TRUE ll_FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>      1 psm_simple        203          1   -<span style="color: #BB0000;">836.</span>    <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>      2 psm_complex       203          1   -<span style="color: #BB0000;">830.</span>    -<span style="color: #BB0000;">5.25</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>      3 stm_cf            203          1   -<span style="color: #BB0000;">828.</span>    -<span style="color: #BB0000;">5.45</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>      4 stm_cr            203          1   -<span style="color: #BB0000;">824.</span>    -<span style="color: #BB0000;">6.08</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $sumall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   validall methno methname     npts      ll nparam   aic   bic rank_aic rank_bic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> FALSE         1 psm_simple      1   <span style="color: #BB0000;">NA</span>         7   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> FALSE         2 psm_complex     1   -<span style="color: #BB0000;">5.25</span>      9   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> FALSE         3 stm_cf          1   -<span style="color: #BB0000;">5.45</span>      9   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> FALSE         4 stm_cr          1   -<span style="color: #BB0000;">6.08</span>     10   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> TRUE          1 psm_simple    203 -<span style="color: #BB0000;">836.</span>        7 <span style="text-decoration: underline;">1</span>685. <span style="text-decoration: underline;">1</span>709.        4        4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> TRUE          2 psm_complex   203 -<span style="color: #BB0000;">830.</span>        9 <span style="text-decoration: underline;">1</span>679. <span style="text-decoration: underline;">1</span>708.        3        3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> TRUE          3 stm_cf        203 -<span style="color: #BB0000;">828.</span>        9 <span style="text-decoration: underline;">1</span>673. <span style="text-decoration: underline;">1</span>703.        2        2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> TRUE          4 stm_cr        203 -<span style="color: #BB0000;">824.</span>       10 <span style="text-decoration: underline;">1</span>668. <span style="text-decoration: underline;">1</span>701.        1        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
