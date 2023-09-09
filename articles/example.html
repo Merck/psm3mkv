@@ -438,168 +438,6 @@ of time in the PD state and overall.</p>
 Here we use just 10 boostrap samples (<code>R=10</code>) just to
 illustrate the process. In practice, we would want to use far more than
 10 samples.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Bootstrap to calculate SE over R bootstrap samples</span></span>
-<span><span class="va">bootsims</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="co"># Number of simulations</span></span>
-<span><span class="va">bootlys</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bosonc</span>,</span>
-<span>                statistic <span class="op">=</span> <span class="va">calc_allrmds_boot</span>,</span>
-<span>                R <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>                cuttime <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                Ty <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>                dpam <span class="op">=</span> <span class="va">params</span></span>
-<span>                <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in survival::Surv(time = durn1, time2 = durn2, event = evflag): Stop</span></span>
-<span><span class="co">#&gt; time must be &gt; start time, NA created</span></span>
-<span><span class="va">bootlys</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ORDINARY NONPARAMETRIC BOOTSTRAP</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; boot(data = bosonc, statistic = calc_allrmds_boot, R = 10, cuttime = 0, </span></span>
-<span><span class="co">#&gt;     Ty = 10, dpam = params)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Bootstrap Statistics :</span></span>
-<span><span class="co">#&gt;     original     bias    std. error</span></span>
-<span><span class="co">#&gt; t1* 22.02965  2.9531046    5.663216</span></span>
-<span><span class="co">#&gt; t2* 19.95760  1.2077690    3.606117</span></span>
-<span><span class="co">#&gt; t3* 19.95760  1.2077690    3.606117</span></span>
-<span><span class="co">#&gt; t4*  5.41287 -2.4886976    4.698878</span></span>
-<span><span class="co">#&gt; t5* 10.41259 -0.2461597    1.840287</span></span>
-<span><span class="co">#&gt; t6* 13.32346 -0.8846560    2.350445</span></span>
-<span><span class="co">#&gt; t7* 27.44252  0.4933430    1.860460</span></span>
-<span><span class="co">#&gt; t8* 30.37019  0.9616093    2.918249</span></span>
-<span><span class="co">#&gt; t9* 33.28106  0.3231130    3.003755</span></span></code></pre></div>
 <p>Note that the percentiles information reported indicates that in a
 small number of samples, the restricted mean duration in PD was
 restricted to be negative in the PSM. This indicates an inconsistency
@@ -611,7 +449,7 @@ case.</p>
 <h2 id="visual-inspection-of-model-fits">Visual inspection of model fits<a class="anchor" aria-label="anchor" href="#visual-inspection-of-model-fits"></a>
 </h2>
 <p>Creating the four graphics of model fit is straightforward.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generate graphs (can take time)</span></span>
 <span><span class="va">ptdgraphs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_survs.html">graph_survs</a></span><span class="op">(</span><span class="va">bosonc</span>, <span class="va">params</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Creating KM </span></span>
@@ -620,14 +458,14 @@ case.</p>
 <span><span class="co">#&gt; Drawing plots</span></span></code></pre></div>
 <p>We can then compare state membership probabilities for the PF and PD
 states.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for PF state</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pf</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_pf-1.png" width="700"></p>
 <p>The PF curves fully overlap with each other in the observed period,
 and appear to fit well visually to the observed PF data.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for PD state</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pd</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
@@ -638,7 +476,7 @@ STMs estimate a higher probability of PD membership at later times than
 was observed. The highest probabilities are from the STM-CF model.</p>
 <p>Next, we can look at probabilities of being alive (i.e: membership in
 either PF or PD state).</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for OS</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">os</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
@@ -655,7 +493,7 @@ This is observed and fitted for the STMs not the the PSM. The STM-CR
 estimate follows directly from the fitted PPS-CR survival curve. The
 STM-CF estimate is derived based on the average, across patients, of
 patients’ expected PPS-CF survival relative to their TTP timepoint.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Probabilities of PPS</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pps</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 85 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
