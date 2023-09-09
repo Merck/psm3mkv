@@ -36,24 +36,24 @@
 #' create_dummydata("survcan")
 #' create_dummydata("flexbosms")
 create_dummydata <- function(dsname) {
-  if (dsname=="survcan") {ds <- create_dummydata_survcan()}
-  else if (dsname=="flexbosms") {ds <- create_dummydata_flexbosms()}
+  if (dsname=="survcan") {create_dummydata_survcan()}
+  else if (dsname=="flexbosms") {create_dummydata_flexbosms()}
   else {stop("Incorrect dataset specified. Must be survcan or flexbosms.")}
-  return(ds)
 }
 
 #' Create survcan dummy dataset for illustration
 #' @description Create 'survcan' dummy dataset to illustrate [psm3mkv]
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @seealso [create_dummydata()]
+#' @importFrom rlang .data
 #' @examples
 #' create_dummydata_survcan()
 create_dummydata_survcan <- function() {
   survival::cancer |>
     dplyr::mutate(
       ptid = row_number(),
-      os.durn = time/7,
-      os.flag = status-1
+      os.durn = .data$time/7,
+      os.flag = .data$status-1
     ) |>
     dplyr::select(ptid, os.durn, os.flag)
 }
@@ -62,6 +62,7 @@ create_dummydata_survcan <- function() {
 #' @description Create 'flexbosms' dummy dataset to illustrate [psm3mkv]
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @seealso [create_dummydata()]
+#' @importFrom rlang .data
 #' @examples
 #' create_dummydata_flexbosms()
 create_dummydata_flexbosms <- function() {
@@ -72,13 +73,14 @@ create_dummydata_flexbosms <- function() {
         ) |>
         dplyr::mutate(
           conv = 365.25/(12*7), # Convert from months to weeks
-          pfs.durn = conv * Tstop_2,
-          pfs.flag = status_1+status_2,
-          os.durn = conv * ifelse(is.na(Tstop_3), Tstop_2, Tstop_3),
-          os.flag = ifelse(is.na(Tstop_3), status_2, status_3),
-          ttp.durn = pfs.durn,
-          ttp.flag = status_1
+          pfs.durn = .data$conv * .data$Tstop_2,
+          pfs.flag = .data$status_1 + .data$status_2,
+          os.durn = .data$conv * ifelse(is.na(.data$Tstop_3), .data$Tstop_2, .data$Tstop_3),
+          os.flag = ifelse(is.na(.data$Tstop_3), .data$status_2, .data$status_3),
+          ttp.durn = .data$pfs.durn,
+          ttp.flag = .data$status_1
         ) |>
-        dplyr::select(id, pfs.durn, pfs.flag, os.durn, os.flag, ttp.durn, ttp.flag) |>
-        dplyr::rename(ptid = id)
+        dplyr::select(id, pfs.durn, pfs.flag,
+                      os.durn, os.flag, ttp.durn, ttp.flag) |>
+        dplyr::rename(ptid = .data$id)
 }
