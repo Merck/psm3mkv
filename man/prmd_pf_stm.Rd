@@ -15,7 +15,3 @@ Numeric value in same time unit as patient-level data (weeks).
 \description{
 Calculates the mean duration in the progression-free state for both the markov clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of \link{rmd_pf_stm}. This function is called by \link{calc_allrmds}.
 }
-\examples{
-rmd_pf_stm(params, Ty=15)
-prmd_pf_stm(params, Ty=15)
-}

@@ -20,6 +20,6 @@ Tibble dataset, for use with \link{psm3mkv} functions
 Create dummy dataset to illustrate \link{psm3mkv}
 }
 \examples{
-create_dummydata("survcan")
-create_dummydata("flexbosms")
+create_dummydata("survcan") |> head()
+create_dummydata("flexbosms") |> head()
 }

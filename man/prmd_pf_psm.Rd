@@ -15,7 +15,3 @@ Numeric value in same time unit as patient-level data (weeks).
 \description{
 Calculates the mean duration in the progression free state for the partitioned survival model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of \link{rmd_pf_psm}. This function is called by \link{calc_allrmds}.
 }
-\examples{
-rmd_pf_psm(params, Ty=15)
-prmd_pf_psm(params, Ty=15
-}

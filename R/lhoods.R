@@ -27,8 +27,11 @@
 #' - `type` is "spl" for splines model or "par" for parametric model
 #' - `spec` contains distribution (`dist`) and coefficients (`coefs`) if `type=="par"`
 #' - `spec` contains gamma values (`gamma`), knot locations (log scale, `knots`) and scale (`scale`) for Royston-Parmar splines model, if `type=="spl"`
+#' @export
 #' @examples
-#' convert_fit2spec(dpam$pfs)
+#' bosonc <- create_dummydata("flexbosms")
+#' fits <- fit_ends_mods_spl(bosonc)
+#' convert_fit2spec(fits$pfs[[3]]$result)
 convert_fit2spec <- function(fitsurv) {
   # Declare local variables
   par.dist <- type <- spl.gamma <- spl.knots <- NULL
@@ -187,14 +190,14 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 #' fits <- fit_ends_mods_par(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
-#'   os = find_bestfit(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit_par(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit_par(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
+#'   os = find_bestfit_par(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 #'   )
-#' calc_likes_psm_simple(bosonc, dpam=params)
+#' calc_likes_psm_complex(bosonc, dpam=params)
 calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL

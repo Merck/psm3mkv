@@ -15,6 +15,3 @@ Numeric value in same time unit as patient-level data (weeks).
 \description{
 Calculates the mean duration in the progressed disease state for the clock reset markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of \link{rmd_pd_stm_cr}. This function is called by \link{calc_allrmds}.
 }
-\examples{
-rmd_pd_stm_cr(params, Ty=15)
-}

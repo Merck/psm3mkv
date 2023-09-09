@@ -291,7 +291,6 @@ calc_rmd <- function(Tw, type, spec){
 #' @export
 #' @examples
 #' give_noparams_par("llogis")
-#' give_noparams_par(c("exp", "gengamma"))
 give_noparams_par <- function(dist) {
   if (length(dist)!=1) stop("Multiple distributions entered, may call only one.")
   dplyr::case_when(

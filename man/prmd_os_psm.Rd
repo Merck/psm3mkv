@@ -15,6 +15,3 @@ Numeric value in same time unit as patient-level data (weeks).
 \description{
 Calculates the mean duration alive (i.e. in either progression free or progressed disease states) for the partitioned survival model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of \link{rmd_os_psm}. This function is called by \link{calc_allrmds}.
 }
-\examples{
-rmd_os_psm(params, Ty=15)
-}

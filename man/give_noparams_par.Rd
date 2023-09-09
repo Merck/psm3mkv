@@ -18,7 +18,6 @@ Returns the number of parameters used by one or many statistical distributions, 
 }
 \examples{
 give_noparams_par("llogis")
-give_noparams_par(c("exp", "gengamma"))
 }
 \seealso{
 \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}

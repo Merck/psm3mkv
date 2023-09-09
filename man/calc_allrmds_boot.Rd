@@ -27,7 +27,7 @@ calc_allrmds_boot(simdat, inclset = 0, dpam, cuttime = 0, Ty = 10)
 \item{Ty}{Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.}
 }
 \value{
-Numeric vector of key results
+Numeric vector of restricted mean durations - PF for each model (PSM, STM-CF, STM-CR), then PD, then OS.
 }
 \description{
 Wrapper function to \link{calc_allrmds} to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward markov model, clock reset markov model).

@@ -51,7 +51,7 @@ calc_ibs <- function(ptdata, dpam) {
   n_pts <- length(ptdata$os.durn)
   n_times <- length(time_interest)
   # Basic survival object
-  survobj <- sort(Surv(ptdata$os.durn, ptdata$os.flag))
+  survobj <- sort(survival::Surv(ptdata$os.durn, ptdata$os.flag))
   # Matrices of predicted probabilities, by model
   cat("Calculating fitted probabilities \n")
   sp_mat_psm <- matrix(prob_os_psm(time_interest, dpam),

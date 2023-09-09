@@ -13,7 +13,7 @@ Tibble dataset, for use with \link{psm3mkv} functions
 Create 'flexbosms' dummy dataset to illustrate \link{psm3mkv}
 }
 \examples{
-create_dummydata_flexbosms()
+create_dummydata_flexbosms() |> head()
 }
 \seealso{
 \code{\link[=create_dummydata]{create_dummydata()}}

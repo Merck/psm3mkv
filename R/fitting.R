@@ -25,12 +25,12 @@
 #' @description Checks whether the Hessian matrix returned in a list after fitting a survival regression with flexsurvreg is positive-definite.
 #' @param fitlist is a list returned after running [flexsurv::flexsurvreg()] describing a fitted survival model
 #' @return logical: TRUE if Hessian matrix is positive definite, FALSE if not.
+#' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_par(bosonc)
 #' check_posdef(fits$pfs[[2]]$result)
 check_posdef <- function(fitlist) {
-  # distname <- fitlist$result$dlist$name
   out <- tryCatch({
     det(chol(fitlist$opt$hessian))>0
     },
@@ -45,71 +45,6 @@ check_posdef <- function(fitlist) {
   finally = {}
   )
   return(out)
-}
-
-#' Check the consistency of the chosen PFS and OS distributions
-#' @param dpam List of survival regressions for model endpoints. This must include progression-free survival (PFS) and overall survival (OS).
-#' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks. NA implies there is no maximum.
-#' @return List containing:
-#' - check: TRUE if check passes, FALSE if check fails
-#' - mess: provides and error message if the check fails
-#' @export
-#' @examples
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_par(bosonc)
-#' # Pick out best distributions for PFS and OS according to min AIC
-#' params_aic <- list(
-#'   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_par(fits$os, "aic")$fit
-#' )
-#' params_exp <- list(
-#'   pfs = fits$pfs[[1]]$result,
-#'   os = fits$os[[1]]$result
-#' )
-#' check_pfsos_consistent(params_aic)
-#' check_pfsos_consistent(params_exp, Ty=10)
-check_pfsos_consistent <- function(dpam, Ty=NA) {
-  # PFS and OS must satisfy:
-  # [1]: OS(t) >= PFS(t)
-  #         => Min[OS(t)-PFS(t)] must >=0
-  #         => Min[Diff1(t)] must >=0 where Diff1(t) = OS(t)-PFS(t)
-  # [2]: f_PFS(t) >= f_OS(t) => h_PFS(t) . S_PFS(t) >= h_OS(t) . S_OS(t)
-  #         => Min[h_PFS(t) . S_PFS(t) - h_OS(t) . S_OS(t)] must >= 0
-  #         => Min[Diff2(t)] must >=0 where Diff2(t) = h_PFS(t).S_PFS(t)-h_OS(t).S_OS(t)
-  # for all t<=Ty.
-  # [1] is implied by [2].
-  # Declare local variables
-  Tw <- pfs.ts <- pfs.type <- pfs.spec <- os.ts <- os.type <- os.spec <- NULL
-  startt <- minplace <- mint <- mindiff1 <- errval <- errmess <- NULL
-  # Bound to aid integration in weeks
-  Tw <- ifelse(is.na(Ty), Inf, Ty*365.25/7)
-  # Pull out type and spec for PFS
-  pfs.ts <- convert_fit2spec(dpam$pfs)
-  pfs.type <- pfs.ts$type
-  pfs.spec <- pfs.ts$spec
-  # Pull out type and spec for TTP
-  os.ts <- convert_fit2spec(dpam$os)
-  os.type <- os.ts$type
-  os.spec <- os.ts$spec
-  # Define diff1 function = OS(t)-PFS(t)
-  diff1 <- function(timevar) {
-    sost <- calc_surv(timevar, os.type, os.spec)
-    spfst <- calc_surv(timevar, pfs.type, pfs.spec)
-    sost-spfst
-  }
-  # Find minimum values of each function in 0<=t<=Ty
-  # First start at a reasonable initial condition time, mint
-  startt <- (0:100) * min(520, Tw) / 100
-  minplace <- which.min(diff1(startt))
-  mint <- (minplace-1) * min(520, Tw) / 100
-  mindiff1 <- stats::optim(par=mint, fn=diff1, method="L-BFGS-B", lower=0, upper=Tw)
-  # Derive return values
-  errval <- (mindiff1$value<0)*1
-  # Derive return message
-  errmess <- ifelse(errval==0, "",
-                     paste0("OS and PFS fits are not consistent. OS is less than PFS at time ", mindiff1$par, ". "))
-  # Return
-  return(list(check=errval, mess=errmess))
 }
 
 #' Fit survival regressions with multiple parametric distributions

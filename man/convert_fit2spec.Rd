@@ -21,5 +21,7 @@ List of type and specification
 Obtain the type and specification as required in other package functions from a model fit
 }
 \examples{
-convert_fit2spec(dpam$pfs)
+bosonc <- create_dummydata("flexbosms")
+fits <- fit_ends_mods_spl(bosonc)
+convert_fit2spec(fits$pfs[[3]]$result)
 }

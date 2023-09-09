@@ -4,7 +4,14 @@
 \alias{fit_mods_spl}
 \title{Fit survival regressions with multiple parametric distributions}
 \usage{
-fit_mods_spl(durn1, durn2 = NA, evflag, knot_set, scale_set, expvar = NA)
+fit_mods_spl(
+  durn1,
+  durn2 = NA,
+  evflag,
+  knot_set = 1:3,
+  scale_set = c("hazard", "odds", "normal"),
+  expvar = NA
+)
 }
 \arguments{
 \item{durn1}{First time point, corresponds with time in \code{\link[survival:Surv]{survival::Surv()}}. For right censored data, this is the follow up time. For interval data, the first argument is the starting time for the interval.}

@@ -19,7 +19,6 @@ When there are multiple spline models fitted to the same endpoint and dataset, i
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")
-fits <- fit_ends_mods_spl(bosonc, expvar=bosonc$ttp.durn)
+fits <- fit_ends_mods_spl(bosonc)
 find_bestfit_spl(fits$ttp, "aic")
-find_bestfit_spl(fits$pps_cf, "bic")
 }

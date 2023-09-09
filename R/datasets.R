@@ -33,8 +33,8 @@
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @export
 #' @examples
-#' create_dummydata("survcan")
-#' create_dummydata("flexbosms")
+#' create_dummydata("survcan") |> head()
+#' create_dummydata("flexbosms") |> head()
 create_dummydata <- function(dsname) {
   if (dsname=="survcan") {create_dummydata_survcan()}
   else if (dsname=="flexbosms") {create_dummydata_flexbosms()}
@@ -47,11 +47,11 @@ create_dummydata <- function(dsname) {
 #' @seealso [create_dummydata()]
 #' @importFrom rlang .data
 #' @examples
-#' create_dummydata_survcan()
+#' create_dummydata_survcan() |> head()
 create_dummydata_survcan <- function() {
   survival::cancer |>
     dplyr::mutate(
-      ptid = row_number(),
+      ptid = dplyr::row_number(),
       os.durn = .data$time/7,
       os.flag = .data$status-1
     ) |>
@@ -64,7 +64,7 @@ create_dummydata_survcan <- function() {
 #' @seealso [create_dummydata()]
 #' @importFrom rlang .data
 #' @examples
-#' create_dummydata_flexbosms()
+#' create_dummydata_flexbosms() |> head()
 create_dummydata_flexbosms <- function() {
   flexsurv::bosms3 |>
         tidyr::pivot_wider(id_cols = "id",

@@ -32,8 +32,7 @@ params <- list(
   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
-# Find mean(s)
-rmd_os_psm(bosonc, dpam=params)
+rmd_os_psm(params)
 }
 \seealso{
 Used safely as \link{prmd_os_psm} by \link{calc_allrmds}

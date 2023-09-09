@@ -41,7 +41,11 @@
 #'     evflag = bosonc$os.flag,
 #'     expvar = bosonc$pfs.durn
 #'     )
-fit_mods_spl <- function(durn1, durn2=NA, evflag, knot_set, scale_set, expvar=NA) {
+fit_mods_spl <- function(durn1, durn2=NA, evflag,
+                         knot_set=1:3,
+                         scale_set=c("hazard", "odds", "normal"),
+                         expvar = NA
+                         ) {
   # Declare local variables
   multispl <- entry <- NULL
   # Return nothing if no knots or scales specified
@@ -170,9 +174,8 @@ fit_ends_mods_spl <- function(ds,
 #' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc, expvar=bosonc$ttp.durn)
+#' fits <- fit_ends_mods_spl(bosonc)
 #' find_bestfit_spl(fits$ttp, "aic")
-#' find_bestfit_spl(fits$pps_cf, "bic")
 find_bestfit_spl <- function(reglist, crit="aic") {
   # Declare local variables
   noreg <- valid <- remain <- NULL
