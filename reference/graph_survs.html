@@ -86,7 +86,6 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in fit_ends_mods_spl(bosonc):</span> object 'pps.durn' not found</span>
 <span class="r-in"><span><span class="co"># Pick out best distribution according to min AIC</span></span></span>
 <span class="r-in"><span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  ppd <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
@@ -96,17 +95,28 @@
 <span class="r-in"><span>  pps_cf <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
 <span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'fits' not found</span>
 <span class="r-in"><span><span class="va">ptdgraphs</span> <span class="op">&lt;-</span> <span class="fu">graph_survs</span><span class="op">(</span><span class="va">bosonc</span>, <span class="va">params</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Creating KM </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating fitted curves </span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(gdata, timeplus = pmax(0, time - cuttime), psm_pf = prob_pf_psm(timeplus,     dpam, starting), psm_os = prob_os_psm(timeplus, dpam, starting),     psm_pd = psm_os - psm_pf, stm_cf_pf = prob_pf_stm(timeplus,         dpam, starting), stm_cr_pf = stm_cf_pf, stm_cf_pd = prob_pd_stm_cf(timeplus,         dpam, starting), stm_cr_pd = prob_pd_stm_cr(timeplus,         dpam, starting), stm_cf_os = stm_cf_pf + stm_cf_pd, stm_cr_os = stm_cr_pf +         stm_cr_pd, stm_cr_pps = prob_pps_cr(time, dpam), stm_cf_pps = prob_pps_cf(ttptimes = ds$ttp.durn,         ppstimes = time, dpam = dpam)):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `psm_pf = prob_pf_psm(timeplus, dpam, starting)`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> object 'params' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Rearranging datasets </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Drawing plots </span>
 <span class="r-in"><span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">pps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'ptdgraphs' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Time Method Probability</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 0     km           1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 0     psm         <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 0     stm_cr       1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 0     stm_cf       1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 0.527 km           1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 0.527 psm         <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 0.527 stm_cr       0.998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 0.527 stm_cf       0.969</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 1.05  km           0.980</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 1.05  psm         <span style="color: #BB0000;">NA</span>    </span>
 <span class="r-in"><span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pf</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'ptdgraphs' not found</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 5 rows containing missing values (`geom_line()`).</span>
+<span class="r-plt img"><img src="graph_survs-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

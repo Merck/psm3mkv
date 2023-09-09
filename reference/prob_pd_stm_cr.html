@@ -82,7 +82,6 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in fit_ends_mods_spl(bosonc):</span> object 'pps.durn' not found</span>
 <span class="r-in"><span><span class="co"># Pick out best distribution according to min AIC</span></span></span>
 <span class="r-in"><span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  ppd <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
@@ -92,9 +91,24 @@
 <span class="r-in"><span>  pps_cf <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
 <span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'fits' not found</span>
 <span class="r-in"><span><span class="fu">prob_pd_stm_cr</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">100</span>, <span class="va">params</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in FUN(X[[i]], ...):</span> object 'params' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 0.000000000 0.060138735 0.108121914 0.147019738 0.178485112 0.204031115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [7] 0.224898274 0.241978542 0.255814655 0.266761717 0.275114914 0.281129804</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [13] 0.285031884 0.287030029 0.287325545 0.286118938 0.283602846 0.279959691</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [19] 0.275357940 0.269951702 0.263887342 0.257285072 0.250259636 0.242913869</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] 0.235336236 0.227605222 0.219789614 0.211948479 0.204132184 0.196383250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] 0.188737209 0.181223250 0.173865274 0.166682547 0.159689972 0.152899110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] 0.146318278 0.139953175 0.133807059 0.127881545 0.122176413 0.116690118</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [43] 0.111419978 0.106362436 0.101513431 0.096867583 0.092419669 0.088163888</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [49] 0.084094142 0.080219398 0.076502228 0.072952148 0.069562820 0.066315417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] 0.063229318 0.060285215 0.057477267 0.054799591 0.052246535 0.049812641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] 0.047492604 0.045281319 0.043173866 0.041165500 0.039251895 0.037428207</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [67] 0.035690487 0.034034715 0.032457061 0.030953852 0.029521303 0.028156597</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] 0.026856198 0.025617453 0.024436951 0.023311968 0.022239959 0.021218396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [79] 0.020244868 0.019317084 0.018434681 0.017591864 0.016788545 0.016022838</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] 0.015292949 0.014597168 0.013933868 0.013301503 0.012698600 0.012123756</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] 0.011575636 0.011052971 0.010554551 0.010079221 0.009625886 0.009193506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] 0.008781088 0.008387688 0.008012409 0.007654395 0.007312832</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

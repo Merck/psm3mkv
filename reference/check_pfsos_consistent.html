@@ -79,22 +79,29 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_par.html">fit_ends_mods_par</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in fit_ends_mods_par(bosonc):</span> object 'pps.durn' not found</span>
 <span class="r-in"><span><span class="co"># Pick out best distributions for PFS and OS according to min AIC</span></span></span>
 <span class="r-in"><span><span class="va">params_aic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  pfs <span class="op">=</span> <span class="fu"><a href="find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pfs</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
 <span class="r-in"><span>  os <span class="op">=</span> <span class="fu"><a href="find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">os</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'fits' not found</span>
 <span class="r-in"><span><span class="va">params_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  pfs <span class="op">=</span> <span class="va">fits</span><span class="op">$</span><span class="va">pfs</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span>,</span></span>
 <span class="r-in"><span>  os <span class="op">=</span> <span class="va">fits</span><span class="op">$</span><span class="va">os</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'fits' not found</span>
 <span class="r-in"><span><span class="fu">check_pfsos_consistent</span><span class="op">(</span><span class="va">params_aic</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'params_aic' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $check</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mess</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "OS and PFS fits are not consistent. OS is less than PFS at time 103.999996589097. "</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">check_pfsos_consistent</span><span class="op">(</span><span class="va">params_exp</span>, Ty<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'params_exp' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $check</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mess</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

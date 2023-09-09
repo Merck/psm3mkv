@@ -105,7 +105,954 @@ Also, the given cuttime.</p></li>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Create dataset in suitable form using bos dataset from the flexsurv package</span></span></span>
 <span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fit_ends_mods_spl</span><span class="op">(</span><span class="va">bosonc</span>, expvar<span class="op">=</span><span class="va">bosonc</span><span class="op">$</span><span class="va">ttp.durn</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in fit_ends_mods_spl(bosonc, expvar = bosonc$ttp.durn):</span> object 'pps.durn' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[1]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.7114  -3.1392  -2.2836   0.2183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.9650   0.5632   1.3668   0.2050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.0110  -0.0211   0.0432   0.0164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -422.8569, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 851.7137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[1]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[2]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.8065  -3.2682  -2.3448   0.2356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.8694   0.4668   1.2719   0.2054</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0153  -0.0511   0.0205   0.0183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -421.7298, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 849.4597</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[2]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[3]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -1.60314  -1.83224  -1.37404   0.11689</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.38216   0.20690   0.55743   0.08942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.01936  -0.03709  -0.00163   0.00905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -421.5655, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 849.1309</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[3]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[4]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.73940  -3.27506  -2.20374   0.27330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.94983   0.43833   1.46132   0.26097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.00852  -0.14684   0.12981   0.07058</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.02978  -0.19567   0.25523   0.11503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -422.8021, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 853.6043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[4]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[5]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.6568  -3.2134  -2.1003   0.2840</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.0097   0.4700   1.5494   0.2754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.0691  -0.0964   0.2346   0.0844</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.1375  -0.4197   0.1448   0.1440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -421.3791, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 850.7583</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[5]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[6]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -1.5359  -1.8178  -1.2539   0.1439</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.4345   0.2068   0.6622   0.1162</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.0304  -0.0583   0.1190   0.0452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.0796  -0.2359   0.0768   0.0798</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -421.3112, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 850.6223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[6]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[7]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est        L95%       U95%       se       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.485963  -3.046780  -1.925146   0.286136</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.197935   0.554972   1.840897   0.328048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.221183   0.000965   0.441402   0.112358</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.837151  -1.573188  -0.101115   0.375536</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.887201   0.107658   1.666745   0.397734</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -420.1814, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 850.3627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[7]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[8]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.4671  -3.0582  -1.8759   0.3016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1985   0.5475   1.8495   0.3322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2335  -0.0137   0.4807   0.1261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7797  -1.6891   0.1296   0.4640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.7355  -0.2786   1.7496   0.5174</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -420.0042, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 850.0085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[8]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[9]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -1.4492  -1.7515  -1.1470   0.1542</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.5042   0.2406   0.7677   0.1345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.1192  -0.0130   0.2514   0.0674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.4462  -0.9748   0.0824   0.2697</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.4287  -0.1742   1.0316   0.3076</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -420.0067, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 850.0134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ttp[[9]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[1]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.8254  -7.7259  -3.9250   0.9696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.5623   0.4569   2.6676   0.5640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.0167  -0.1170   0.1504   0.0682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -153.7031, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 313.4063</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[1]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[2]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.79819  -7.70574  -3.89064   0.97326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.52049   0.39352   2.64745   0.57499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.00446  -0.14762   0.13870   0.07304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -154.0731, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 314.1461</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[2]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[3]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.7953  -3.4937  -2.0969   0.3563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.5645   0.1203   1.0088   0.2267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0331  -0.0986   0.0324   0.0334</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -154.0678, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 314.1356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[3]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[4]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.260  -8.623  -3.897   1.206</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.080   0.308   3.851   0.904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.404  -0.502   1.309   0.462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.433  -1.434   0.569   0.511</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -153.3264, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 314.6528</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[4]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[5]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.279  -8.668  -3.891   1.219</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.108   0.301   3.916   0.922</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.487  -0.491   1.465   0.499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.560  -1.665   0.545   0.564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -153.5727, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 315.1455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[5]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[6]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.920  -3.724  -2.115   0.410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.757   0.108   1.405   0.331</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.207  -0.254   0.669   0.236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.287  -0.839   0.266   0.282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -153.6044, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 315.2088</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[6]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[7]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.3287  -8.9745  -3.6828   1.3500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.1917  -0.2408   4.6243   1.2411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2345  -1.2647   1.7336   0.7649</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0531  -2.7172   2.8234   1.4134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.3086  -2.3272   1.7101   1.0299</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -153.3243, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 316.6486</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[7]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[8]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.320  -8.969  -3.671   1.352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.182  -0.262   4.626   1.247</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.223  -1.328   1.775   0.792</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.174  -2.806   3.154   1.521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.487  -2.746   1.772   1.153</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -153.5704, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 317.1408</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[8]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[9]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.89719  -3.73120  -2.06319   0.42552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.71931  -0.08609   1.52472   0.41093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.00886  -0.65672   0.67443   0.33959</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.24938  -1.22124   1.71999   0.75033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.38355  -1.60015   0.83305   0.62073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -153.5862, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 317.1723</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ppd[[9]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[1]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.71386  -3.13362  -2.29410   0.21417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.99398   0.61139   1.37657   0.19520</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.00393  -0.01836   0.02622   0.01137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -512.0123, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1030.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[1]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[2]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.84806  -3.29863  -2.39748   0.22989</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.83234   0.44998   1.21469   0.19508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.02545  -0.05136   0.00045   0.01322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -511.7148, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1029.43</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[2]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[3]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -1.62401  -1.84681  -1.40122   0.11367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.37082   0.20155   0.54008   0.08636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.02243  -0.03539  -0.00947   0.00661</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -511.4637, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1028.927</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[3]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[4]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.7744  -3.2640  -2.2848   0.2498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.9271   0.4496   1.4046   0.2436</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0307  -0.1622   0.1007   0.0671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0441  -0.1242   0.2124   0.0859</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -511.8845, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1031.769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[4]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[5]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.7070  -3.2247  -2.1892   0.2642</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.9774   0.4708   1.4841   0.2585</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.0822  -0.0934   0.2577   0.0896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.1403  -0.3780   0.0973   0.1212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -511.2509, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1030.502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[5]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[6]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -1.5724  -1.8376  -1.3072   0.1353</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.4129   0.1989   0.6270   0.1092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.0272  -0.0673   0.1217   0.0482</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.0637  -0.1942   0.0668   0.0666</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -511.2899, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1030.58</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[6]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[7]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.5410  -3.0589  -2.0230   0.2643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1468   0.5511   1.7425   0.3040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.1899  -0.0306   0.4103   0.1125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7089  -1.3940  -0.0237   0.3496</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.6196   0.0375   1.2017   0.2970</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -509.8239, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1029.648</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[7]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[8]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.5276  -3.0764  -1.9788   0.2800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1501   0.5432   1.7569   0.3096</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2371  -0.0217   0.4958   0.1320</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7336  -1.6565   0.1894   0.4709</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.5475  -0.2960   1.3910   0.4303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -510.0705, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1030.141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[8]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[9]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -1.4793  -1.7636  -1.1950   0.1450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.4844   0.2357   0.7330   0.1269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.1297  -0.0121   0.2716   0.0724</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.4727  -1.0114   0.0660   0.2749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.3763  -0.1221   0.8746   0.2543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -509.868, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 1029.736</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pfs[[9]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[1]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.0074  -6.2393  -3.7754   0.6286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.3996   0.7437   2.0556   0.3347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0157  -0.0995   0.0682   0.0428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -433.2801, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 872.5603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[1]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[2]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -4.8971  -6.1132  -3.6809   0.6205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.2418   0.5762   1.9075   0.3396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0854  -0.1808   0.0101   0.0487</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -435.5343, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 877.0686</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[2]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[3]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.5243  -3.0238  -2.0248   0.2549</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.5252   0.2308   0.8195   0.1502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0771  -0.1250  -0.0292   0.0245</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -434.7993, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 875.5985</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[3]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[4]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.321  -6.770  -3.872   0.739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.745   0.799   2.692   0.483</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.299  -0.208   0.807   0.259</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.402  -1.050   0.246   0.331</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -432.5721, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 873.1442</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[4]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[5]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.369  -6.851  -3.886   0.757</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.807   0.817   2.797   0.505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.614  -0.020   1.249   0.324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.930  -1.784  -0.076   0.436</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -433.4306, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 874.8611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[5]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[6]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.6769  -3.2520  -2.1018   0.2934</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.7502   0.3378   1.1625   0.2104</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.3136  -0.0281   0.6553   0.1743</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.5287  -1.0036  -0.0538   0.2423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -432.8091, df = 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 873.6182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[6]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[7]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.426  -6.984  -3.868   0.795</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.879   0.738   3.019   0.582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.318  -0.573   1.209   0.455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.275  -2.322   1.772   1.044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.117  -1.820   1.587   0.869</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -432.4254, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 874.8508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[7]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[8]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.4331  -7.0056  -3.8607   0.8023</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.8919   0.7270   3.0569   0.5944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.3778  -0.6283   1.3839   0.5133</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0734  -2.4751   2.6219   1.3003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.8477  -3.1699   1.4744   1.1848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -433.2146, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 876.4292</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[8]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[9]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.6970  -3.2959  -2.0981   0.3056</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.7819   0.3067   1.2570   0.2424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.1897  -0.3455   0.7250   0.2731</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0191  -1.4401   1.4784   0.7446</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.4670  -1.8384   0.9043   0.6997</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -432.6368, df = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 875.2736</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $os[[9]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[1]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[1]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[2]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[2]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[3]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[3]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[4]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[4]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[5]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[5]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[6]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[6]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[7]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[7]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[8]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[8]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[9]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cf[[9]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[1]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[1]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[2]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[2]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[3]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[3]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[4]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[4]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[5]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[5]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[6]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[6]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[7]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[7]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[8]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[8]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[9]]$result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pps_cr[[9]]$error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in model.frame.default(formula = survival::Surv(time = durn1, time2 = durn2,     event = evflag) ~ {    {        expvar    }}, data = &lt;environment&gt;): variable lengths differ (found for '{     {         expvar     } }')&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

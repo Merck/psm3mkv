@@ -78,11 +78,39 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span>, expvar<span class="op">=</span><span class="va">bosonc</span><span class="op">$</span><span class="va">ttp.durn</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in fit_ends_mods_spl(bosonc, expvar = bosonc$ttp.durn):</span> object 'pps.durn' not found</span>
 <span class="r-in"><span><span class="fu">find_bestfit_spl</span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'fits' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $fit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -1.60314  -1.83224  -1.37404   0.11689</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.38216   0.20690   0.55743   0.08942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.01936  -0.03709  -0.00163   0.00905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -421.5655, df = 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 849.1309</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      id nknots scales  npts  pars loglik conv    aic   bic rankaic rankbic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1      1 hazard   204     3  -<span style="color: #BB0000;">423.</span> TRUE   852.  862.       8       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2      1 odds     204     3  -<span style="color: #BB0000;">422.</span> TRUE   849.  859.       2       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3      1 normal   204     3  -<span style="color: #BB0000;">422.</span> TRUE   849.  859.       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     4      2 hazard   204     4  -<span style="color: #BB0000;">423.</span> TRUE   854.  867.       9       8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     5      2 odds     204     4  -<span style="color: #BB0000;">421.</span> TRUE   851.  864.       7       5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     6      2 normal   204     4  -<span style="color: #BB0000;">421.</span> TRUE   851.  864.       6       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     7      3 hazard   204     5  -<span style="color: #BB0000;">420.</span> TRUE   850.  867.       5       9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span>     8      3 odds     204     5  -<span style="color: #BB0000;">420.</span> TRUE   850.  867.       3       6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span>     9      3 normal   204     5  -<span style="color: #BB0000;">420.</span> TRUE   850.  867.       4       7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">find_bestfit_spl</span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"bic"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'fits' not found</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in reglist[[remain[chosen]]]:</span> attempt to select less than one element in get1index</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
