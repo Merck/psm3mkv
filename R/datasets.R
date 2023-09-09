@@ -67,8 +67,8 @@ create_dummydata_survcan <- function() {
 #' create_dummydata_flexbosms()
 create_dummydata_flexbosms <- function() {
   flexsurv::bosms3 |>
-        tidyr::pivot_wider(id_cols = id,
-                     names_from = trans,
+        tidyr::pivot_wider(id_cols = "id",
+                     names_from = "trans",
                      values_from = c("Tstart", "Tstop", "status")
         ) |>
         dplyr::mutate(

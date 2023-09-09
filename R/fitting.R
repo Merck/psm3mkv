@@ -177,28 +177,29 @@ fit_mods <- function(durn1, durn2=NA, evflag, type, spec) {
 #' @param cuttime Time cutpoint
 #' @return Dataset of complete patient-level dataset, adjusted for cutpoint
 #' @export
+#' @importFrom rlang .data
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' create_extrafields(bosonc, cuttime=10)
 create_extrafields <- function(ds, cuttime=0){
   ds <- ds |>
     dplyr::rename(
-      ttp.odurn = ttp.durn,
-      pfs.odurn = pfs.durn,
-      os.odurn = os.durn
+      ttp.odurn = "ttp.durn",
+      pfs.odurn = "pfs.durn",
+      os.odurn = "os.durn"
     ) |>
     dplyr::mutate(
       # Calculate time after time cut-off
-      ttp.durn = pmax(0, ttp.odurn - cuttime),
-      pfs.durn = pmax(0, pfs.odurn - cuttime),
-      os.durn = pmax(0, os.odurn - cuttime),
+      ttp.durn = pmax(0, .data$ttp.odurn - cuttime),
+      pfs.durn = pmax(0, .data$pfs.odurn - cuttime),
+      os.durn = pmax(0, .data$os.odurn - cuttime),
       tzero = 0,
       # Calculate other endpoints
-      pps.odurn = pmax(os.odurn - ttp.odurn, 0),
-      pps.durn = pmax(os.durn - ttp.durn, 0),
-      pps.flag = ttp.flag * os.flag,
-      ppd.durn = ttp.durn,
-      ppd.flag = (1 - ttp.flag) * pfs.flag
+      pps.odurn = pmax(.data$os.odurn - .data$ttp.odurn, 0),
+      pps.durn = pmax(.data$os.durn - .data$ttp.durn, 0),
+      pps.flag = .data$ttp.flag * .data$os.flag,
+      ppd.durn = .data$ttp.durn,
+      ppd.flag = (1 - .data$ttp.flag) * .data$pfs.flag
       )
   return(ds)
 }

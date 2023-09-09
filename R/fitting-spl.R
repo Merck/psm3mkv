@@ -42,6 +42,8 @@
 #'     expvar = bosonc$pfs.durn
 #'     )
 fit_mods_spl <- function(durn1, durn2=NA, evflag, knot_set, scale_set, expvar=NA) {
+  # Declare local variables
+  multispl <- entry <- NULL
   # Return nothing if no knots or scales specified
   if (sum(is.na(knot_set))!=0) {return(NA)}
   if (sum(is.na(scale_set))!=0) {return(NA)}
@@ -53,7 +55,6 @@ fit_mods_spl <- function(durn1, durn2=NA, evflag, knot_set, scale_set, expvar=NA
   for (k in seq(knot_set)) {
     for (s in seq(scale_set)) {
       entry <- s+(k-1)*length(knot_set)
-      
       # If there is an explanatory variable
       if (!is.na(expvar[1])) {
         multispl[[entry]] <- sflexsurvspline(
@@ -102,10 +103,13 @@ fit_mods_spl <- function(durn1, durn2=NA, evflag, knot_set, scale_set, expvar=NA
 #' bosonc <- create_dummydata("flexbosms")
 #' fit_ends_mods_spl(bosonc, expvar=bosonc$ttp.durn)
 fit_ends_mods_spl <- function(ds,
-                                 knot_set=1:3,
-                                 scale_set=c("hazard", "odds", "normal"),
+                              knot_set=1:3,
+                              scale_set=c("hazard", "odds", "normal"),
                               expvar = NA
-                                ) {
+                              ) {
+  # Declare local variables
+  dspps <- fits.ppd <- fits.ttp <- fits.pfs <- NULL
+  fits.os <- fits.pps_cf <- fits.pps_cr <- NULL
   # Derive additional fields, as with regular function
   ds <- create_extrafields(ds, cuttime=0)
   dspps <- ds |> dplyr::filter(pps.durn>0)
@@ -170,6 +174,11 @@ fit_ends_mods_spl <- function(ds,
 #' find_bestfit_spl(fits$ttp, "aic")
 #' find_bestfit_spl(fits$pps_cf, "bic")
 find_bestfit_spl <- function(reglist, crit="aic") {
+  # Declare local variables
+  noreg <- valid <- remain <- NULL
+  npts <- pars <- aic <- loglik <- bic <- NULL
+  ic <- chosen <- conv <- nknots <- scales <- NULL
+  restab <- othtab <- NULL
   # Pick out the valid regressions (where valid==TRUE)
   noreg <- length(reglist)
   valid <- seq(noreg) |>

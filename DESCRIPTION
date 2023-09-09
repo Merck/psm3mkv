@@ -17,6 +17,7 @@ Imports:
     flexsurv,
     ggplot2,
     purrr,
+    rlang,
     SimplicialCubature,
     stats,
     survival,

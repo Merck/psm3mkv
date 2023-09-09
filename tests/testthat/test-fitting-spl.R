@@ -1,8 +1,6 @@
 # Testing file for fitting.R
 # ==========================
 
-library(dplyr)
-
 # Fit_multi
 # ---------
 
