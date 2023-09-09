@@ -180,7 +180,7 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
-#' Find mean(s)
+#' # Find mean(s)
 #' rmd_pd_stm_cf(bosonc, dpam=params)
 rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
   # Declare local variables

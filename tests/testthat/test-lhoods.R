@@ -117,32 +117,32 @@ params_spl <- list(ppd=fit.ppd$fit,
 # PSM simple
 ll_psm_simple <- calc_likes_psm_simple(bosonc, params_spl, cuttime=0)
 llcomp_psm_simple <- ll_psm_simple$data |>
-  group_by(valid, outcome) |>
-  summarize(
+  dplyr::group_by(valid, outcome) |>
+  dplyr::summarize(
     slike=sum(llike)
   )
 
 # PSM complex
 ll_psm_complex <- calc_likes_psm_complex(bosonc, params_spl, cuttime=0)
 llcomp_psm_complex <- ll_psm_complex$data |>
-  group_by(valid, outcome) |>
-  summarize(
+  dplyr::group_by(valid, outcome) |>
+  dplyr::summarize(
     slike=sum(llike)
   )
 
 # STM CF
 ll_stmcf <- calc_likes_stm_cf(bosonc, params_spl, cuttime=0)
 llcomp_stmcf <- ll_stmcf$data |>
-  group_by(valid, outcome) |>
-  summarize(
+  dplyr::group_by(valid, outcome) |>
+  dplyr::summarize(
     slike=sum(llike)
   )
 
 # STM CR
 ll_stmcr <- calc_likes_stm_cr(bosonc, params_spl, cuttime=0)
 llcomp_stmcr <- ll_stmcr$data |>
-  group_by(valid, outcome) |>
-  summarize(
+  dplyr::group_by(valid, outcome) |>
+  dplyr::summarize(
     slike=sum(llike)
   )
 

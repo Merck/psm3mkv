@@ -378,8 +378,8 @@ prob_os_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
   pf <- pd <- NULL
   # Calculations
-  pf <- time |> map_dbl(~prob_pf_stm(.x, dpam, starting))
-  pd <- time |> map_dbl(~prob_pd_stm_cr(.x, dpam, starting))
+  pf <- time |> purrr::map_dbl(~prob_pf_stm(.x, dpam, starting))
+  pd <- time |> purrr::map_dbl(~prob_pd_stm_cr(.x, dpam, starting))
   pf+pd
 }
 

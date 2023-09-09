@@ -546,7 +546,7 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
   # Present likelihood by outcome, validity and model
   s1_long <- lldata |>
     dplyr::summarise(
-      npts = n(),
+      npts = dplyr::n(),
       ll = sum(llike),
       .by = c("valid", "outcome", "methno", "methname")
     )
@@ -559,7 +559,7 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
   # Summarise across all patients by validity, irrespective of outcome
   s2_long <- lldata |>
     dplyr::summarise(
-      npts = n(),
+      npts = dplyr::n(),
       ll = sum(llike),
       .by = c("validall", "methno", "methname")
     )
@@ -569,7 +569,7 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
   # Summarise across all patients, irrespective of outcome or validity
   s3_long <- lldata |>
     dplyr::summarise(
-      npts = n(),
+      npts = dplyr::n(),
       ll = sum(llike),
       .by = c("validall", "methno", "methname")
     ) |>

@@ -38,8 +38,8 @@
 #' @return The value of the distribution function, a numeric value.
 #' @export
 #' @examples
-#' calc_pdist(10, "exp", 0.01)
-#' calc_pdist(5, "lnorm", c(3, 1))
+#' calc_pdist_par(10, "exp", 0.01)
+#' calc_pdist_par(5, "lnorm", c(3, 1))
 calc_pdist_par <- function(time, dist, pars) {
   if (dist=="exp") {
     stats::pexp(time, rate=pars[1])
@@ -92,7 +92,7 @@ calc_pdist_par <- function(time, dist, pars) {
 #'     )
 #' calc_pdist(time=1:5,
 #'     type="par",
-#'     spec=list(dist="lnorm", pars=c(3,1)
+#'     spec=list(dist="lnorm", pars=c(3,1))
 #'     )
 calc_pdist <- function(time, type, spec){
   type <- tolower(substr(type, 1, 3))
@@ -123,11 +123,11 @@ calc_pdist <- function(time, type, spec){
 #' @examples
 #' calc_surv(time=1:5,
 #'     type="spl",
-#'     specs=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
+#'     spec=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
 #'     )
 #' calc_surv(time=1:5,
 #'     type="par",
-#'     specs=list(dist="lnorm", pars=c(3,1)
+#'     spec=list(dist="lnorm", pars=c(3,1))
 #'     )
 calc_surv <- function(time, type, spec) {
   1-calc_pdist(time, type, spec)
@@ -174,11 +174,11 @@ calc_haz_par <- function(time, dist, pars) {
 #' @examples
 #' calc_haz(time=1:5,
 #'     type="spl",
-#'     specs=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
+#'     spec=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
 #'     )
 #' calc_haz(time=1:5,
 #'     type="par",
-#'     specs=list(dist="lnorm", pars=c(3,1)
+#'     spec=list(dist="lnorm", pars=c(3,1))
 #'     )
 calc_haz <- function(time, type, spec){
   type <- tolower(substr(type, 1, 3))
@@ -207,8 +207,8 @@ calc_haz <- function(time, type, spec){
 #' @return the restricted mean duration, a numeric value.
 #' @export
 #' @examples
-#' calc_rmd_par("exp", 0.2, 20)
-#' calc_rmd_par("lnorm", c(3, 1), 10)
+#' calc_rmd_par(20, "exp", 0.2)
+#' calc_rmd_par(10, "lnorm", c(3, 1))
 calc_rmd_par <- function(Tw, dist, pars) {
   if(dist=="exp") {
     flexsurv::rmst_exp(Tw, rate=pars[1], start=0)
@@ -257,11 +257,11 @@ calc_rmd_par <- function(Tw, dist, pars) {
 #' @examples
 #' calc_rmd(Tw=200,
 #'     type="spl",
-#'     specs=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
+#'     spec=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
 #'     )
 #' calc_rmd(Tw=250,
 #'     type="par",
-#'     specs=list(dist="lnorm", pars=c(3,1)
+#'     spec=list(dist="lnorm", pars=c(3,1))
 #'     )
 calc_rmd <- function(Tw, type, spec){
   type <- tolower(substr(type, 1, 3))
@@ -290,8 +290,8 @@ calc_rmd <- function(Tw, type, spec){
 #' @inherit calc_pdist seealso
 #' @export
 #' @examples
-#' give_noparams("llogis")
-#' give_noparams(c("exp", "gengamma"))
+#' give_noparams_par("llogis")
+#' give_noparams_par(c("exp", "gengamma"))
 give_noparams_par <- function(dist) {
   if (length(dist)!=1) stop("Multiple distributions entered, may call only one.")
   dplyr::case_when(
