@@ -57,9 +57,9 @@ rmd_all <- calc_allrmds(bosonc,
 Ty <- 10
 Tw <- Ty * weeks_in_year
 # params$pfs$dlist$name is "exp"
-exp_psm_pf <- rmst_exp(Tw, rate=params$pfs$res[1])
+exp_psm_pf <- flexsurv::rmst_exp(Tw, rate=params$pfs$res[1])
 # params$os$dlist$name is "weibullPH"
-exp_psm_os <- rmst_weibullPH(Tw, shape=params$os$res[1,1], scale=params$os$res[2,1])
+exp_psm_os <- flexsurv::rmst_weibullPH(Tw, shape=params$os$res[1,1], scale=params$os$res[2,1])
 exp_psm_pd <- exp_psm_os - exp_psm_pf
 
 test_that("PSM results match expected durations", {
@@ -167,8 +167,8 @@ exp_stmcf_pf2 <- stats::integrate(int1, 0, 10*weeks_in_year)$value
 S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
 exp_stmcr_pd2 <- SimplicialCubature::adaptIntegrateSimplex(int3, S)$integral
 exp_stmcf_pd2 <- SimplicialCubature::adaptIntegrateSimplex(int2, S)$integral
-exp_psm_pf2 <- rmst_exp(Tw, rate=params$pfs$res[1]) # Exp
-exp_psm_os2 <- rmst_weibullPH(Tw,
+exp_psm_pf2 <- flexsurv::rmst_exp(Tw, rate=params$pfs$res[1]) # Exp
+exp_psm_os2 <- flexsurv::rmst_weibullPH(Tw,
                              shape=params$os$res[1,1],
                              scale=params$os$res[2,1]) # WeibullPH
 

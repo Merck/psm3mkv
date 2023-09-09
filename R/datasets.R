@@ -82,5 +82,5 @@ create_dummydata_flexbosms <- function() {
         ) |>
         dplyr::select(id, pfs.durn, pfs.flag,
                       os.durn, os.flag, ttp.durn, ttp.flag) |>
-        dplyr::rename(ptid = .data$id)
+        dplyr::rename(ptid = "id")
 }

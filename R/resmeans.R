@@ -453,16 +453,16 @@ calc_allrmds <- function(simdat,
     pfdat <- tidyr::as_tibble(cbind(time=pf_km$time, surv=pf_km$surv)) |>
       dplyr::mutate(
         row = dplyr::row_number(),
-        itime = if_else(.data$row==1, .data$time, time-lag(.data$time)),
-        incl = if_else(.data$time<cuttime, 1, 0),
+        itime = dplyr::if_else(.data$row==1, .data$time, .data$time-dplyr::lag(.data$time)),
+        incl = dplyr::if_else(.data$time<cuttime, 1, 0),
         area = .data$incl*.data$surv*.data$itime
       )
     pfarea <- sum(pfdat$area)
     pfsurv <- min(pfdat[pfdat$incl==1,]$surv)
     # OS calculations
     osdat <- tidyr::as_tibble(cbind(time=os_km$time, surv=os_km$surv)) |>
-      mutate(
-        row = row_number(),
+      dplyr::mutate(
+        row = dplyr::row_number(),
         itime = if_else(.data$row==1, .data$time, .data$time-lag(.data$time)),
         incl = if_else(.data$time<cuttime, 1, 0),
         area = .data$incl*.data$surv*.data$itime

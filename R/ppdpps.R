@@ -32,7 +32,7 @@
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
-#' Pick out best distribution according to min AIC
+#' # Pick out best distribution according to min AIC
 #' params <- list(
 #'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
 #'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
@@ -44,6 +44,13 @@
 #' calc_haz_psm(0:10, ptdata=bosonc, dpam=params, type="simple")
 #' calc_haz_psm(0:10, ptdata=bosonc, dpam=params, type="complex")
 calc_haz_psm <- function(timevar, ptdata, dpam, type) {
+  # Declare local variables
+  pfs.ts <- pfs.type <- pfs.spec <- NULL
+  os.ts <- os.type <- os.spec <- NULL
+  ttp.ts <- ttp.type <- ttp.spec <- NULL
+  ne_pfs <- ne_ttp <- progfrac <- NULL
+  http <- hpf <- hos <- sos <- spf <- NULL
+  hppd_simple <- hppd_complex <- hppd <- hpps <- hdiff <- NULL
   # PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
   pfs.type <- pfs.ts$type
@@ -104,6 +111,8 @@ calc_haz_psm <- function(timevar, ptdata, dpam, type) {
 #'     dpam=params,
 #'     type="simple")
 calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
+  # Declare local variables
+  cumH <- NULL
   # Hazard function
   hazfn <- function(x) {
     calc_haz_psm(timevar=x, ptdata=ptdata, dpam=dpam, type=type)$post
