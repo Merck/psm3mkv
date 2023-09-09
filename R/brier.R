@@ -31,22 +31,22 @@
 #' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
+#' fits <- fit_ends_mods_par(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit_par(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit_par(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
+#'   os = find_bestfit_par(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 #'   )
 #' calc_ibs(bosonc, params)
 calc_ibs <- function(ptdata, dpam) {
   cat("Initial calculations \n")
   # Pull out event times
   time_interest <- sort(ptdata$os.durn[ptdata$os.flag==1])
-  time_interest <- time_interest[-which(time_interest==lag(time_interest))]
+  time_interest <- time_interest[which(time_interest!=dplyr::lag(time_interest))]
   # Pull out numbers of patients and event times
   n_pts <- length(ptdata$os.durn)
   n_times <- length(time_interest)

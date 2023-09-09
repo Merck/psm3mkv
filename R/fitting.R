@@ -57,15 +57,6 @@ check_posdef <- function(fitlist) {
 #' @return A list by distribution, each containing two components:
 #' - result: A list of class [flexsurv::flexsurvreg] containing information about the fitted model.
 #' - error: Any error message returned on fitting the regression (NULL indicates no error).
-#' @examples
-#' bosonc <- create_dummydata("flexbosms")
-#' fit_mods_par(
-#'     durn1 = bosonc$pfs.durn,
-#'     durn2 = bosonc$os.durn,
-#'     evflag = bosonc$os.flag,
-#'     dists = c("exp", "weibullPH"),
-#'     expvar = bosonc$pfs.durn
-#'     )
 fit_mods_par <- function(durn1, durn2=NA, evflag, dists, expvar=NA) {
   # Return nothing if no distributions specified
   if (sum(is.na(dists))!=0) {return(NA)}

@@ -36,15 +36,6 @@ A list by distribution, each containing two components:
 \description{
 Fits survival regressions with \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} to multiple specifications in one function call.
 }
-\examples{
-bosonc <- create_dummydata("flexbosms")
-fit_mods_spl(
-    durn1 = bosonc$pfs.durn,
-    durn2 = bosonc$os.durn,
-    evflag = bosonc$os.flag,
-    expvar = bosonc$pfs.durn
-    )
-}
 \seealso{
 \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \code{\link[survival:Surv]{survival::Surv()}}
 }

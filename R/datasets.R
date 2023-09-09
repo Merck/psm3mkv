@@ -46,8 +46,6 @@ create_dummydata <- function(dsname) {
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @seealso [create_dummydata()]
 #' @importFrom rlang .data
-#' @examples
-#' create_dummydata_survcan() |> head()
 create_dummydata_survcan <- function() {
   survival::cancer |>
     dplyr::mutate(
@@ -63,8 +61,6 @@ create_dummydata_survcan <- function() {
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @seealso [create_dummydata()]
 #' @importFrom rlang .data
-#' @examples
-#' create_dummydata_flexbosms() |> head()
 create_dummydata_flexbosms <- function() {
   flexsurv::bosms3 |>
         tidyr::pivot_wider(id_cols = "id",
