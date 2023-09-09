@@ -6,6 +6,7 @@
 # * https://r-pkgs.org/tests.html
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
+Sys.setenv("R_TESTS" = "")
 library(testthat)
 library(psm3mkv)
 

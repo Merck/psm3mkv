@@ -108,7 +108,7 @@ fit_ends_mods_spl <- function(ds,
                                 ) {
   # Derive additional fields, as with regular function
   ds <- create_extrafields(ds, cuttime=0)
-  dspps <- ds |> filter(pps.durn>0)
+  dspps <- ds |> dplyr::filter(pps.durn>0)
   # Captures lists of fitted models to each endpoint
   fits.ppd <- fit_mods_spl(durn1 = ds$tzero,
                        durn2 = ds$ppd.durn,

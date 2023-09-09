@@ -111,8 +111,8 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
       os.durn = pmax(0, os.durn - cuttime),
       ttp.durn = pmax(0, ttp.durn - cuttime)
     ) |>
-    filter(pfs.durn>0) |>
-    mutate(
+    dplyr::filter(pfs.durn>0) |>
+    dplyr::mutate(
       # Survival and hazard functions needed
       hpfsu = calc_haz(pfs.durn, pfs.type, pfs.spec),
       spfsu = calc_surv(pfs.durn, pfs.type, pfs.spec),
@@ -134,7 +134,7 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
   # Replace NA for zero hppst
   likedata$hppst[likedata$hppst==0] <- NA
   likedata <- likedata |>
-    mutate(
+    dplyr::mutate(
       # Four possible outcomes
       f1 = (1-ttp.flag)*(1-os.flag),
       f2 = (1-ttp.flag)*os.flag,
@@ -143,7 +143,7 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
       # PSM likelihoods for each outcome
       # (u is PFS time rather than TTP time as in paper Table)
       # Add up and apply log
-      like = case_when(
+      like = dplyr::case_when(
         f1==1 ~ spfsu,
         f2==1 ~ spfsu*hppdu,
         f3==1 ~ spfsu*httpu*sppstu,
@@ -211,8 +211,8 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
       os.durn = pmax(0, os.durn - cuttime),
       ttp.durn = pmax(0, ttp.durn - cuttime)
     ) |>
-    filter(pfs.durn>0) |>
-    mutate(
+    dplyr::filter(pfs.durn>0) |>
+    dplyr::mutate(
       # Survival and hazard functions needed
       hpfsu = calc_haz(pfs.durn, pfs.type, pfs.spec),
       spfsu = calc_surv(pfs.durn, pfs.type, pfs.spec),
@@ -233,7 +233,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
     )
   likedata$hppst[likedata$hppst==0] <- NA
   likedata <- likedata |>
-    mutate(
+    dplyr::mutate(
       # Four possible outcomes
       f1 = (1-ttp.flag)*(1-os.flag),
       f2 = (1-ttp.flag)*os.flag,
@@ -242,7 +242,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
       # PSM likelihoods for each outcome
       # (u is PFS time rather than TTP time as in paper Table)
       # Add up and apply log
-      like = case_when(
+      like = dplyr::case_when(
         f1==1 ~ spfsu,
         f2==1 ~ spfsu*hppdu,
         f3==1 ~ spfsu*httpu*sppstu,
@@ -304,14 +304,14 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
   s_npars <- ppd.npars + ttp.npars + pps.npars
   # Add on fields to dataset
   likedata <- tidyr::as_tibble(ptdata) |>
-    mutate(
+    dplyr::mutate(
       # Adjust all durations for cutoff time
       pfs.durn = pfs.durn - cuttime,
       os.durn = os.durn - cuttime,
       ttp.durn = ttp.durn - cuttime
     ) |>
-    filter(pfs.durn>0) |>
-    mutate(
+    dplyr::filter(pfs.durn>0) |>
+    dplyr::mutate(
       # Survival and hazard functions needed
       httpu = calc_haz(pfs.durn, ttp.type, ttp.spec),
       sttpu = calc_surv(pfs.durn, ttp.type, ttp.spec),
@@ -327,7 +327,7 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
       f4 = ttp.flag*os.flag,
       # STM likelihoods for each outcome
       # Add up and apply log
-      like = case_when(
+      like = dplyr::case_when(
         f1==1 ~ sttpu*sppdu,
         f2==1 ~ sttpu*sppdu*hppdu,
         f3==1 ~ sttpu*sppdu*httpu*(sppst/sppsu),
@@ -392,14 +392,14 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
   s_npars <- ppd.npars + ttp.npars + pps.npars
   # Add on fields to dataset
   likedata <- tidyr::as_tibble(ptdata) |>
-    mutate(
+    dplyr::mutate(
       # Adjust all durations for cutoff time
       pfs.durn = pfs.durn - cuttime,
       os.durn = os.durn - cuttime,
       ttp.durn = ttp.durn - cuttime
     ) |>
-    filter(pfs.durn>0) |>
-    mutate(
+    dplyr::filter(pfs.durn>0) |>
+    dplyr::mutate(
       # Survival and hazard functions needed
       httpu = calc_haz(pfs.durn, ttp.type, ttp.spec),
       sttpu = calc_surv(pfs.durn, ttp.type, ttp.spec),
@@ -415,7 +415,7 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
       f4 = ttp.flag*os.flag,           # Progression, then death
       # STM likelihoods for each outcome
       # Add up and apply log
-      like = case_when(
+      like = dplyr::case_when(
         f1==1 ~ sttpu*sppdu,
         f2==1 ~ sttpu*sppdu*hppdu,
         f3==1 ~ sttpu*sppdu*httpu*sppstu,
@@ -488,47 +488,47 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
   list4 <- calc_likes_stm_cr(ptdata, dpam, cuttime)
   # Create datasets for each method
   lldata1 <- list1$data |>
-    select(ptid, outcome, llike, valid) |>
-    mutate(methno=1)
+    dplyr::select(ptid, outcome, llike, valid) |>
+    dplyr::mutate(methno=1)
   lldata2 <- list2$data |>
-    select(ptid, outcome, llike, valid) |>
-    mutate(methno=2)
+    dplyr::select(ptid, outcome, llike, valid) |>
+    dplyr::mutate(methno=2)
   lldata3 <- list3$data |>
-    select(ptid, outcome, llike, valid) |>
-    mutate(methno=3)
+    dplyr::select(ptid, outcome, llike, valid) |>
+    dplyr::mutate(methno=3)
   lldata4 <- list4$data |>
-    select(ptid, outcome, llike, valid) |>
-    mutate(methno=4)
+    dplyr::select(ptid, outcome, llike, valid) |>
+    dplyr::mutate(methno=4)
   # Pull datasets together by columns
   llvdata <- lldata1 |>
-    left_join(lldata2, by="ptid") |>
-    left_join(lldata3, by="ptid") |>
-    left_join(lldata4, by="ptid") |>
-    mutate(validall = (valid.x*valid.y*valid.x.x*valid.y.y==1)) |>
-    select(ptid, validall)
+    dplyr::left_join(lldata2, by="ptid") |>
+    dplyr::left_join(lldata3, by="ptid") |>
+    dplyr::left_join(lldata4, by="ptid") |>
+    dplyr::mutate(validall = (valid.x*valid.y*valid.x.x*valid.y.y==1)) |>
+    dplyr::select(ptid, validall)
   # Pull datasets together by rows
   lldata <- lldata1 |>
-    add_row(lldata2) |>
-    add_row(lldata3) |>
-    add_row(lldata4) |>
-    mutate(methname = methodnames[methno]) |>
-    left_join(llvdata, by="ptid")
+    dplyr::add_row(lldata2) |>
+    dplyr::add_row(lldata3) |>
+    dplyr::add_row(lldata4) |>
+    dplyr::mutate(methname = methodnames[methno]) |>
+    dplyr::left_join(llvdata, by="ptid")
   # Present likelihood by outcome, validity and model
   s1_long <- lldata |>
-    summarise(
+    dplyr::summarise(
       npts = n(),
       ll = sum(llike),
       .by = c("valid", "outcome", "methno", "methname")
     )
   s1_wide <- s1_long |>
-    select(-methname) |>
+    dplyr::select(-methname) |>
     tidyr::pivot_wider(names_from="methno",
                        names_prefix="ll_",
                        values_from="ll") |>
-    arrange(valid, outcome)
+    dplyr::arrange(valid, outcome)
   # Summarise across all patients by validity, irrespective of outcome
   s2_long <- lldata |>
-    summarise(
+    dplyr::summarise(
       npts = n(),
       ll = sum(llike),
       .by = c("validall", "methno", "methname")
@@ -538,14 +538,14 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
                        values_from=c("npts", "ll"))
   # Summarise across all patients, irrespective of outcome or validity
   s3_long <- lldata |>
-    summarise(
+    dplyr::summarise(
       npts = n(),
       ll = sum(llike),
       .by = c("validall", "methno", "methname")
     ) |>
-  mutate(
+  dplyr::mutate(
     # Number of parameters
-    nparam = case_when(
+    nparam = dplyr::case_when(
       methno == 1 ~ list1$npar,
       methno == 2 ~ list2$npar,
       methno == 3 ~ list3$npar,
@@ -561,7 +561,7 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
     rank_aic = ifelse(validall, rank_aic, NA),
     rank_bic = ifelse(validall, rank_bic, NA)
     ) |>
-    arrange(validall, methno)
+    dplyr::arrange(validall, methno)
   # Return results
   return(list(
     detailed = s1_wide,
