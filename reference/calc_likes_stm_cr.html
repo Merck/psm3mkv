@@ -104,7 +104,47 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Pick out best distribution according to min AIC</span></span></span>
+<span class="r-in"><span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  ppd <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
+<span class="r-in"><span>  ttp <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
+<span class="r-in"><span>  pfs <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pfs</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
+<span class="r-in"><span>  os <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">os</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
+<span class="r-in"><span>  pps_cf <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
+<span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">calc_likes_stm_cr</span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $npts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 204 204</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $npar</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ll</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -829.8603 -829.8603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 204 × 23</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ptid pfs.durn pfs.flag os.durn os.flag ttp.durn ttp.flag  httpu sttpu</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1   18.7          1   42.9        1   18.7          1 0.032<span style="text-decoration: underline;">6</span> 0.448</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2   12.0          1   23.3        1   12.0          1 0.038<span style="text-decoration: underline;">7</span> 0.567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3    0.452        1    8.81       1    0.452        1 0.062<span style="text-decoration: underline;">3</span> 0.971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4    9.07         1   52.7        1    9.07         1 0.042<span style="text-decoration: underline;">1</span> 0.638</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5   47.7          0   47.7        0   47.7          0 0.019<span style="text-decoration: underline;">6</span> 0.218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6    3.26         1   13.1        1    3.26         1 0.050<span style="text-decoration: underline;">2</span> 0.833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7    0.738        1    2.74       1    0.738        1 0.059<span style="text-decoration: underline;">4</span> 0.954</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8   35.5          1   35.5        1   35.5          0 0.023<span style="text-decoration: underline;">3</span> 0.282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9   10.4          1   37.1        1   10.4          1 0.040<span style="text-decoration: underline;">6</span> 0.605</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10   10.5          1   32.7        1   10.5          1 0.040<span style="text-decoration: underline;">5</span> 0.603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 194 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 14 more variables: hppdu &lt;dbl&gt;, sppdu &lt;dbl&gt;, hppdt &lt;dbl&gt;, sppstu &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   hppstu &lt;dbl&gt;, f1 &lt;dbl&gt;, f2 &lt;dbl&gt;, f3 &lt;dbl&gt;, f4 &lt;dbl&gt;, like &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   llike &lt;dbl&gt;, outcome &lt;dbl&gt;, chf &lt;lgl&gt;, valid &lt;lgl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
