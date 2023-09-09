@@ -29,13 +29,13 @@
 #' survfit <- flexsurv::flexsurvreg(...)
 #' check_posdef(survfit)
 check_posdef <- function(fitlist) {
-  distname <- fitlist$result$dlist$name
+  # distname <- fitlist$result$dlist$name
   out <- tryCatch({
     det(chol(fitlist$opt$hessian))>0
     },
   error = function(cond) {
     message(paste("Hessian is not positive definite when fitted to the",
-                  distname,
+                  fitlist$result$dlist$name,
                   "distribution. \n"
                   ))
     FALSE
@@ -77,6 +77,9 @@ check_pfsos_consistent <- function(dpam, Ty=NA) {
   #         => Min[Diff2(t)] must >=0 where Diff2(t) = h_PFS(t).S_PFS(t)-h_OS(t).S_OS(t)
   # for all t<=Ty.
   # [1] is implied by [2].
+  # Declare local variables
+  Tw <- pfs.ts <- pfs.type <- pfs.spec <- os.ts <- os.type <- os.spec <- NULL
+  startt <- minplace <- mint <- mindiff1 <- errval <- errmess <- NULL
   # Bound to aid integration in weeks
   Tw <- ifelse(is.na(Ty), Inf, Ty*365.25/7)
   # Pull out type and spec for PFS
@@ -238,6 +241,9 @@ fit_ends_mods_par <- function(ds,
                 pps_cf.dist = c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz"),
                 pps_cr.dist = c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz"),
                 expvar = NA) {
+  # Declare local variables
+  dspps <- NULL
+  fits.ppd <- fits.ttp <- fits.pfs <- fits.os <- fits.pps_cf <- fits.pps_cr <- NULL
   # Derive additional fields, as with regular function
   ds <- create_extrafields(ds, cuttime)
   dspps <- ds |> dplyr::filter(pps.durn>0)
@@ -301,6 +307,11 @@ fit_ends_mods_par <- function(ds,
 #' find_bestfit_par(fits$ttp, "aic")
 #' find_bestfit_par(fits$os, "bic")
 find_bestfit_par <- function(reglist, crit) {
+  # Declare local variables
+  noreg <- valid <- remain <- NULL
+  npts <- pars <- aic <- loglik <- bic <- NULL
+  ic <- chosen <- posdef <- conv <- dists <- NULL
+  restab <- othtab <- NULL
   # Pick out the valid regressions (where valid==TRUE)
   noreg <- length(reglist)
   valid <- seq(noreg) |> purrr::map_lgl(~is.null(reglist[[.x]]$error))
