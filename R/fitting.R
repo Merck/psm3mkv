@@ -295,7 +295,7 @@ fit_ends_mods_par <- function(ds,
 #' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
-#' Pick some distributions to fit to all endpoints
+#' # Pick some distributions to fit to all endpoints
 #' dists <- c("exp", "llogis", "lnorm")
 #' # Fit all distributions to all endpoints
 #' fits <- fit_ends_mods_par(bosonc,
