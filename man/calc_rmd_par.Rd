@@ -20,8 +20,8 @@ the restricted mean duration, a numeric value.
 Calculates the restricted mean duration, given a statistical distribution (named per flexsurv) and its parameters.
 }
 \examples{
-calc_rmd_par("exp", 0.2, 20)
-calc_rmd_par("lnorm", c(3, 1), 10)
+calc_rmd_par(20, "exp", 0.2)
+calc_rmd_par(10, "lnorm", c(3, 1))
 }
 \seealso{
 \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}

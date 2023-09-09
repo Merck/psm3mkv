@@ -28,8 +28,8 @@ The value of the distribution function, a numeric value.
 Calculate the value of the distribution function, given the statistical distribution and its parameters.
 }
 \examples{
-calc_pdist(10, "exp", 0.01)
-calc_pdist(5, "lnorm", c(3, 1))
+calc_pdist_par(10, "exp", 0.01)
+calc_pdist_par(5, "lnorm", c(3, 1))
 }
 \seealso{
 \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}

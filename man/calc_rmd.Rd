@@ -41,11 +41,11 @@ Calculates the restricted mean duration, given the form of a parametric distribu
 \examples{
 calc_rmd(Tw=200,
     type="spl",
-    specs=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
+    spec=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
     )
 calc_rmd(Tw=250,
     type="par",
-    specs=list(dist="lnorm", pars=c(3,1)
+    spec=list(dist="lnorm", pars=c(3,1))
     )
 }
 \seealso{

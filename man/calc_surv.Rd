@@ -41,11 +41,11 @@ Calculate the value of the survival function, given the statistical distribution
 \examples{
 calc_surv(time=1:5,
     type="spl",
-    specs=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
+    spec=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
     )
 calc_surv(time=1:5,
     type="par",
-    specs=list(dist="lnorm", pars=c(3,1)
+    spec=list(dist="lnorm", pars=c(3,1))
     )
 }
 \seealso{

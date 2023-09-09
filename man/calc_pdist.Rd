@@ -45,7 +45,7 @@ calc_pdist(time=1:5,
     )
 calc_pdist(time=1:5,
     type="par",
-    spec=list(dist="lnorm", pars=c(3,1)
+    spec=list(dist="lnorm", pars=c(3,1))
     )
 }
 \seealso{
