@@ -1,7 +1,6 @@
 # Testing for lhoods.R
 # ====================
 
-# library(dplyr)
 bosonc <- create_dummydata("flexbosms")
 
 # Parametric
@@ -78,18 +77,18 @@ test_that("Likelihood totals match for parametric", {
     ll_psm_simple$ll[2],
     sum(llcomp_psm_simple$slike[llcomp_psm_simple$valid==TRUE])
     )
-#  expect_equal(
-#    ll_psm_complex$ll[2],
-#    sum(llcomp_psm_complex$slike[llcomp_psm_complex$valid==TRUE])
-#    )
-#  expect_equal(
-#    ll_stmcf$ll[2],
-#    sum(llcomp_stmcf$slike[llcomp_stmcf$valid==TRUE])
-#    )
-#  expect_equal(
-#    ll_stmcr$ll[2],
-#    sum(llcomp_stmcr$slike[llcomp_stmcr$valid==TRUE])
-#    )
+  expect_equal(
+    ll_psm_complex$ll[2],
+    sum(llcomp_psm_complex$slike[llcomp_psm_complex$valid==TRUE])
+    )
+  expect_equal(
+    ll_stmcf$ll[2],
+    sum(llcomp_stmcf$slike[llcomp_stmcf$valid==TRUE])
+    )
+  expect_equal(
+    ll_stmcr$ll[2],
+    sum(llcomp_stmcr$slike[llcomp_stmcr$valid==TRUE])
+    )
 })
 
 # Splines
@@ -150,21 +149,21 @@ llcomp_stmcr <- ll_stmcr$data |>
 ll_all <- calc_likes(bosonc, params_spl, cuttime=0)
 
 # Test likelihood values
-#test_that("Likelihood totals match for splines", {
-#  expect_equal(
-#    ll_psm_simple$ll[2],
-#    sum(llcomp_psm_simple$slike[llcomp_psm_simple$valid==TRUE])
-#  )
-#  expect_equal(
-#    ll_psm_complex$ll[2],
-#    sum(llcomp_psm_complex$slike[llcomp_psm_complex$valid==TRUE])
-#  )
-#  expect_equal(
-#    ll_stmcf$ll[2],
-#    sum(llcomp_stmcf$slike[llcomp_stmcf$valid==TRUE])
-#  )
-#  expect_equal(
-#    ll_stmcr$ll[2],
-#    sum(llcomp_stmcr$slike[llcomp_stmcr$valid==TRUE])
-#  )
-#})
+test_that("Likelihood totals match for splines", {
+  expect_equal(
+    ll_psm_simple$ll[2],
+    sum(llcomp_psm_simple$slike[llcomp_psm_simple$valid==TRUE])
+  )
+  expect_equal(
+    ll_psm_complex$ll[2],
+    sum(llcomp_psm_complex$slike[llcomp_psm_complex$valid==TRUE])
+  )
+  expect_equal(
+    ll_stmcf$ll[2],
+    sum(llcomp_stmcf$slike[llcomp_stmcf$valid==TRUE])
+  )
+  expect_equal(
+    ll_stmcr$ll[2],
+    sum(llcomp_stmcr$slike[llcomp_stmcr$valid==TRUE])
+  )
+})

@@ -62,7 +62,7 @@ Calculate likelihood values and other summary output for the following three sta
 \examples{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
-Pick out best distribution according to min AIC
+# Pick out best distribution according to min AIC
 params <- list(
   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,

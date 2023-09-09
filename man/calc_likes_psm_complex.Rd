@@ -49,7 +49,7 @@ Calculate likelihood values and other summary output for a more complex three-st
 \examples{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_par(bosonc)
-Pick out best distribution according to min AIC
+# Pick out best distribution according to min AIC
 params <- list(
   ppd = find_bestfit(fits$ppd, "aic")$fit,
   ttp = find_bestfit(fits$ttp, "aic")$fit,

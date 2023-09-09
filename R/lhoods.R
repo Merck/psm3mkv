@@ -30,6 +30,10 @@
 #' @examples
 #' convert_fit2spec(dpam$pfs)
 convert_fit2spec <- function(fitsurv) {
+  # Declare local variables
+  par.dist <- type <- spl.gamma <- spl.knots <- NULL
+  spl.scale <- spec <- pars <- NULL
+  # Pick out distribution/splines
   par.dist <- fitsurv$dlist$name
   if (par.dist=="survspline") {
     type <- "spl"
@@ -76,6 +80,7 @@ convert_fit2spec <- function(fitsurv) {
 #' - `AIC`: Akaike Information Criterion value for this model
 #' - `BIC`: Bayesian Information Criterion value for this model
 #' @seealso [calc_likes()], [calc_likes_psm_complex()], [calc_likes_stm_cf()], [calc_likes_stm_cr()]
+#' @importFrom rlang .data
 #' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
@@ -91,6 +96,10 @@ convert_fit2spec <- function(fitsurv) {
 #'   )
 #' calc_likes_psm_simple(bosonc, dpam=params)
 calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
+  # Declare local variables
+  pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- NULL
+  os.ts <- os.type <- os.spec <- os.npars <- NULL
+  s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
   pfs.type <- pfs.ts$type
@@ -107,26 +116,26 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
   likedata <- tidyr::as_tibble(ptdata) |>
     dplyr::mutate(
       # Adjust all durations for cutoff time
-      pfs.durn = pmax(0, pfs.durn - cuttime),
-      os.durn = pmax(0, os.durn - cuttime),
-      ttp.durn = pmax(0, ttp.durn - cuttime)
+      pfs.durn = pmax(0, .data$pfs.durn - cuttime),
+      os.durn = pmax(0, .data$os.durn - cuttime),
+      ttp.durn = pmax(0, .data$ttp.durn - cuttime)
     ) |>
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      hpfsu = calc_haz(pfs.durn, pfs.type, pfs.spec),
-      spfsu = calc_surv(pfs.durn, pfs.type, pfs.spec),
-      hppdu = calc_haz_psm(timevar=pfs.durn,
+      hpfsu = calc_haz(.data$pfs.durn, pfs.type, pfs.spec),
+      spfsu = calc_surv(.data$pfs.durn, pfs.type, pfs.spec),
+      hppdu = calc_haz_psm(timevar=.data$pfs.durn,
                            ptdata=ptdata,
                            dpam=dpam,
                            type="simple")$pre,
-      httpu = pmax(0, hpfsu-hppdu),
-      sppstu = calc_surv_psmpps(totime=os.durn,
-                                fromtime=pfs.durn,
+      httpu = pmax(0, .data$hpfsu-.data$hppdu),
+      sppstu = calc_surv_psmpps(totime=.data$os.durn,
+                                fromtime=.data$pfs.durn,
                                 ptdata=ptdata,
                                 dpam=dpam,
                                 type="simple"),
-      hppst = calc_haz_psm(timevar=os.durn,
+      hppst = calc_haz_psm(timevar=.data$os.durn,
                            ptdata=ptdata,
                            dpam=dpam,
                            type="simple")$post
@@ -136,10 +145,10 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
   likedata <- likedata |>
     dplyr::mutate(
       # Four possible outcomes
-      f1 = (1-ttp.flag)*(1-os.flag),
-      f2 = (1-ttp.flag)*os.flag,
-      f3 = ttp.flag*(1-os.flag),
-      f4 = ttp.flag*os.flag,
+      f1 = (1-.data$ttp.flag) * (1-.data$os.flag),
+      f2 = (1-.data$ttp.flag) * .data$os.flag,
+      f3 = .data$ttp.flag * (1-.data$os.flag),
+      f4 = .data$ttp.flag * .data$os.flag,
       # PSM likelihoods for each outcome
       # (u is PFS time rather than TTP time as in paper Table)
       # Add up and apply log
@@ -150,10 +159,10 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
         f4==1 ~ spfsu*httpu*sppstu*hppst,
         .default = NA
       ),
-      llike = log(like),
-      outcome = f1*1 + f2*2 + f3*3 + f4*4,
-      chf = (f1+f2+f3+f4)==1,
-      valid = is.na(llike)==FALSE
+      llike = log(.data$like),
+      outcome = .data$f1*1 + .data$f2*2 + .data$f3*3 + .data$f4*4,
+      chf = (.data$f1+.data$f2+.data$f3+.data$f4)==1,
+      valid = is.na(.data$llike)==FALSE
     )
   # Record other metrics
   npts <- c(length(likedata$ptid), length(likedata$ptid[likedata$valid==TRUE]))
@@ -171,11 +180,12 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
+#' @importFrom rlang .data
 #' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_par(bosonc)
-#' Pick out best distribution according to min AIC
+#' # Pick out best distribution according to min AIC
 #' params <- list(
 #'   ppd = find_bestfit(fits$ppd, "aic")$fit,
 #'   ttp = find_bestfit(fits$ttp, "aic")$fit,
@@ -186,6 +196,11 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 #'   )
 #' calc_likes_psm_simple(bosonc, dpam=params)
 calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
+  # Declare local variables
+  ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
+  pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- NULL
+  os.ts <- os.type <- os.spec <- os.npars <- NULL
+  s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # TTP
   ttp.ts <- convert_fit2spec(dpam$ttp)
   ttp.type <- ttp.ts$type
@@ -207,26 +222,26 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
   likedata <- tidyr::as_tibble(ptdata) |>
     dplyr::mutate(
       # Adjust all durations for cutoff time
-      pfs.durn = pmax(0, pfs.durn - cuttime),
-      os.durn = pmax(0, os.durn - cuttime),
-      ttp.durn = pmax(0, ttp.durn - cuttime)
+      pfs.durn = pmax(0, .data$pfs.durn - cuttime),
+      os.durn = pmax(0, .data$os.durn - cuttime),
+      ttp.durn = pmax(0, .data$ttp.durn - cuttime)
     ) |>
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      hpfsu = calc_haz(pfs.durn, pfs.type, pfs.spec),
-      spfsu = calc_surv(pfs.durn, pfs.type, pfs.spec),
-      hppdu = calc_haz_psm(timevar=pfs.durn,
+      hpfsu = calc_haz(.data$pfs.durn, pfs.type, pfs.spec),
+      spfsu = calc_surv(.data$pfs.durn, pfs.type, pfs.spec),
+      hppdu = calc_haz_psm(timevar=.data$pfs.durn,
                            ptdata=ptdata,
                            dpam=dpam,
                            type="complex")$pre,
-      httpu = pmax(0, hpfsu-hppdu),
-      sppstu = calc_surv_psmpps(totime=os.durn,
-                                fromtime=pfs.durn,
+      httpu = pmax(0, .data$hpfsu-.data$hppdu),
+      sppstu = calc_surv_psmpps(totime=.data$os.durn,
+                                fromtime=.data$pfs.durn,
                                 ptdata=ptdata,
                                 dpam=dpam,
                                 type="complex"),
-      hppst = calc_haz_psm(timevar=os.durn,
+      hppst = calc_haz_psm(timevar=.data$os.durn,
                            ptdata=ptdata,
                            dpam=dpam,
                            type="complex")$post
@@ -235,10 +250,10 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
   likedata <- likedata |>
     dplyr::mutate(
       # Four possible outcomes
-      f1 = (1-ttp.flag)*(1-os.flag),
-      f2 = (1-ttp.flag)*os.flag,
-      f3 = ttp.flag*(1-os.flag),
-      f4 = ttp.flag*os.flag,
+      f1 = (1-.data$ttp.flag) * (1-.data$os.flag),
+      f2 = (1-.data$ttp.flag) * .data$os.flag,
+      f3 = .data$ttp.flag * (1-.data$os.flag),
+      f4 = .data$ttp.flag * .data$os.flag,
       # PSM likelihoods for each outcome
       # (u is PFS time rather than TTP time as in paper Table)
       # Add up and apply log
@@ -249,10 +264,10 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
         f4==1 ~ spfsu*httpu*sppstu*hppst,
         .default = NA
       ),
-      llike = log(like),
-      outcome = f1*1 + f2*2 + f3*3 + f4*4,
-      chf = (f1+f2+f3+f4)==1,
-      valid = is.na(llike)==FALSE
+      llike = log(.data$like),
+      outcome = .data$f1*1 + .data$f2*2 + .data$f3*3 + .data$f4*4,
+      chf = (.data$f1+.data$f2+.data$f3+.data$f4)==1,
+      valid = is.na(.data$llike)==FALSE
     )
   # Record other metrics
   npts <- c(length(likedata$ptid), length(likedata$ptid[likedata$valid==TRUE]))
@@ -270,6 +285,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
+#' @importFrom rlang .data
 #' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
@@ -285,6 +301,11 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 #'   )
 #' calc_likes_stm_cf(bosonc, dpam=params)
 calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
+  # Declare local variables
+  ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- ppd.npars <- NULL
+  pps.ts <- pps.type <- pps.spec <- pps.npars <- NULL
+  s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # Pull out distributions and parameters - PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
   ppd.type <- ppd.ts$type
@@ -306,25 +327,25 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
   likedata <- tidyr::as_tibble(ptdata) |>
     dplyr::mutate(
       # Adjust all durations for cutoff time
-      pfs.durn = pfs.durn - cuttime,
-      os.durn = os.durn - cuttime,
-      ttp.durn = ttp.durn - cuttime
+      pfs.durn = .data$pfs.durn - cuttime,
+      os.durn = .data$os.durn - cuttime,
+      ttp.durn = .data$ttp.durn - cuttime
     ) |>
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      httpu = calc_haz(pfs.durn, ttp.type, ttp.spec),
-      sttpu = calc_surv(pfs.durn, ttp.type, ttp.spec),
-      hppdu = calc_haz(pfs.durn, ppd.type, ppd.spec),
-      sppdu = calc_surv(pfs.durn, ppd.type, ppd.spec),
-      sppsu = calc_surv(pfs.durn, pps.type, pps.spec),
-      sppst = calc_surv(os.durn, pps.type, pps.spec),
-      hppst = calc_haz(os.durn, pps.type, pps.spec),
+      httpu = calc_haz(.data$pfs.durn, ttp.type, ttp.spec),
+      sttpu = calc_surv(.data$pfs.durn, ttp.type, ttp.spec),
+      hppdu = calc_haz(.data$pfs.durn, ppd.type, ppd.spec),
+      sppdu = calc_surv(.data$pfs.durn, ppd.type, ppd.spec),
+      sppsu = calc_surv(.data$pfs.durn, pps.type, pps.spec),
+      sppst = calc_surv(.data$os.durn, pps.type, pps.spec),
+      hppst = calc_haz(.data$os.durn, pps.type, pps.spec),
       # Four possible outcomes
-      f1 = (1-ttp.flag)*(1-os.flag),
-      f2 = (1-ttp.flag)*os.flag,
-      f3 = ttp.flag*(1-os.flag),
-      f4 = ttp.flag*os.flag,
+      f1 = (1-.data$ttp.flag) * (1-.data$os.flag),
+      f2 = (1-.data$ttp.flag) * .data$os.flag,
+      f3 = .data$ttp.flag * (1-.data$os.flag),
+      f4 = .data$ttp.flag * .data$os.flag,
       # STM likelihoods for each outcome
       # Add up and apply log
       like = dplyr::case_when(
@@ -334,10 +355,10 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
         f4==1 ~ sttpu*sppdu*httpu*(sppst/sppsu)*hppst,
         .default = NA
       ),
-      llike = log(like),
-      outcome = f1*1 + f2*2 + f3*3 + f4*4,
-      chf = (f1+f2+f3+f4)==1,
-      valid = is.na(llike)==FALSE
+      llike = log(.data$like),
+      outcome = .data$f1*1 + .data$f2*2 + .data$f3*3 + .data$f4*4,
+      chf = (.data$f1+.data$f2+.data$f3+.data$f4)==1,
+      valid = is.na(.data$llike)==FALSE
     )
   # Pick out n and log like
   npts <- c(length(likedata$ptid),
@@ -358,10 +379,11 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_stm_cf()], [calc_likes_psm_simple()], [calc_likes_psm_complex()]
 #' @export
+#' @importFrom rlang .data
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
-#' Pick out best distribution according to min AIC
+#' # Pick out best distribution according to min AIC
 #' params <- list(
 #'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
 #'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
@@ -372,7 +394,11 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 #'   )
 #' calc_likes_stm_cr(bosonc, dpam=params)
 calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
-  # Pull out distributions and parameters
+  # Declare local variables
+  ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- ppd.npars <- NULL
+  pps.ts <- pps.type <- pps.spec <- pps.npars <- NULL
+  s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # Pull out distributions and parameters - PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
   ppd.type <- ppd.ts$type
@@ -394,25 +420,25 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
   likedata <- tidyr::as_tibble(ptdata) |>
     dplyr::mutate(
       # Adjust all durations for cutoff time
-      pfs.durn = pfs.durn - cuttime,
-      os.durn = os.durn - cuttime,
-      ttp.durn = ttp.durn - cuttime
+      pfs.durn = .data$pfs.durn - cuttime,
+      os.durn = .data$os.durn - cuttime,
+      ttp.durn = .data$ttp.durn - cuttime
     ) |>
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      httpu = calc_haz(pfs.durn, ttp.type, ttp.spec),
-      sttpu = calc_surv(pfs.durn, ttp.type, ttp.spec),
-      hppdu = calc_haz(pfs.durn, ppd.type, ppd.spec),
-      sppdu = calc_surv(pfs.durn, ppd.type, ppd.spec),
-      hppdt = calc_haz(os.durn, ppd.type, ppd.spec),
-      sppstu = calc_surv(os.durn-pfs.durn, pps.type, pps.spec),
-      hppstu = calc_haz(os.durn-pfs.durn, pps.type, pps.spec),
+      httpu = calc_haz(.data$pfs.durn, ttp.type, ttp.spec),
+      sttpu = calc_surv(.data$pfs.durn, ttp.type, ttp.spec),
+      hppdu = calc_haz(.data$pfs.durn, ppd.type, ppd.spec),
+      sppdu = calc_surv(.data$pfs.durn, ppd.type, ppd.spec),
+      hppdt = calc_haz(.data$os.durn, ppd.type, ppd.spec),
+      sppstu = calc_surv(.data$os.durn-pfs.durn, pps.type, pps.spec),
+      hppstu = calc_haz(.data$os.durn-.data$pfs.durn, pps.type, pps.spec),
       # Four possible outcomes
-      f1 = (1-ttp.flag)*(1-os.flag),   # No progression or death
-      f2 = (1-ttp.flag)*os.flag,       # Death before progression
-      f3 = ttp.flag*(1-os.flag),       # Progression, no death
-      f4 = ttp.flag*os.flag,           # Progression, then death
+      f1 = (1-.data$ttp.flag) * (1-.data$os.flag),   # No progression or death
+      f2 = (1-.data$ttp.flag) * .data$os.flag,       # Death before progression
+      f3 = .data$ttp.flag * (1-.data$os.flag),       # Progression, no death
+      f4 = .data$ttp.flag * .data$os.flag,           # Progression, then death
       # STM likelihoods for each outcome
       # Add up and apply log
       like = dplyr::case_when(
@@ -422,10 +448,10 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
         f4==1 ~ sttpu*sppdu*httpu*sppstu*hppstu,
         .default = NA
       ),
-      llike = log(like),
-      outcome = f1*1 + f2*2 + f3*3 + f4*4,
-      chf = (f1+f2+f3+f4)==1,
-      valid = is.na(llike)==FALSE
+      llike = log(.data$like),
+      outcome = .data$f1*1 + .data$f2*2 + .data$f3*3 + .data$f4*4,
+      chf = (.data$f1+.data$f2+.data$f3+.data$f4)==1,
+      valid = is.na(.data$llike)==FALSE
     )
   # Pick out n and log like
   npts <- c(length(likedata$ptid),
@@ -469,7 +495,7 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
-#' Pick out best distribution according to min AIC
+#' # Pick out best distribution according to min AIC
 #' params <- list(
 #'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
 #'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
@@ -480,6 +506,10 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #'   )
 #' calc_likes(bosonc, dpam=params)
 calc_likes <- function(ptdata, dpam, cuttime=0) {
+  # Declare local variables
+  methodnames <- list1 <- list2 <- list3 <- list4 <- NULL
+  lldata1 <- lldata2 <- lldata3 <- lldata4 <- NULL
+  llvdata <- lldata <- s1_long <- s1_wide <- s2_long <- s2_wide <- s3_long <- NULL
   methodnames <- c("psm_simple", "psm_complex", "stm_cf", "stm_cr")
   # Call PSM and STM functions
   list1 <- calc_likes_psm_simple(ptdata, dpam, cuttime)
@@ -553,13 +583,13 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
       .default = 0
     ),
     # Calculate AIC, BIC
-    aic = ifelse(validall, 2*nparam-2*ll, NA),
-    bic = ifelse(validall, nparam*log(npts)-2*ll, NA),
+    aic = ifelse(.data$validall, 2*.data$nparam - 2*.data$ll, NA),
+    bic = ifelse(.data$validall, .data$nparam * log(.data$npts) - 2 * .data$ll, NA),
     # Calculate ranks, among pts where likelihood can be calculated
-    rank_aic = rank(aic),
-    rank_bic = rank(bic),
-    rank_aic = ifelse(validall, rank_aic, NA),
-    rank_bic = ifelse(validall, rank_bic, NA)
+    rank_aic = rank(.data$aic),
+    rank_bic = rank(.data$bic),
+    rank_aic = ifelse(.data$validall, .data$rank_aic, NA),
+    rank_bic = ifelse(.data$validall, .data$rank_bic, NA)
     ) |>
     dplyr::arrange(validall, methno)
   # Return results
