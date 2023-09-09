@@ -55,6 +55,8 @@
 #' )
 #' prob_pf_psm(0:100, params)
 prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
+  # Declare local variables
+  pfs.ts <- pfs.type <- pfs.spec <- survprob <- NULL
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
   pfs.type <- pfs.ts$type
@@ -85,6 +87,9 @@ prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' )
 #' prob_pf_stm(0:100, params)
 prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
+  # Declare local variables
+  ppd.ts <- ppd.type <- ppd.spec <- s1 <- NULL
+  ttp.ts <- ttp.type <- ttp.spec <- s2 <- NULL
   # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
   ppd.type <- ppd.ts$type
@@ -120,6 +125,8 @@ prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' )
 #' prob_os_psm(0:100, params)
 prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
+  # Declare local variables
+  os.ts <- os.type <- os.spec <- survprob <- NULL
   # Pull out type and spec for OS
   os.ts <- convert_fit2spec(dpam$os)
   os.type <- os.ts$type
@@ -149,6 +156,9 @@ prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
 #' )
 #' prob_pps_cr(0:100, params)
 prob_pps_cr <- function(time, dpam) {
+  # Declare local variables
+  pps.ts <- pps.type <- pps.spec <- NULL
+  # Calculations
   pps.ts <- convert_fit2spec(dpam$pps_cr)
   pps.type <- pps.ts$type
   pps.spec <- pps.ts$spec
@@ -176,6 +186,9 @@ prob_pps_cr <- function(time, dpam) {
 #' )
 #' prob_pps_cf(0:100, 0:100, params)
 prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
+  # Declare local variables
+  pps.ts <- pps.type <- pps.spec <- NULL
+  s1 <- rel <- s2 <- meanrel <- durn <- NULL
   # Pull out type and spec for PPS_CF
   pps.ts <- convert_fit2spec(dpam$pps_cf)
   pps.type <- pps.ts$type
@@ -218,6 +231,9 @@ prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
 #' )
 #' prob_pd_psm(0:100, params)
 prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
+  # Declare local variables
+  os <- pf <- NULL
+  # Calculations
   os <- time |> purrr::map_dbl(~prob_os_psm(.x, dpam, starting))
   pf <- time |> purrr::map_dbl(~prob_pf_psm(.x, dpam, starting))
   os-pf
@@ -244,6 +260,11 @@ prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' )
 #' prob_pd_stm_cr(0:100, params)
 prob_pd_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
+  # Declare local variables
+  ttp.ts <- ttp.type <- ttp.spec <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- NULL
+  pps.ts <- pps.type <- pps.spec <- NULL
+  int_pf <- int_pd <- NULL
   # Avoid integration if time==0
   if (time==0) {return(starting[2])}
   # Pull out type and spec for TTP
@@ -296,6 +317,11 @@ prob_pd_stm_cr <- Vectorize(prob_pd_stm_cr, "time")
 #' )
 #' prob_pd_stm_cf(0:100, params)
 prob_pd_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
+  # Declare local variables
+  ttp.ts <- ttp.type <- ttp.spec <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- NULL
+  pps.ts <- pps.type <- pps.spec <- NULL
+  sppst <- int_pf <- int_pd <- NULL
   # Avoid integration if time==0
   if (time==0) {return(starting[2])}
   # Pull out type and spec for TTP
@@ -349,6 +375,9 @@ prob_pd_stm_cf <- Vectorize(prob_pd_stm_cf, "time")
 #' )
 #' prob_os_stm_cr(0:100, params)
 prob_os_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
+  # Declare local variables
+  pf <- pd <- NULL
+  # Calculations
   pf <- time |> map_dbl(~prob_pf_stm(.x, dpam, starting))
   pd <- time |> map_dbl(~prob_pd_stm_cr(.x, dpam, starting))
   pf+pd
@@ -375,6 +404,9 @@ prob_os_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
 #' )
 #' prob_os_stm_cf(0:100, params)
 prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
+  # Declare local variables
+  pf <- pd <- NULL
+  # Calculations
   pf <- time |> purrr::map_dbl(~prob_pf_stm(.x, dpam, starting))
   pd <- time |> purrr::map_dbl(~prob_pd_stm_cf(.x, dpam, starting))
   pf+pd
@@ -387,6 +419,7 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' @param cuttime is the cut-off time for a two-piece model (default 0, indicating a one-piece model)
 #' @param tpoints indicates how many timepoints should be included in the graphics (default 100)
 #' @return Four datasets and graphics as a list
+#' @importFrom rlang .data
 #' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
@@ -405,6 +438,11 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' ptdgraphs$graph$pf
 graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   cat("Creating KM \n")
+  # Declare local variables
+  ds <- pfsfit <- osfit <- ppsfit <- NULL
+  rnding <- timevar <- kmpfs <- kmos <- kmpps <- timeos <- gdata <- NULL
+  pfdata <- osdata <- ppsdata <- cut_pf <- cut_os <- starting <- NULL
+  # Calculations
   ds <- create_extrafields(ptdata, cuttime)
   # Fit K-M before cutpoint
   pfsfit <- survival::survfit(
@@ -437,27 +475,27 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
     dplyr::left_join(pfdata, by="time") |>
     dplyr::left_join(ppsdata, by="time") |>
     dplyr::mutate(
-      km_os = dplyr::if_else(is.na(pfs), NA, os),
-      km_pf = dplyr::if_else(is.na(pfs), NA, pfs),
-      km_pd = km_os-km_pf
+      km_os = dplyr::if_else(is.na(.data$pfs), NA, .data$os),
+      km_pf = dplyr::if_else(is.na(.data$pfs), NA, .data$pfs),
+      km_pd = .data$km_os-.data$km_pf
     ) |>
     dplyr::select(-pfs, -os)
   # Parametric fits, censored function
   cat("Calculating fitted curves \n")
   gdata <- gdata |>
     dplyr::mutate(
-      timeplus = pmax(0, time-cuttime),
-      psm_pf = prob_pf_psm(timeplus, dpam, starting),
-      psm_os = prob_os_psm(timeplus, dpam, starting),
-      psm_pd = psm_os-psm_pf,
-      stm_cf_pf = prob_pf_stm(timeplus, dpam, starting),
+      timeplus = pmax(0, .data$time-cuttime),
+      psm_pf = prob_pf_psm(.data$timeplus, dpam, starting),
+      psm_os = prob_os_psm(.data$timeplus, dpam, starting),
+      psm_pd = .data$psm_os-.data$psm_pf,
+      stm_cf_pf = prob_pf_stm(.data$timeplus, dpam, starting),
       stm_cr_pf = stm_cf_pf,
-      stm_cf_pd = prob_pd_stm_cf(timeplus, dpam, starting),
-      stm_cr_pd = prob_pd_stm_cr(timeplus, dpam, starting),
-      stm_cf_os = stm_cf_pf + stm_cf_pd,
-      stm_cr_os = stm_cr_pf + stm_cr_pd,
-      stm_cr_pps = prob_pps_cr(time, dpam),
-      stm_cf_pps = prob_pps_cf(ttptimes=ds$ttp.durn, ppstimes=time, dpam=dpam)
+      stm_cf_pd = prob_pd_stm_cf(.data$timeplus, dpam, starting),
+      stm_cr_pd = prob_pd_stm_cr(.data$timeplus, dpam, starting),
+      stm_cf_os = .data$stm_cf_pf + .data$stm_cf_pd,
+      stm_cr_os = .data$stm_cr_pf + .data$stm_cr_pd,
+      stm_cr_pps = prob_pps_cr(.data$time, dpam),
+      stm_cf_pps = prob_pps_cf(ttptimes=ds$ttp.durn, ppstimes=.data$time, dpam=dpam)
     ) |>
     dplyr::rename(Time=time)
   # Dataset for PF outcome
@@ -465,9 +503,9 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   pfdata <- gdata |>
     dplyr::rename(km = km_pf) |>
     dplyr::mutate(
-      psm = ifelse(Time < cuttime, NA, psm_pf),
-      stm_cr = ifelse(Time < cuttime, NA, stm_cr_pf),
-      stm_cf = ifelse(Time < cuttime, NA, stm_cf_pf)
+      psm = ifelse(.data$Time < cuttime, NA, .data$psm_pf),
+      stm_cr = ifelse(.data$Time < cuttime, NA, .data$stm_cr_pf),
+      stm_cf = ifelse(.data$Time < cuttime, NA, .data$stm_cf_pf)
     ) |>
     tidyr::pivot_longer(cols=c(km, psm, stm_cr, stm_cf),
                  names_to="Method", values_to="Probability")
@@ -475,9 +513,9 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   pddata <- gdata |>
     dplyr::rename(km = km_pd) |>
     dplyr::mutate(
-      psm = ifelse(Time < cuttime, NA, psm_pd),
-      stm_cr = ifelse(Time < cuttime, NA, stm_cr_pd),
-      stm_cf = ifelse(Time < cuttime, NA, stm_cf_pd)
+      psm = ifelse(.data$Time < cuttime, NA, .data$psm_pd),
+      stm_cr = ifelse(.data$Time < cuttime, NA, .data$stm_cr_pd),
+      stm_cf = ifelse(.data$Time < cuttime, NA, .data$stm_cf_pd)
     ) |>
     tidyr::pivot_longer(cols=c(km, psm, stm_cr, stm_cf),
                  names_to="Method", values_to="Probability")
@@ -485,9 +523,9 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   osdata <- gdata |>
     dplyr::rename(km = km_os) |>
     dplyr::mutate(
-      psm = ifelse(Time < cuttime, NA, psm_os),
-      stm_cr = ifelse(Time < cuttime, NA, stm_cr_os),
-      stm_cf = ifelse(Time < cuttime, NA, stm_cf_os)
+      psm = ifelse(.data$Time < cuttime, NA, .data$psm_os),
+      stm_cr = ifelse(.data$Time < cuttime, NA, .data$stm_cr_os),
+      stm_cf = ifelse(.data$Time < cuttime, NA, .data$stm_cf_os)
     ) |>
     tidyr::pivot_longer(cols=c(km, psm, stm_cr, stm_cf),
                  names_to="Method", values_to="Probability")
@@ -507,8 +545,8 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   # Dataset for PSM graphic
   psmdata <- gdata |>
     dplyr::mutate(
-      pf = ifelse(Time < cuttime, NA, psm_pf),
-      os = ifelse(Time < cuttime, NA, psm_os)
+      pf = ifelse(.data$Time < cuttime, NA, .data$psm_pf),
+      os = ifelse(.data$Time < cuttime, NA, .data$psm_os)
     ) |>
     dplyr::select(Time, pf, os) |>
     tidyr::pivot_longer(cols=c(pf, os),
