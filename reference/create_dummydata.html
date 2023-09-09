@@ -75,7 +75,7 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">create_dummydata</span><span class="op">(</span><span class="st">"survcan"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(survival::cancer, ptid = row_number(), os.durn = time/7,     os.flag = status - 1):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `ptid = row_number()`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(survival::cancer, ptid = row_number(), os.durn = .data$time/7,     os.flag = .data$status - 1):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `ptid = row_number()`.</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `row_number()`:</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "row_number"</span>
 <span class="r-in"><span><span class="fu">create_dummydata</span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
