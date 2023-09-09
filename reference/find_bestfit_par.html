@@ -79,7 +79,67 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Pick some distributions to fit to all endpoints</span></span></span>
+<span class="r-in"><span><span class="va">dists</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exp"</span>, <span class="st">"llogis"</span>, <span class="st">"lnorm"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Fit all distributions to all endpoints</span></span></span>
+<span class="r-in"><span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_par.html">fit_ends_mods_par</a></span><span class="op">(</span><span class="va">bosonc</span>,</span></span>
+<span class="r-in"><span>    cuttime <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>    ppd.dist <span class="op">=</span> <span class="va">dists</span>,</span></span>
+<span class="r-in"><span>    ttp.dist <span class="op">=</span> <span class="va">dists</span>,</span></span>
+<span class="r-in"><span>    pfs.dist <span class="op">=</span> <span class="va">dists</span>,</span></span>
+<span class="r-in"><span>    os.dist <span class="op">=</span> <span class="va">dists</span>,</span></span>
+<span class="r-in"><span>    pps_cr.dist <span class="op">=</span> <span class="va">dists</span>,</span></span>
+<span class="r-in"><span>    pps_cf.dist <span class="op">=</span> <span class="va">dists</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">find_bestfit_par</span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $fit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, dist = ..2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        est      L95%     U95%     se     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape   1.0300   0.8726   1.2158   0.0872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> scale  15.4175  11.8479  20.0625   2.0716</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -422.068, df = 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 848.136</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      id dists   npts  pars loglik conv  posdef   aic   bic rankaic rankbic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1 exp      204     1  -<span style="color: #BB0000;">426.</span> TRUE  TRUE    853.  856.       3       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2 llogis   204     2  -<span style="color: #BB0000;">422.</span> TRUE  TRUE    848.  855.       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 lnorm    204     2  -<span style="color: #BB0000;">424.</span> TRUE  TRUE    851.  858.       2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu">find_bestfit_par</span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">os</span>, <span class="st">"bic"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $fit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, dist = ..2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        est     L95%    U95%    se    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape   1.814   1.541   2.136   0.151</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> scale  23.832  20.361  27.895   1.914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -436.9493, df = 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 877.8987</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      id dists   npts  pars loglik conv  posdef   aic   bic rankaic rankbic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1 exp      204     1  -<span style="color: #BB0000;">444.</span> TRUE  TRUE    890.  894.       3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2 llogis   204     2  -<span style="color: #BB0000;">437.</span> TRUE  TRUE    878.  885.       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 lnorm    204     2  -<span style="color: #BB0000;">439.</span> TRUE  TRUE    883.  889.       2       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
