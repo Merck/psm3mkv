@@ -55,6 +55,9 @@
 #' # Find mean(s)
 #' rmd_pf_stm(bosonc, dpam=params)
 rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+  # Declare local variables
+  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- NULL
   # Bound to aid integration in weeks
   Tw <- Ty*365.25/7
   # Normalize starting vector
@@ -109,6 +112,11 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' # Find mean(s)
 #' rmd_pd_stm_cr(bosonc, dpam=params)
 rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+  # Declare local variables
+  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- NULL
+  pps.ts <- pps.type <- pps.spec <- NULL
+  S <- int_pf <- int_pd <- soj <- NULL
   # Bound to aid integration in weeks
   Tw <- Ty*365.25/7
   # Normalize starting vector
@@ -175,6 +183,11 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' Find mean(s)
 #' rmd_pd_stm_cf(bosonc, dpam=params)
 rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+  # Declare local variables
+  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- NULL
+  pps.ts <- pps.type <- pps.spec <- NULL
+  S <- int_pf <- int_pd <- soj <- NULL
   # Bound to aid integration in weeks
   Tw <- Ty*365.25/7
   # Normalize starting vector
@@ -243,6 +256,9 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' # Find mean(s)
 #' rmd_pf_psm(bosonc, dpam=params)
 rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+  # Declare local variables
+  Tw <- NULL
+  pfs.ts <- pfs.type <- pfs.spec <- NULL
   # Bound to aid integration in weeks
   Tw <- Ty*365.25/7
   # Normalize starting vector
@@ -286,6 +302,8 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #' # Find mean(s)
 #' rmd_os_psm(bosonc, dpam=params)
 rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+  # Declare local variables
+  Tw <- os.ts <- os.type <- os.spec <- NULL
   # Bound to aid integration in weeks
   Tw <- Ty*365.25/7
   # Normalize starting vector
@@ -345,6 +363,22 @@ calc_allrmds <- function(simdat,
                          dpam,
                          cuttime = 0,
                          Ty = 10) {
+  # Declare local variables
+  ds <- ts.ppd <- fit.ppd <- ts.ttp <- fit.ttp <- NULL
+  ts.pfs <- fit.pfs <- ts.os <- fit.os <- NULL
+  ts.pps_cf <- fit.pps_cf <- ts.pps_cr <- fit.pps_cr <- NULL
+  ds <- chvalid <- pf_km <- os_km <- NULL
+  pfdat <- pfarea <- pfsurv <- osdat <- osarea <- ossurv <- NULL
+  adjTy <- pf_psm_post <- os_psm_post <- pf_stm_post <- pd_stmcf_post <- pd_stmcr_post <- NULL
+  pf_psm <- os_psm <- pf_stm <- os_stm_cf <- os_stm_cr <- NULL
+  pd_psm <- pd_stm_cf <- pd_stm_cr <- NULL
+  vec_pf <- vec_pd <- vec_os <- vec_model <- res <- cutadj <- NULL
+  # Return vector for two-piece adjustment
+  cutadj <- list(pf_area=pfarea, pf_surv=pfsurv, os_area=osarea, os_surv=ossurv)
+  # Calculate rest through differences
+  pd_psm_post <- os_psm_post-pf_psm_post
+  os_stmcf_post <- pf_stm_post+pd_stmcf_post
+  os_stmcr_post <- pf_stm_post+pd_stmcr_post
   # For a bootstrap sample, refit all distributions
   if (inclset[1]!=0) {
     simdat <- simdat[inclset,]
@@ -419,9 +453,9 @@ calc_allrmds <- function(simdat,
     pfdat <- tidyr::as_tibble(cbind(time=pf_km$time, surv=pf_km$surv)) |>
       dplyr::mutate(
         row = dplyr::row_number(),
-        itime = if_else(row==1, time, time-lag(time)),
-        incl = if_else(time<cuttime, 1, 0),
-        area = incl*surv*itime
+        itime = if_else(.data$row==1, .data$time, time-lag(.data$time)),
+        incl = if_else(.data$time<cuttime, 1, 0),
+        area = .data$incl*.data$surv*.data$itime
       )
     pfarea <- sum(pfdat$area)
     pfsurv <- min(pfdat[pfdat$incl==1,]$surv)
@@ -429,9 +463,9 @@ calc_allrmds <- function(simdat,
     osdat <- tidyr::as_tibble(cbind(time=os_km$time, surv=os_km$surv)) |>
       mutate(
         row = row_number(),
-        itime = if_else(row==1, time, time-lag(time)),
-        incl = if_else(time<cuttime, 1, 0),
-        area = incl*surv*itime
+        itime = if_else(.data$row==1, .data$time, .data$time-lag(.data$time)),
+        incl = if_else(.data$time<cuttime, 1, 0),
+        area = .data$incl*.data$surv*.data$itime
       )
     osarea <- sum(osdat$area)
     ossurv <- min(osdat[osdat$incl==1,]$surv)
@@ -450,9 +484,9 @@ calc_allrmds <- function(simdat,
     pd_stmcf_post <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting)
     pd_stmcr_post <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting)
     # Calculate rest through differences
-    pd_psm_post <- os_psm_post-pf_psm_post
-    os_stmcf_post <- pf_stm_post+pd_stmcf_post
-    os_stmcr_post <- pf_stm_post+pd_stmcr_post
+    pd_psm_post <- os_psm_post - pf_psm_post
+    os_stmcf_post <- pf_stm_post + pd_stmcf_post
+    os_stmcr_post <- pf_stm_post + pd_stmcr_post
   }
   # Calculating overall means
   pf_psm <- pfarea + pf_psm_post
