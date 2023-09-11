@@ -412,15 +412,17 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
   pf+pd
 }
 
+
 #' Graph the observed and fitted state membership probabilities
 #' @description Graph the observed and fitted state membership probabilities for PF, PD, OS and PPS.
 #' @param ptdata is the patient-level dataset of TTP, PFS and OS.
-#' @param dpam is the listList of survival regressions for model endpoints. All endpoints are required.
+#' @param dpam is the list of survival regressions for model endpoints. All endpoints are required.
 #' @param cuttime is the cut-off time for a two-piece model (default 0, indicating a one-piece model)
 #' @param tpoints indicates how many timepoints should be included in the graphics (default 100)
 #' @return Four datasets and graphics as a list
 #' @importFrom rlang .data
 #' @export
+#'
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -433,10 +435,240 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
+#' # Create graphics
 #' ptdgraphs <- graph_survs(bosonc, params)
 #' ptdgraphs$data$pps[1:10,]
 #' ptdgraphs$graph$pf
-graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
+graph_survorhaz <- function(ptdata, dpam, metric="survival", cuttime=0, tpoints=100){
+  # Call separate functions according to whether one piece or two piece modeling
+  if (cuttime==0) {
+   # Call data and graphics for each endpoint
+   pfres <- graph_survorhaz_1p_pf(ptdata, dpam, metric) # Written
+   pdres <- graph_survorhaz_1p_pd(ptdata, dpam, metric) # Partly written
+   osres <- graph_survorhaz_1p_os(ptdata, dpam, metric) # Not written
+   psmres <- graph_survorhaz_1p_psm(ptdata, dpam, metric) # Not written
+   ppsres <- graph_survorhaz_1p_pps(ptdata, dpam, metric) # Not written
+   # Group together data by endpoint
+   retdata <- list(
+     pf=pfres$data,
+     pd=pdres$data,
+     os=osres$data,
+     psm=psmres$data,
+     pps=ppsres$data
+   )
+   # Group together graphics by endpoint
+   retgraph <- list(
+     pf=pfres$graph,
+     pd=pdres$graph,
+     os=osres$graph,
+     psm=psmres$graph,
+     pps=ppsres$graph
+   )
+   # Summarise in list to return
+   list(data=retdata, graph=retgraph)
+   }
+  else {
+    if(substr(tolower(metric), 1, 3)!="sur") {stop("Error. Only survival graphics are available for two-piece modeling")}
+    graph_survs_2p(ptdata, dpam, cuttime, tpoints)
+    }
+}
+
+# Survival or hazard graphic and dataset for PF curve
+graph_survorhaz_1p_pf <- function(ptdata, dpam, metric="survival") {
+  # metric: survival or hazard
+  # Fit KM
+  kmfit <- survival::survfit(
+    survival::Surv(pfs.durn, pfs.flag) ~ 1,
+    data=ptdata)
+  # Create tibble of KM and fitted results
+  data_full <- dplyr::tibble(time=kmfit$time, s_km=kmfit$surv) |>
+    dplyr::add_row(time=0, s_km=1) |>
+    dplyr::arrange(time) |>
+    # Calculate survival values fitted for each model
+    mutate(
+      s_psm = prob_pf_psm(.data$time, dpam),
+      s_stm_cf = prob_pf_stm(.data$time, dpam),
+      s_stm_cr = .data$s_stm_cf
+    ) |>
+    # Calculate hazard
+    mutate(
+      dtime = time-lag(time),
+      gtime = time-dtime/2,
+      h_obs = (log(lag(s_km))-log(s_km))/dtime,
+      h_psm = (log(lag(s_psm))-log(s_psm))/dtime,
+      h_stm_cf= (log(lag(s_stm_cf))-log(s_stm_cf))/dtime,
+      h_stm_cr = .data$h_stm_cf
+    )
+  # Pull out hazard or survival, depending on metric (S=TRUE, h=FALSE)
+  metcode <- if_else(substr(tolower(metric), 1, 3)!="sur", FALSE, TRUE)
+  ylabel <- if_else(metcode, "Probability", "Hazard")
+  xlabel <- "Time from baseline"
+  # Create smaller dataset for graphic
+  data_mini <- data_full |>
+    dplyr::mutate(
+      km = (1-metcode)*h_obs + metcode*s_km,
+      psm = (1-metcode)*h_psm + metcode*s_psm,
+      stm_cf = (1-metcode)*h_stm_cf + metcode*s_stm_cf,
+      stm_cr = (1-metcode)*h_stm_cr + metcode*s_stm_cr,
+    ) |>
+    dplyr::select(gtime, km, psm, stm_cf, stm_cr) |>
+    tidyr::pivot_longer(cols=c(km, psm, stm_cf, stm_cr),
+                        names_to="Method", values_to="vals")
+  # Create graphic
+  gplot <- ggplot2::ggplot(data_mini, ggplot2::aes(gtime, vals)) +
+    ggplot2::geom_line(ggplot2::aes(color = Method)) +
+    ggplot2::ylab(ylabel) +
+    ggplot2::xlab(xlabel)
+  # Apply log scale if endpoint is hazard
+  if(!metcode) {gplot <- gplot + ggplot2::scale_y_log10()}
+  # Return
+  return(list(data=data_full, graph=gplot))
+}
+
+# Survival or hazard graphic and dataset for OS curve
+graph_survorhaz_1p_os <- function(ptdata, dpam, metric="survival") {
+  # metric: survival or hazard
+  # Fit KM
+  kmfit <- survival::survfit(
+    survival::Surv(os.durn, os.flag) ~ 1,
+    data=ptdata)
+  # Create tibble of KM and fitted results
+  data_full <- dplyr::tibble(time=kmfit$time, s_km=kmfit$surv) |>
+    dplyr::add_row(time=0, s_km=1) |>
+    dplyr::arrange(time) |>
+    # Calculate survival values fitted for each model
+    mutate(
+      s_psm = prob_os_psm(.data$time, dpam),
+      s_stm_cf = prob_os_stm_cf(.data$time, dpam),
+      s_stm_cr = prob_os_stm_cr(.data$time, dpam)
+    ) |>
+    # Calculate hazard
+    mutate(
+      dtime = time-lag(time),
+      gtime = time-dtime/2,
+      h_obs = (log(lag(s_km))-log(s_km))/dtime,
+      h_psm = (log(lag(s_psm))-log(s_psm))/dtime,
+      h_stm_cf= (log(lag(s_stm_cf))-log(s_stm_cf))/dtime,
+      h_stm_cr = (log(lag(s_stm_cr))-log(s_stm_cr))/dtime
+    )
+  # Pull out hazard or survival, depending on metric (S=0, h=1)
+  metcode <- if_else(substr(tolower(metric), 1, 3)!="sur", FALSE, TRUE)
+  ylabel <- if_else(metcode, "Probability", "Hazard")
+  xlabel <- "Time from baseline"
+  # Create smaller dataset for graphic
+  data_mini <- data_full |>
+    dplyr::mutate(
+      km = (1-metcode)*h_obs + metcode*s_km,
+      psm = (1-metcode)*h_psm + metcode*s_psm,
+      stm_cf = (1-metcode)*h_stm_cf + metcode*s_stm_cf,
+      stm_cr = (1-metcode)*h_stm_cr + metcode*s_stm_cr,
+    ) |>
+    dplyr::select(gtime, km, psm, stm_cf, stm_cr) |>
+    tidyr::pivot_longer(cols=c(km, psm, stm_cf, stm_cr),
+                        names_to="Method", values_to="vals")
+  # Create graphic
+  gplot <- ggplot2::ggplot(data_mini, ggplot2::aes(gtime, vals)) +
+    ggplot2::geom_line(ggplot2::aes(color = Method)) +
+    ggplot2::ylab(ylabel) +
+    ggplot2::xlab(xlabel)
+  # Apply log scale if endpoint is hazard
+  if(!metcode) {gplot <- gplot + ggplot2::scale_y_log10()}
+  # Return
+  return(list(data=data_full, graph=gplot))
+}
+
+
+
+# Survival or hazard graphic and dataset for PD curve
+graph_survorhaz_1p_pd <- function(ptdata, dpam, metric="survival") {
+  # metric: survival or hazard
+  # Fit KMs
+  pfskmfit <- survival::survfit(
+    survival::Surv(pfs.durn, pfs.flag) ~ 1,
+    data=ptdata
+    )
+  pfs.tib <- dplyr::tibble(
+    time=summary(pfskmfit)$time,
+    km_pfs=summary(pfskmfit)$surv
+    )
+  oskmfit <- survival::survfit(
+    survival::Surv(os.durn, os.flag) ~ 1,
+    data=ptdata)
+  os.tib <- dplyr::tibble(
+    time=summary(oskmfit)$time,
+    km_os=summary(oskmfit)$surv
+  )
+  # Create tibble of KM and fitted results
+  
+  
+  data_full <- dplyr::tibble(
+    time = sort(c(pfskmfit$time, oskmfit$time))) |>
+    left_join(pfs.tib, km_pfs, by=time)
+    
+    mutate(
+      km_pfs = summary(pfskmfit, times=.data$time)$surv,
+      km_os = summary(oskmfit, times=.data$time)$surv
+    )
+  
+  
+      left_join(pfskmfit, surv, by=time)
+  
+  timevar <- sort(c(0, pfskmfit$time, oskmfit$time))
+  
+  data_full <- dplyr::tibble(time=kmfit$time, s_km=kmfit$surv) |>
+    dplyr::add_row(time=0, s_km=1) |>
+    dplyr::arrange(time) |>
+    # Calculate survival values fitted for each model
+    mutate(
+      s_psm = prob_os_psm(.data$time, dpam),
+      s_stm_cf = prob_os_stm_cf(.data$time, dpam),
+      s_stm_cr = prob_os_stm_cr(.data$time, dpam)
+    ) |>
+    # Calculate hazard
+    mutate(
+      dtime = time-lag(time),
+      gtime = time-dtime/2,
+      h_obs = (log(lag(s_km))-log(s_km))/dtime,
+      h_psm = (log(lag(s_psm))-log(s_psm))/dtime,
+      h_stm_cf= (log(lag(s_stm_cf))-log(s_stm_cf))/dtime,
+      h_stm_cr = (log(lag(s_stm_cr))-log(s_stm_cr))/dtime
+    )
+  # Pull out hazard or survival, depending on metric (S=0, h=1)
+  metcode <- if_else(substr(tolower(metric), 1, 3)!="sur", FALSE, TRUE)
+  ylabel <- if_else(metcode, "Probability", "Hazard")
+  xlabel <- "Time from baseline"
+  # Create smaller dataset for graphic
+  data_mini <- data_full |>
+    dplyr::mutate(
+      km = (1-metcode)*h_obs + metcode*s_km,
+      psm = (1-metcode)*h_psm + metcode*s_psm,
+      stm_cf = (1-metcode)*h_stm_cf + metcode*s_stm_cf,
+      stm_cr = (1-metcode)*h_stm_cr + metcode*s_stm_cr,
+    ) |>
+    dplyr::select(gtime, km, psm, stm_cf, stm_cr) |>
+    tidyr::pivot_longer(cols=c(km, psm, stm_cf, stm_cr),
+                        names_to="Method", values_to="vals")
+  # Create graphic
+  gplot <- ggplot2::ggplot(data_mini, ggplot2::aes(gtime, vals)) +
+    ggplot2::geom_line(ggplot2::aes(color = Method)) +
+    ggplot2::ylab(ylabel) +
+    ggplot2::xlab(xlabel)
+  # Apply log scale if endpoint is hazard
+  if(!metcode) {gplot <- gplot + ggplot2::scale_y_log10()}
+  # Return
+  return(list(data=data_full, graph=gplot))
+}
+
+
+#' Graph the observed and fitted state membership probabilities
+#' @description Graph the observed and fitted state membership probabilities for PF, PD, OS and PPS.
+#' @param ptdata is the patient-level dataset of TTP, PFS and OS.
+#' @param dpam is the list of survival regressions for model endpoints. All endpoints are required.
+#' @param cuttime is the cut-off time for a two-piece model (default 0, indicating a one-piece model)
+#' @param tpoints indicates how many timepoints should be included in the graphics (default 100)
+#' @return Four datasets and graphics as a list
+#' @importFrom rlang .data
+graph_survs_2p <- function(ptdata, dpam, cuttime=0, tpoints=100){
   cat("Creating KM \n")
   # Declare local variables
   ds <- pfsfit <- osfit <- ppsfit <- NULL
@@ -551,29 +783,28 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
     dplyr::select(Time, pf, os) |>
     tidyr::pivot_longer(cols=c(pf, os),
                         names_to="Endpoint", values_to="Probability")
-  # Draw graphic
+  # Summarise datasets to a list
+  datalist <- list(
+    pf=pfdata,
+    pd=pddata,
+    os=osdata,
+    pps=ppsdata
+  )
+  # Internal function to draw graphic
   cat("Drawing plots \n")
-  # Removed from geom_line: + labs(subtitle="[title]")
-  graphic_pf <- ggplot2::ggplot(pfdata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Method))
-  graphic_pd <- ggplot2::ggplot(pddata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Method))
-  graphic_os <- ggplot2::ggplot(osdata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Method))
-  graphic_psm <- ggplot2::ggplot(psmdata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Endpoint))
-  graphic_pps <- ggplot2::ggplot(ppsdata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Method)) +
-    ggplot2::xlab("Time from progression")
-  return(list(
-    data=list(pf=pfdata,
-              pd=pddata,
-              os=osdata,
-              pps=ppsdata),
-    graph=list(pf=graphic_pf,
-               pd=graphic_pd,
-               os=graphic_os,
-               psm=graphic_psm,
-               pps=graphic_pps)))
+  draw_2pgraphic <- function(ds, xlabel="Time from baseline") {
+    ggplot2::ggplot(ds, ggplot2::aes(Time, Probability)) +
+      ggplot2::geom_line(ggplot2::aes(color = Method)) +
+      ggplot2::xlab(xlabel)
+  }
+  # Draw graphics
+  graphlist <- list(
+    pf = draw_2pgraphic(pfdata),
+    pd = draw_2pgraphic(pddata),
+    os = draw_2pgraphic(osdata),
+    psm = draw_2pgraphic(psmdata),
+    pps = draw_2pgraphic(ppsdata, xlabel="Time from progression")
+  )
+  return(list(data=datalist, graph=graphlist))
 }
 
