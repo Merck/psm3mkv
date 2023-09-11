@@ -237,7 +237,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
       hppdu = calc_haz_psm(timevar=.data$pfs.durn,
                            ptdata=ptdata,
                            dpam=dpam,
-                           type="complex")$pre,
+                           type="complex")$adj$ppd,
       httpu = pmax(0, .data$hpfsu-.data$hppdu),
       sppstu = calc_surv_psmpps(totime=.data$os.durn,
                                 fromtime=.data$pfs.durn,
@@ -247,7 +247,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
       hppst = calc_haz_psm(timevar=.data$os.durn,
                            ptdata=ptdata,
                            dpam=dpam,
-                           type="complex")$post
+                           type="complex")$adj$pps
     )
   likedata$hppst[likedata$hppst==0] <- NA
   likedata <- likedata |>

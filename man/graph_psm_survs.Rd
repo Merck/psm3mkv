@@ -54,7 +54,11 @@ params <- list(
   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 )
-# Create graphics
-psms_simple <- graph_psm_survs(timerange=0:100, endpoint="OS", ptdata=bosonc, dpam=params, psmtype="simple")
+# Original OS graphic
+graph_orig <- graph_survs(ptdata=bosonc, dpam=params)
+graph_orig$graph$os
+# New graphic illustrating effect of constraints on OS model
+psms_simple <- graph_psm_survs(timerange=(0:600)/10, endpoint="OS", ptdata=bosonc, dpam=params, psmtype="simple")
 psms_simple$graph
+# Compare
 }

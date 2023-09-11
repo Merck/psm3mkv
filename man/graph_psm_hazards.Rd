@@ -55,6 +55,6 @@ params <- list(
   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 )
 # Create graphics
-psmh_simple <- graph_psm_hazards(timerange=0:100, endpoint="PPD", ptdata=bosonc, dpam=params, psmtype="simple")
+psmh_simple <- graph_psm_hazards(timerange=(0:600)/10, endpoint="OS", ptdata=bosonc, dpam=params, psmtype="simple")
 psmh_simple$graph
 }
