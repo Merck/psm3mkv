@@ -153,7 +153,7 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
   exp(-cumH)
 }
 
-# Pick out adjusted and unadjusted PSM hazards for given endpoint and time
+#' Pick out adjusted and unadjusted PSM hazards for given endpoint and time
 #' @param timerange Time-range (vector) over which hazards are calculated
 #' @param endpoint Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)
 #' @inheritParams calc_likes_psm_simple

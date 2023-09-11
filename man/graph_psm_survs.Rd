@@ -55,6 +55,6 @@ params <- list(
   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 )
 # Create graphics
-psms_simple <- graph_psm_survs(timerange=0:100, endpoint="", ptdata=bosonc, dpam=params, type="simple")
+psms_simple <- graph_psm_survs(timerange=0:100, endpoint="OS", ptdata=bosonc, dpam=params, psmtype="simple")
 psms_simple$graph
 }
