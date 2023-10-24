@@ -1,3 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^codecov\.yml$
+^_pkgdown\.yml$
+^pkgdown$
+^LICENSES_THIRD_PARTY\.md$
