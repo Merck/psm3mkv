@@ -247,10 +247,10 @@ ptdgraphs$graph$pps + scale_color_npg()
 
 ## References
 
-1. Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M, Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State Models. Available at: https://cran.r-project.org/web/packages/flexsurv/index.html.
+1. Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M, Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State Models. Available at: https://cran.r-project.org/package=flexsurv.
 
 2. Woods BS, Sideris E, Palmer S, Latimer N, Soares M. Partitioned Survival and State Transition Models for Healthcare Decision Making in Oncology: Where Are We Now? Value in Health 23(12):1613-21; 2020. DOI: 10.1016/j.jval.2020.08.2094
 
 3. Royston P and Parmar M. Flexible parametric proportional-hazards and proportional-odds models for censored survival data, with application to prognostic modelling and estimation of treatment effects. Statistics in Medicine 21(1):2175-2197; 2002. DOI: 10.1002/sim.1203
 
-4. Hanpu Z. Predictive Evaluation Metrics in Survival Analysis. Vignette to the *SurvMetrics* R package. July 2021. Available from: https://cran.r-project.org/web/packages/SurvMetrics/vignettes/SurvMetrics-vignette.html
+4. Hanpu Z. Predictive Evaluation Metrics in Survival Analysis. Vignette to the *SurvMetrics* R package. July 2021. Available from: https://cran.r-project.org/package=SurvMetrics/vignettes/SurvMetrics-vignette.html
