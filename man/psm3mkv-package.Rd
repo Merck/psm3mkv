@@ -4,7 +4,7 @@
 \name{psm3mkv-package}
 \alias{psm3mkv}
 \alias{psm3mkv-package}
-\title{psm3mkv: Fit and Evaluate Three-State Partitioned Survival Analysis and Markov Models to Progression-Free and Overall Survival data}
+\title{psm3mkv: Fit and Evaluate Three-State Partitioned Survival Analysis and Markov Models to Progression-Free and Overall Survival Data}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
@@ -13,12 +13,14 @@ Fits and evaluates three-state partitioned survival analyses (PartSAs) and marko
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://merck.github.io/psm3mkv/}
   \item \url{https://github.com/Merck/psm3mkv}
+  \item Report bugs at \url{https://github.com/Merck/psm3mkv/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Dominic Muston \email{dominic.muston@merck.com} (\href{https://orcid.org/0000000348767940}{ORCID})
+\strong{Maintainer}: Dominic Muston \email{dominic.muston@merck.com} (\href{https://orcid.org/0000-0003-4876-7940}{ORCID})
 
 Other contributors:
 \itemize{
