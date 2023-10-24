@@ -32,11 +32,11 @@ Given this, the package enables:
 - Fitting a range of models to endpoints relevant each model type:
 
   - One piece parametric (distributions according to
-    [flexsurv](https://cran.r-project.org/web/packages/flexsurv/index.html)).
+    [flexsurv](https://cran.r-project.org/package=flexsurv)).
 
   - Royston-Parmar splines (1-3 internal knots, hazard/odds/normal
     scales, again as per
-    [flexsurv](https://cran.r-project.org/web/packages/flexsurv/index.html))\[3\].
+    [flexsurv](https://cran.r-project.org/package=flexsurv))\[3\].
 
   - Two piece parametric (given a time cutoff).
 
@@ -118,8 +118,7 @@ different licenses.
 
 1.  Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M,
     Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State
-    Models. Available at:
-    <https://cran.r-project.org/web/packages/flexsurv/index.html>.
+    Models. Available at: <https://cran.r-project.org/package=flexsurv>.
 
 2.  Woods BS, Sideris E, Palmer S, Latimer N, Soares M. Partitioned
     Survival and State Transition Models for Healthcare Decision Making
