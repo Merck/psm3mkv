@@ -21,20 +21,6 @@
 # ltablesurv.R
 # ==================================================================
 
-# Mortality data - England & Wales, Female, 2019
-# table <- HMDHFDplus::readHMDweb(CNTRY="GBRTENW",
-#                                 item="fltper_1x1",
-#                                 username="dom.muston@gmail.com",
-#                                 password="***REMOVED***"
-#) |>
-#  dplyr::filter(Year==2019) |>
-#  dplyr::select(Age, lx) |>
-#  dplyr::mutate(Timew = ceiling((Age-50)*365.25/7)) |>
-#  dplyr::filter(Timew>=0)|>
-#  dplyr::select(-Age)
-# ltable <- tibble::tibble(Timew=mort$Timew, lx=mort$lx)
-# calc_ltsurv(0:10, ltable)
-
 #' VLOOKUP function
 #' @description Function to lookup values according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel.
 #' @param indexval The index value to be looked-up (may be a vector of multiple values)
@@ -94,14 +80,42 @@ vlookup <- function(indexval, indexvec, valvec) {
 #' @return Numeric survival probability
 #' @export
 #' @examples
-#' ltable <- tibble::tibble(time=0:10, lx=1-time*0.08)
+#' ltable <- tibble::tibble(time=0:10, lx=1-time*0.1)
 #' calc_ltsurv(c(2, 2.5, 11), ltable)
 calc_ltsurv <- function(time, lifetable){
   if (lifetable$time[1]!=0) stop("Lifetable must run from time zero")
   vlookup(time, lifetable$time, lifetable$lx)$geom / lifetable$lx[1]
 }
 
-# Restricted life expectancy up to time Ty (years) from a lifetable
-calc_ex <- function(Ty, lifetable, discrate) {
-  
+#' Calculate restricted life expectancy from a lifetable
+#' @param Ty Time duration over which to calculate (default is 10 years). Assumes input is in years, and patient-level data is recorded in weeks.
+#' @param lifetable The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
+#' @param discrate Discount rate (%) per year
+#' @return
+#' @export
+#' @examples
+#' # Create a lifetable. Must end with lx=0.
+#' ltable <- tibble::tibble(time=0:20, lx=1-time*0.05)
+#' calc_ex(lifetable=ltable, discrate=0.03)
+#' calc_ex(Ty=Inf, lifetable=ltable)
+calc_ex <- function(Ty=10, lifetable, discrate=0) {
+  # Lifetable must have minimum lx = 0
+  if (min(lifetable$lx)!=0) stop("Lifetable must end with a zero lx")
+  # Calculation
+  res1 <- lifetable |>
+    dplyr::mutate(
+      midtime = if_else(lx>0, (time + lead(time))/2, 0),
+      vn = (1+discrate)^(-midtime),
+      lxvn = lx*vn,
+      beyond = (time>Ty)*1,
+      blxvn = beyond*lxvn
+    )
+  res2 <- res1 |>
+    dplyr::summarize(
+      lx0 = max(lxvn),
+      Dx0 = sum(lxvn),
+      Dxt = sum(blxvn)
+    )
+  ex <- (res$Dx0-res$Dxt)/res$lx0
+  list(ex=ex, calcs=res1)
 }
