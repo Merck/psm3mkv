@@ -104,7 +104,7 @@ calc_ex <- function(Ty=10, lifetable, discrate=0) {
   # Calculation
   res1 <- lifetable |>
     dplyr::mutate(
-      midtime = if_else(lx>0, (time + lead(time))/2, 0),
+      midtime = dplyr::if_else(lx>0, (time + lead(time))/2, 0),
       vn = (1+discrate)^(-midtime),
       lxvn = lx*vn,
       beyond = (time>Ty)*1,

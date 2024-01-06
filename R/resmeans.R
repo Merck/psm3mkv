@@ -110,7 +110,7 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' rmd_pd_stm_cr(dpam=params)
 rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare error if starting[2]>0 and lifetable!=NA
-  if (is.na(lifetable)*starting[2]!=0) stop("Cannot apply lifetable constraint when PD state not initially empty")
+  if ((!is.na(lifetable))*starting[2]!=0) stop("Cannot apply lifetable constraint when PD state not initially empty")
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
@@ -125,7 +125,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   # Integrand from PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS(x2-x1)
   # subject to a maximum of the lifetable survival
   integrand_pf <- function(x) {
-    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
     sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
     http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
@@ -141,7 +141,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   # Integrand from PD = S_PPS(x2-x1)
   integrand_pd <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    spps <- calc_surv(x, pps.type, pps.spec)
+    spps <- calc_surv(x, pps.ts$type, pps.ts$spec)
     vn*spps
     }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
@@ -179,7 +179,7 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' rmd_pd_stm_cf(dpam=params)
 rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare error if starting[2]>0 and lifetable!=NA
-  if (is.na(lifetable)*starting[2]!=0) stop("Cannot apply life-table constraint when PD state not initially empty")
+  if ((!is.na(lifetable))*starting[2]!=0) stop("Cannot apply life-table constraint when PD state not initially empty")
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
@@ -194,9 +194,9 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   # Integrand PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_OS(x2)/S_OS(x1)
   # subject to lifetable maximum
   integrand_pf <- function(x) {
-    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
     sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
-    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$pec)
+    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
     http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
     sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
     sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
@@ -212,7 +212,7 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
   # Integrand PD = S_OS(x2)/S_OS(x1)
   integrand_pd <- function(x) {
-    calc_surv(x, pps.type, pps.spec)
+    calc_surv(x, pps.ts$type, pps.ts$spec)
   }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
   # Mean sojourn given starting vector
@@ -257,9 +257,9 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
   # Lifetable constraint
-  ltc <- if (is.na(lifetable)) calc_ex(Ty, lifetable, discrate) else NA
+  ltc <- if (!is.na(lifetable)) calc_ex(Ty, lifetable, discrate) else NA
   # Calculate discounted restricted mean duration
-  rmd <- vn * if (is.na(lifetable)) {
+  rmd <- if (is.na(lifetable)) {
     calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate)
   } else {
     pmin(ltc, calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate))
@@ -298,15 +298,15 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Declare local variables
   Tw <- os.ts  <- NULL
   # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
   # Pull out type and spec for OS
   os.ts <- convert_fit2spec(dpam$os)
   # Lifetable constraint
-  ltc <- if (is.na(lifetable)) calc_ex(Ty, lifetable, discrate) else NA
+  ltc <- if (!is.na(lifetable)) calc_ex(Ty, lifetable, discrate) else NA
   # Calculate discounted restricted mean duration
-  rmd <- vn * if (is.na(lifetable)) {
+  rmd <- if (is.na(lifetable)) {
     calc_rmd(Tw, os.ts$type, os.ts$spec, discrate)
   } else {
     pmin(ltc, calc_rmd(Tw, os.ts$type, os.ts$spec, discrate))
