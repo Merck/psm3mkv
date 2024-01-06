@@ -100,3 +100,8 @@ calc_ltsurv <- function(time, lifetable){
   if (lifetable$time[1]!=0) stop("Lifetable must run from time zero")
   vlookup(time, lifetable$time, lifetable$lx)$geom / lifetable$lx[1]
 }
+
+# Restricted life expectancy up to time Ty (years) from a lifetable
+calc_ex <- function(Ty, lifetable, discrate) {
+  
+}

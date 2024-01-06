@@ -58,7 +58,7 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- NULL
   # Time horizon in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
   # Pull out type and spec for TTP and PPD
@@ -67,13 +67,13 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # RMD PFS is the integral of S_PFS; S_PFS = S_TTP x S_PPD
   # subject to a maximum of the lifetable survival
   integrand <- function(x) {
-    vn <- (1+discrate)^(-x*7/365.25)
+    vn <- (1+discrate)^(-convert_wks2yrs(x))
     sttp <- calc_surv(x, ttp.ts$type, ttp.ts$spec)
     sppd <- calc_surv(x, ppd.ts$type, ppd.ts$spec)
     if (is.na(lifetable)) {
       vn*sttp*sppd
     } else {
-      pmin(vn*sttp*sppd, vn*calc_ltsurv(x, lifetable))
+      vn*pmin(sttp*sppd, vn*calc_ltsurv(x, lifetable))
     }
   }
   int <- stats::integrate(integrand, 0, Tw)
@@ -107,42 +107,42 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pd_stm_cr(dpam=params)
-rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
+  # Declare error if starting[2]>0 and lifetable!=NA
+  if (is.na(lifetable)*starting[2]!=0) stop("Cannot apply lifetable constraint when PD state not initially empty")
   # Declare local variables
-  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- NULL
-  pps.ts <- pps.type <- pps.spec <- NULL
+  Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
   # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP
+  # Pull out type and spec for TTP, PPD and PPS_CR
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
-  # Pull out type and spec for PPS_CR
   pps.ts <- convert_fit2spec(dpam$pps_cr)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
   # Integrand from PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS(x2-x1)
+  # subject to a maximum of the lifetable survival
   integrand_pf <- function(x) {
-    sttp <- calc_surv(x[1], ttp.type, ttp.spec)
-    sppd <- calc_surv(x[1], ppd.type, ppd.spec)
-    http <- calc_haz(x[1], ttp.type, ttp.spec)
-    spps <- calc_surv(x[2]-x[1], pps.type, pps.spec)
-    sttp*sppd*http*spps
+    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
+    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
+    http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
+    spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
+    if (is.na(lifetable)) {
+      vn*sttp*sppd*http*spps
+    } else {
+      vn*pmin(sttp*sppd*http*spps, calc_ltsurv(x[2], lifetable))
+    }
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
   # Integrand from PD = S_PPS(x2-x1)
   integrand_pd <- function(x) {
-    calc_surv(x, pps.type, pps.spec)
-  }
+    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    spps <- calc_surv(x, pps.type, pps.spec)
+    vn*spps
+    }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
   # Mean sojourn given starting vector
   soj <- starting[1] * int_pf$integral + starting[2] * int_pd$value
@@ -176,36 +176,36 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pd_stm_cf(dpam=params)
-rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
+  # Declare error if starting[2]>0 and lifetable!=NA
+  if (is.na(lifetable)*starting[2]!=0) stop("Cannot apply life-table constraint when PD state not initially empty")
   # Declare local variables
-  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- NULL
-  pps.ts <- pps.type <- pps.spec <- NULL
+  Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
   # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for PPD
+  # Pull out type and spec for TTP, PPD and PPS_CF
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
-  # Pull out type and spec for PPS_CF
   pps.ts <- convert_fit2spec(dpam$pps_cf)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
   # Integrand PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_OS(x2)/S_OS(x1)
+  # subject to lifetable maximum
   integrand_pf <- function(x) {
-    sttp <- calc_surv(x[1], ttp.type, ttp.spec)
-    sppd <- calc_surv(x[1], ppd.type, ppd.spec)
-    http <- calc_haz(x[1], ttp.type, ttp.spec)
-    sos1 <- calc_surv(x[1], pps.type, pps.spec)
-    sos2 <- calc_surv(x[2], pps.type, pps.spec)
-    ifelse(sos1==0, 0, sttp*sppd*http*sos2/sos1)
+    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
+    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$pec)
+    http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
+    sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
+    sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
+    if (sos1==0) 0 else {
+      if (is.na(lifetable)) {
+        vn * sttp*sppd*http*sos2/sos1
+      } else {
+        vn * pmin(sttp*sppd*http*sos2/sos1, calc_ltsurv(x[2], lifetable))
+      }
+    }
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
@@ -246,20 +246,25 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pf_psm(dpam=params)
-rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare local variables
-  Tw <- NULL
-  pfs.ts <- pfs.type <- pfs.spec <- NULL
+  Tw <- pfs.ts <- rmd <- NULL
   # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
-  pfs.type <- pfs.ts$type
-  pfs.spec <- pfs.ts$spec
-  # Call calc_rmd
-  starting[1] * calc_rmd(Tw, pfs.type, pfs.spec)
+  # Lifetable constraint
+  ltc <- if (is.na(lifetable)) calc_ex(Ty, lifetable, discrate) else NA
+  # Calculate discounted restricted mean duration
+  rmd <- vn * if (is.na(lifetable)) {
+    calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate)
+  } else {
+    pmin(ltc, calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate))
+  }
+  # Finally multiply by starting population in PF
+  starting[1] * rmd
 }
 
 #' Safely calculate restricted mean duration in progression free state for the partitioned survival model
@@ -288,19 +293,25 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_os_psm(params)
-rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare local variables
-  Tw <- os.ts <- os.type <- os.spec <- NULL
+  Tw <- os.ts  <- NULL
   # Bound to aid integration in weeks
   Tw <- Ty*365.25/7
   # Normalize starting vector
   starting <- starting/sum(starting)
   # Pull out type and spec for OS
   os.ts <- convert_fit2spec(dpam$os)
-  os.type <- os.ts$type
-  os.spec <- os.ts$spec
-  # Call calc_rmd
-  (starting[1] + starting[2]) * calc_rmd(Tw, os.type, os.spec)
+  # Lifetable constraint
+  ltc <- if (is.na(lifetable)) calc_ex(Ty, lifetable, discrate) else NA
+  # Calculate discounted restricted mean duration
+  rmd <- vn * if (is.na(lifetable)) {
+    calc_rmd(Tw, os.ts$type, os.ts$spec, discrate)
+  } else {
+    pmin(ltc, calc_rmd(Tw, os.ts$type, os.ts$spec, discrate))
+  }
+  # Finally multiply by starting population in OS
+  (starting[1] + starting[2]) * rmd
 }
 
 #' Safely calculate restricted mean duration for overall survival in the partitioned survival model
@@ -347,7 +358,9 @@ calc_allrmds <- function(simdat,
                          inclset = 0,
                          dpam,
                          cuttime = 0,
-                         Ty = 10) {
+                         Ty = 10,
+                         lifetable = NA,
+                         discrate = 0) {
   # Declare local variables
   ds <- ts.ppd <- fit.ppd <- ts.ttp <- fit.ttp <- NULL
   ts.pfs <- fit.pfs <- ts.os <- fit.os <- NULL
@@ -463,11 +476,11 @@ calc_allrmds <- function(simdat,
   if (chvalid) {
     # Call functions to calculate mean durations
     adjTy <- Ty - cuttime*7/365.25
-    pf_psm_post <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting)
-    os_psm_post <- prmd_os_psm(dpam, Ty=adjTy, starting=starting)
-    pf_stm_post <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting)
-    pd_stmcf_post <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting)
-    pd_stmcr_post <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting)
+    pf_psm_post <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    os_psm_post <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pf_stm_post <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pd_stmcf_post <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pd_stmcr_post <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
     # Calculate rest through differences
     pd_psm_post <- os_psm_post - pf_psm_post
     os_stmcf_post <- pf_stm_post + pd_stmcf_post
@@ -518,12 +531,16 @@ calc_allrmds_boot <- function(simdat,
                               inclset = 0,
                               dpam,
                               cuttime = 0,
-                              Ty = 10) {
+                              Ty = 10,
+                              lifetable = NA,
+                              discrate = 0) {
   if (inclset[1]==0) {inclset <- 1:length(simdat$ptid)}
   mb <- calc_allrmds(simdat = simdat,
                      inclset = inclset,
                      dpam = dpam,
                      cuttime = cuttime,
-                     Ty = Ty)
+                     Ty = Ty,
+                     lifetable = lifetable,
+                     discrate = discrate)
   c(mb$results$pf, mb$results$pd, mb$results$os)
 }

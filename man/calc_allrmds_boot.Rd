@@ -4,7 +4,15 @@
 \alias{calc_allrmds_boot}
 \title{Wrapper to enable bootstrap sampling of restricted mean durations for each health state and all three models.}
 \usage{
-calc_allrmds_boot(simdat, inclset = 0, dpam, cuttime = 0, Ty = 10)
+calc_allrmds_boot(
+  simdat,
+  inclset = 0,
+  dpam,
+  cuttime = 0,
+  Ty = 10,
+  lifetable = NA,
+  discrate = 0
+)
 }
 \arguments{
 \item{simdat}{Dataset of patient level data. Must be a tibble with columns named:
