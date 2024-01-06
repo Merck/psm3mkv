@@ -35,9 +35,9 @@ params <- list(
   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
   )
-calc_surv_psmpps(totime=1:10,
-    fromtime=rep(1,10),
-    ptdata=bosonc,
-    dpam=params,
-    type="simple")
+# calc_surv_psmpps(totime=1:10,
+#   fromtime=rep(1,10),
+#   ptdata=bosonc,
+#   dpam=params,
+#   type="simple")
 }

@@ -16,3 +16,4 @@ I’ve merged some experimental functions into the main branch following the ver
 # 1 Jan 2024 - Version 0.1
 
 This is the initial release of the package, rather belatedly. The code dates to October 2023.
+
