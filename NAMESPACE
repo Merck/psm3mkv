@@ -2,6 +2,7 @@
 
 export(calc_allrmds)
 export(calc_allrmds_boot)
+export(calc_ex)
 export(calc_haz)
 export(calc_haz_par)
 export(calc_haz_psm)
