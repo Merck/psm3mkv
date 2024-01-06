@@ -36,6 +36,7 @@
 #' @param dpam List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).
 #' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param starting Vector of membership probabilities at time zero.
+#' @param lifetable Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pf_stm] by [calc_allrmds]
 #' @export
@@ -53,27 +54,27 @@
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pf_stm(dpam=params)
-rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare local variables
-  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- NULL
-  # Bound to aid integration in weeks
+  Tw <- ttp.ts <- ppd.ts <- NULL
+  # Time horizon in weeks
   Tw <- Ty*365.25/7
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP
+  # Pull out type and spec for TTP and PPD
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
   # RMD PFS is the integral of S_PFS; S_PFS = S_TTP x S_PPD
+  # subject to a maximum of the lifetable survival
   integrand <- function(x) {
-    sttp <- calc_surv(x, ttp.type, ttp.spec)
-    sppd <- calc_surv(x, ppd.type, ppd.spec)
-    sttp*sppd
+    vn <- (1+discrate)^(-x*7/365.25)
+    sttp <- calc_surv(x, ttp.ts$type, ttp.ts$spec)
+    sppd <- calc_surv(x, ppd.ts$type, ppd.ts$spec)
+    if (is.na(lifetable)) {
+      vn*sttp*sppd
+    } else {
+      pmin(vn*sttp*sppd, vn*calc_ltsurv(x, lifetable))
+    }
   }
   int <- stats::integrate(integrand, 0, Tw)
   return(starting[1]*int$value)

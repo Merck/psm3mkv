@@ -41,10 +41,11 @@
 #' @param indexvec The vector of indices to look-up in
 #' @param valvec The vector of values corresponding to the vector of indices
 #' @return A tibble where each row provides results for each index value. Columns are:
-#' - floor: Floor value, where interpolation is required between measured values
-#' - ceiling: Ceiling value, where interpolation is required between measured values
-#' - arith: Arithmetic mean, where interpolation is required between measured values
-#' - geom: Geometric mean, where interpolation is required between measured values
+#' - `floor`: Floor value, where interpolation is required between measured values
+#' - `ceiling`: Ceiling value, where interpolation is required between measured values
+#' - `arith`: Arithmetic mean, where interpolation is required between measured values
+#' - `geom`: Geometric mean, where interpolation is required between measured values
+#' @seealso [HMDHFDplus::readHMDweb] can be used to obtain lifetables from the Human Mortality Database
 #' @export
 #' @examples
 #' # Suppose we have survival probabilities at times 0 to 20
@@ -52,9 +53,11 @@
 #' survival <- 1-times*0.04
 #' # We would like to look-up the survival probability at time 7
 #' vlookup(7, times, survival)
-#' # In this case, the floor, ceiling, arith and geom values are identical because survival time 7 is known, and no interpolation is necessary
+#' # In this case, the floor, ceiling, arith and geom values are identical
+#' # because survival time 7 is known, and no interpolation is necessary
 #' vlookup(c(7, 7.5), times, survival)
-#' # The second row of the returned tibble reveal different estimates of the survival at time 7.5, depending on our use of the observed survival values at times 7 and 8
+#' # The second row of the returned tibble reveal different estimates of the survival at time 7.5.
+#' # The values vary according to the interpolation method between observed survival values at times 7 and 8.
 vlookup <- function(indexval, indexvec, valvec) {
   # Checks that inputs are reasonable
   if (!is.numeric(indexvec)) stop("Index vector must be numeric")
@@ -91,7 +94,7 @@ vlookup <- function(indexval, indexvec, valvec) {
 #' @return Numeric survival probability
 #' @export
 #' @examples
-#' ltable <- tibble(time=0:10, lx=1-time*0.08)
+#' ltable <- tibble::tibble(time=0:10, lx=1-time*0.08)
 #' calc_ltsurv(c(2, 2.5, 11), ltable)
 calc_ltsurv <- function(time, lifetable){
   if (lifetable$time[1]!=0) stop("Lifetable must run from time zero")
