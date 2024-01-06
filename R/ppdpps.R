@@ -163,9 +163,9 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
 #' Graph is a line graphic of the hazards plotted against the time-range
 #' @importFrom rlang .data
 #' @return adj is the hazard adjusted for constraints, unadj is the unadjusted hazard
-pickout_psmhaz <- function(timepoint, endpoint, ptdata, dpam, psmtype) {
+pickout_psmhaz <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Run calculation of all hazards
-  allhaz <- calc_haz_psm(timepoint, ptdata, dpam, psmtype)
+  allhaz <- calc_haz_psm(timevar, ptdata, dpam, psmtype)
   # Required hazard, unadjusted
   h_unadj <- dplyr::case_when(
     endpoint=="TTP" ~ allhaz$unadj$ttp,
@@ -216,14 +216,14 @@ pickout_psmhaz <- function(timepoint, endpoint, ptdata, dpam, psmtype) {
 #' #   dpam=params,
 #' #   psmtype="simple")
 #' # psmh_simple$graph
-graph_psm_hazards <- function(timerange, endpoint, ptdata, dpam, psmtype) {
+graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Pull out hazards to plot (inefficiently calls function twice, but is quite quick)
-  adjhaz <- timerange |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$adj)
-  unadjhaz <- timerange |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$unadj)
+  adjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$adj)
+  unadjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$unadj)
   # Create dataset for graphic
-  result_data <- dplyr::tibble(Time=timerange, Adjusted=adjhaz, Unadjusted=unadjhaz) |>
+  result_data <- dplyr::tibble(Time=timevar, Adjusted=adjhaz, Unadjusted=unadjhaz) |>
       tidyr::pivot_longer(cols=c(Adjusted, Unadjusted),
                       names_to="Method", values_to="Hazard")
   # Draw graphic
@@ -264,7 +264,7 @@ graph_psm_hazards <- function(timerange, endpoint, ptdata, dpam, psmtype) {
 #' # dpam=params,
 #' # psmtype="simple")
 #' # psms_simple$graph
-graph_psm_survs <- function(timerange, endpoint, ptdata, dpam, psmtype) {
+graph_psm_survs <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Unadjusted hazard
@@ -286,13 +286,13 @@ graph_psm_survs <- function(timerange, endpoint, ptdata, dpam, psmtype) {
     if (intA$message=="OK") intA$value else NA
   }
   # Calculate cumulative hazards
-  cumH_unadj <- seq(timerange) |> purrr::map_dbl(~cumhaz_unadj(.x))
-  cumH_adj <- seq(timerange) |> purrr::map_dbl(~cumhaz_adj(.x))
+  cumH_unadj <- seq(timevar) |> purrr::map_dbl(~cumhaz_unadj(.x))
+  cumH_adj <- seq(timevar) |> purrr::map_dbl(~cumhaz_adj(.x))
   # Calculate survival values
   S_unadj <- exp(-cumH_unadj)
   S_adj <- exp(-cumH_adj)
   # Create dataset for graphic
-  result_data <- dplyr::tibble(Time=timerange, Adjusted=S_adj, Unadjusted=S_unadj) |>
+  result_data <- dplyr::tibble(Time=timevar, Adjusted=S_adj, Unadjusted=S_unadj) |>
     tidyr::pivot_longer(cols=c(Adjusted, Unadjusted),
                         names_to="Method", values_to="Survival")
   # Draw graphic
