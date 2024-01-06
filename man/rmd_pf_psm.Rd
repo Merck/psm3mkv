@@ -4,7 +4,7 @@
 \alias{rmd_pf_psm}
 \title{Restricted mean duration in progression free state for the partitioned survival model}
 \usage{
-rmd_pf_psm(dpam, Ty = 10, starting = c(1, 0, 0))
+rmd_pf_psm(dpam, Ty = 10, starting = c(1, 0, 0), lifetable = NA, discrate = 0)
 }
 \arguments{
 \item{dpam}{List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).}
@@ -12,6 +12,8 @@ rmd_pf_psm(dpam, Ty = 10, starting = c(1, 0, 0))
 \item{Ty}{Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.}
 
 \item{starting}{Vector of membership probabilities at time zero.}
+
+\item{lifetable}{Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.}
 }
 \value{
 Numeric value in same time unit as patient-level data (weeks).
