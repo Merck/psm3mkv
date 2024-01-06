@@ -91,7 +91,7 @@ calc_ltsurv <- function(time, lifetable){
 #' @param Ty Time duration over which to calculate (default is 10 years). Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param lifetable The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @param discrate Discount rate (%) per year
-#' @return
+#' @return List containing `ex`, the numeric (restricted) life expectancy, and `calcs`, a dataframe of the calculations.
 #' @export
 #' @examples
 #' # Create a lifetable. Must end with lx=0.
