@@ -1,6 +1,15 @@
-## 5 Jan 2024 - Constraints implied by a PSM
+news:
+ one_page: false
+ cran_dates: false
+ releases:
+ - text: "usethis 1.3.0"
+   href: https://www.tidyverse.org/articles/2018/02/usethis-1-3-0/
+ - text: "usethis 1.0.0 (and 1.1.0)"
+   href: https://www.tidyverse.org/articles/2017/11/usethis-1.0.0/
 
-I’ve merged some experimental functions into the main branch following the version 0.1 release package. These functions provide analyses of the constraints on mortality hazards and therefore survival implied by a PSM. They are: [calc_haz_psm()], [calc_surv_psmpps()], [pickout_psmhaz()], [graph_psm_hazards()], and [graph_psm_survs()].
+# 5 Jan 2024 - Experimental PSM analysis functions
+
+I’ve merged some experimental functions into the main branch following the version 0.1 release package. These functions provide analyses of the constraints on mortality hazards and therefore survival implied by a PSM. They are: `calc_haz_psm()`, `calc_surv_psmpps()`, `pickout_psmhaz`, `graph_psm_hazards()`, and `graph_psm_survs()`.
 
 # 1 Jan 2024 - Version 0.1
 
