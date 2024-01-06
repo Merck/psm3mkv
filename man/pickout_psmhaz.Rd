@@ -2,37 +2,18 @@
 % Please edit documentation in R/ppdpps.R
 \name{pickout_psmhaz}
 \alias{pickout_psmhaz}
-\title{Pick out adjusted and unadjusted PSM hazards for given endpoint and time}
+\title{Obtain adjusted and unadjusted PSM hazards}
 \usage{
 pickout_psmhaz(timepoint, endpoint, ptdata, dpam, psmtype)
 }
 \arguments{
 \item{endpoint}{Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)}
 
-\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
-\itemize{
-\item ptid: patient identifier
-\item pfs.durn: duration of PFS from baseline
-\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
-\item os.durn: duration of OS from baseline
-\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
-\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
-\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
-}}
+\item{ptdata}{Patient-level dataset}
 
-\item{dpam}{List of survival regressions for each endpoint:
-\itemize{
-\item pre-progression death (PPD)
-\item time to progression (TTP)
-\item progression-free survival (PFS)
-\item overall survival (OS)
-\item post-progression survival clock forward (PPS-CF) and
-\item post-progression survival clock reset (PPS-CR).
-}}
+\item{dpam}{List of fitted survival models for each endpoint}
 
 \item{psmtype}{Type of PSM - simple or complex}
-
-\item{timerange}{Time-range (vector) over which hazards are calculated}
 }
 \value{
 List of data and graph
@@ -42,5 +23,5 @@ Graph is a line graphic of the hazards plotted against the time-range
 adj is the hazard adjusted for constraints, unadj is the unadjusted hazard
 }
 \description{
-Pick out adjusted and unadjusted PSM hazards for given endpoint and time
+EXPERIMENTAL. Obtain adjusted and unadjusted PSM hazards for given endpoint and time
 }

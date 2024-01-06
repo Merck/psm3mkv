@@ -126,11 +126,11 @@ calc_haz_psm <- function(timevar, ptdata, dpam, type) {
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
-#' calc_surv_psmpps(totime=1:10,
-#'     fromtime=rep(1,10),
-#'     ptdata=bosonc,
-#'     dpam=params,
-#'     type="simple")
+#' # calc_surv_psmpps(totime=1:10,
+#' #   fromtime=rep(1,10),
+#' #   ptdata=bosonc,
+#' #   dpam=params,
+#' #   type="simple")
 calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
   # Declare local variables
   cumH <- NULL
@@ -153,10 +153,10 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
   exp(-cumH)
 }
 
-#' Pick out adjusted and unadjusted PSM hazards for given endpoint and time
-#' @param timerange Time-range (vector) over which hazards are calculated
+#' Obtain adjusted and unadjusted PSM hazards
+#' @description EXPERIMENTAL. Obtain adjusted and unadjusted PSM hazards for given endpoint and time
 #' @param endpoint Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)
-#' @inheritParams calc_likes_psm_simple
+#' @inheritParams calc_haz_psm
 #' @param psmtype Type of PSM - simple or complex
 #' @return List of data and graph
 #' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
@@ -165,7 +165,7 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
 #' @return adj is the hazard adjusted for constraints, unadj is the unadjusted hazard
 pickout_psmhaz <- function(timepoint, endpoint, ptdata, dpam, psmtype) {
   # Run calculation of all hazards
-  allhaz <- calc_haz_psm(timepoint, ptdata, dpam, type)
+  allhaz <- calc_haz_psm(timepoint, ptdata, dpam, psmtype)
   # Required hazard, unadjusted
   h_unadj <- dplyr::case_when(
     endpoint=="TTP" ~ allhaz$unadj$ttp,
@@ -189,6 +189,7 @@ pickout_psmhaz <- function(timepoint, endpoint, ptdata, dpam, psmtype) {
 }
 
 #' Graph the PSM hazard functions
+#' @description EXPERIMENTAL. Graph the PSM hazard functions
 #' @inheritParams pickout_psmhaz
 #' @return List of data and graph
 #' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
@@ -208,8 +209,13 @@ pickout_psmhaz <- function(timepoint, endpoint, ptdata, dpam, psmtype) {
 #'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 #' )
 #' # Create graphics
-#' psmh_simple <- graph_psm_hazards(timerange=(0:600)/10, endpoint="OS", ptdata=bosonc, dpam=params, psmtype="simple")
-#' psmh_simple$graph
+#' # psmh_simple <- graph_psm_hazards(
+#' #   timerange=(0:10)*6,
+#' #   endpoint="OS",
+#' #   ptdata=bosonc,
+#' #   dpam=params,
+#' #   psmtype="simple")
+#' # psmh_simple$graph
 graph_psm_hazards <- function(timerange, endpoint, ptdata, dpam, psmtype) {
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
@@ -228,6 +234,7 @@ graph_psm_hazards <- function(timerange, endpoint, ptdata, dpam, psmtype) {
 }
 
 #' Graph the PSM survival functions
+#' @description EXPERIMENTAL. Graph the PSM survival functions
 #' @inheritParams graph_psm_hazards
 #' @return List of data and graph
 #' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
@@ -250,9 +257,13 @@ graph_psm_hazards <- function(timerange, endpoint, ptdata, dpam, psmtype) {
 #' graph_orig <- graph_survs(ptdata=bosonc, dpam=params)
 #' graph_orig$graph$os
 #' # New graphic illustrating effect of constraints on OS model
-#' psms_simple <- graph_psm_survs(timerange=(0:600)/10, endpoint="OS", ptdata=bosonc, dpam=params, psmtype="simple")
-#' psms_simple$graph
-#' # Compare
+#' # psms_simple <- graph_psm_survs(
+#' # timerange=6*(0:10),
+#' # endpoint="OS",
+#' # ptdata=bosonc,
+#' # dpam=params,
+#' # psmtype="simple")
+#' # psms_simple$graph
 graph_psm_survs <- function(timerange, endpoint, ptdata, dpam, psmtype) {
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)

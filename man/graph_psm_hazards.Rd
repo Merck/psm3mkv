@@ -7,30 +7,11 @@
 graph_psm_hazards(timerange, endpoint, ptdata, dpam, psmtype)
 }
 \arguments{
-\item{timerange}{Time-range (vector) over which hazards are calculated}
-
 \item{endpoint}{Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)}
 
-\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
-\itemize{
-\item ptid: patient identifier
-\item pfs.durn: duration of PFS from baseline
-\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
-\item os.durn: duration of OS from baseline
-\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
-\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
-\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
-}}
+\item{ptdata}{Patient-level dataset}
 
-\item{dpam}{List of survival regressions for each endpoint:
-\itemize{
-\item pre-progression death (PPD)
-\item time to progression (TTP)
-\item progression-free survival (PFS)
-\item overall survival (OS)
-\item post-progression survival clock forward (PPS-CF) and
-\item post-progression survival clock reset (PPS-CR).
-}}
+\item{dpam}{List of fitted survival models for each endpoint}
 
 \item{psmtype}{Type of PSM - simple or complex}
 }
@@ -40,7 +21,7 @@ Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and
 Graph is a line graphic of the hazards plotted against the time-range
 }
 \description{
-Graph the PSM hazard functions
+EXPERIMENTAL. Graph the PSM hazard functions
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")
@@ -55,6 +36,11 @@ params <- list(
   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 )
 # Create graphics
-psmh_simple <- graph_psm_hazards(timerange=(0:600)/10, endpoint="OS", ptdata=bosonc, dpam=params, psmtype="simple")
-psmh_simple$graph
+# psmh_simple <- graph_psm_hazards(
+#   timerange=(0:10)*6,
+#   endpoint="OS",
+#   ptdata=bosonc,
+#   dpam=params,
+#   psmtype="simple")
+# psmh_simple$graph
 }
