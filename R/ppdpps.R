@@ -55,33 +55,54 @@ calc_haz_psm <- function(timevar, ptdata, dpam, type) {
   pfs.ts <- convert_fit2spec(dpam$pfs)
   pfs.type <- pfs.ts$type
   pfs.spec <- pfs.ts$spec
+  hpf <- calc_haz(timevar, pfs.type, pfs.spec)
+  spf <- calc_surv(timevar, pfs.type, pfs.spec)
   # OS
   os.ts <- convert_fit2spec(dpam$os)
   os.type <- os.ts$type
   os.spec <- os.ts$spec
-  # TTP
+  hos <- calc_haz(timevar, os.type, os.spec)
+  sos <- calc_surv(timevar, os.type, os.spec)
+  # TTP complex
   ttp.ts <- convert_fit2spec(dpam$ttp)
   ttp.type <- ttp.ts$type
   ttp.spec <- ttp.ts$spec
-  # Events in dataset
+  http_complex <- calc_haz(timevar, ttp.type, ttp.spec)
+  # TTP simple
   ne_pfs <- sum(ptdata$pfs.flag)
   ne_ttp <- sum(ptdata$ttp.flag)
   progfrac <- max(0, min(1, ne_ttp/ne_pfs))
-  # Hazards and survival functions
-  http <- calc_haz(timevar, ttp.type, ttp.spec)
-  hpf <- calc_haz(timevar, pfs.type, pfs.spec)
-  hos <- calc_haz(timevar, os.type, os.spec)
-  sos <- calc_surv(timevar, os.type, os.spec)
-  spf <- calc_surv(timevar, pfs.type, pfs.spec)
-  # hppd varies by type
+  http_simple <- progfrac*hpf
+  # TTP
+  http <- http_simple*(type=="simple") + http_complex*(type!="simple")
+  # PPD
+  hppd_unadj <- hpf-http
   hppd_simple <- pmax(0, pmin((1-progfrac)*hpf, sos*hos/spf))
   hppd_complex <- pmax(0, pmin(hpf-http, sos*hos/spf))
   hppd <- hppd_simple*(type=="simple") + hppd_complex*(type!="simple")
-  hpps <- pmax(0, pmin((sos*hos-spf*hppd)/(sos-spf), 5000))
-  # hpps and others
-  hdiff <- hos-(spf*hppd+(sos-spf)*hpps)
+  # PPS
+  hpps_unadj <- (sos*hos-spf*hppd)/(sos-spf)
+  hpps <- pmax(0, pmin(hpps_unadj, 5000))
   hpps[timevar==0] <- 0
-  return(list(pre=hppd, post=hpps, diff=hdiff))
+  # Diff
+  # hdiff <- hos-(spf*hppd+(sos-spf)*hpps)
+  # Adjusted for caps and collars
+  hadj <- list(
+    ttp = http,
+    ppd = hppd,
+    pfs = http+hppd,
+    os = spf*hppd + (sos-spf)*hpps,
+    pps = hpps
+  )
+  # Unadjusted for caps and collars
+  hunadj <- list(
+    ttp = http,
+    ppd = hpf-http,
+    pfs = hpf,
+    os = hos,
+    pps = hpps_unadj
+  )
+  return(list(adj=hadj, unadj=hunadj))
 }
 
 #' Derive PPS survival function under a PSM
@@ -105,17 +126,17 @@ calc_haz_psm <- function(timevar, ptdata, dpam, type) {
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
-#' calc_surv_psmpps(totime=1:10,
-#'     fromtime=rep(1,10),
-#'     ptdata=bosonc,
-#'     dpam=params,
-#'     type="simple")
+#' # calc_surv_psmpps(totime=1:10,
+#' #   fromtime=rep(1,10),
+#' #   ptdata=bosonc,
+#' #   dpam=params,
+#' #   type="simple")
 calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
   # Declare local variables
   cumH <- NULL
   # Hazard function
   hazfn <- function(x) {
-    calc_haz_psm(timevar=x, ptdata=ptdata, dpam=dpam, type=type)$post
+    calc_haz_psm(timevar=x, ptdata=ptdata, dpam=dpam, type=type)$adj$pps
   }
   # Cum hazard function
   cumhazfn <- function(ptrow) {
@@ -130,4 +151,153 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
   cumH <- seq(fromtime) |> purrr::map_dbl(~cumhazfn(.x))
   # Survival
   exp(-cumH)
+}
+
+#' Obtain adjusted and unadjusted PSM hazards
+#' @description EXPERIMENTAL. Obtain adjusted and unadjusted PSM hazards for given endpoint and time
+#' @param endpoint Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)
+#' @inheritParams calc_haz_psm
+#' @param psmtype Type of PSM - simple or complex
+#' @return List of data and graph
+#' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
+#' Graph is a line graphic of the hazards plotted against the time-range
+#' @importFrom rlang .data
+#' @return adj is the hazard adjusted for constraints, unadj is the unadjusted hazard
+pickout_psmhaz <- function(timevar, endpoint, ptdata, dpam, psmtype) {
+  # Run calculation of all hazards
+  allhaz <- calc_haz_psm(timevar, ptdata, dpam, psmtype)
+  # Required hazard, unadjusted
+  h_unadj <- dplyr::case_when(
+    endpoint=="TTP" ~ allhaz$unadj$ttp,
+    endpoint=="PPD" ~ allhaz$unadj$ppd,
+    endpoint=="PFS" ~ allhaz$unadj$pfs,
+    endpoint=="OS" ~ allhaz$unadj$os,
+    endpoint=="PPS" ~ allhaz$unadj$pps,
+    .default = NA
+  )
+  # Required hazard, adjusted
+  h_adj <- dplyr::case_when(
+    endpoint=="TTP" ~ allhaz$adj$ttp,
+    endpoint=="PPD" ~ allhaz$adj$ppd,
+    endpoint=="PFS" ~ allhaz$adj$pfs,
+    endpoint=="OS" ~ allhaz$adj$os,
+    endpoint=="PPS" ~ allhaz$adj$pps,
+    .default = NA
+  )
+  # Return adjusted and unadjusted hazard
+  return(list(adj=h_adj, unadj=h_unadj))
+}
+
+#' Graph the PSM hazard functions
+#' @description EXPERIMENTAL. Graph the PSM hazard functions
+#' @inheritParams pickout_psmhaz
+#' @return List of data and graph
+#' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
+#' Graph is a line graphic of the hazards plotted against the time-range
+#' @importFrom rlang .data
+#' @export
+#' @examples
+#' bosonc <- create_dummydata("flexbosms")
+#' fits <- fit_ends_mods_par(bosonc)
+#' # Pick out best distribution according to min AIC
+#' params <- list(
+#'   ppd = find_bestfit_par(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit_par(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
+#'   os = find_bestfit_par(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
+#' )
+#' # Create graphics
+#' # psmh_simple <- graph_psm_hazards(
+#' #   timerange=(0:10)*6,
+#' #   endpoint="OS",
+#' #   ptdata=bosonc,
+#' #   dpam=params,
+#' #   psmtype="simple")
+#' # psmh_simple$graph
+graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
+  # Convert endpoint to upper case text
+  endpoint <- toupper(endpoint)
+  # Pull out hazards to plot (inefficiently calls function twice, but is quite quick)
+  adjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$adj)
+  unadjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$unadj)
+  # Create dataset for graphic
+  result_data <- dplyr::tibble(Time=timevar, Adjusted=adjhaz, Unadjusted=unadjhaz) |>
+      tidyr::pivot_longer(cols=c(Adjusted, Unadjusted),
+                      names_to="Method", values_to="Hazard")
+  # Draw graphic
+  result_graph <- ggplot2::ggplot(result_data, ggplot2::aes(Time, Hazard)) +
+    ggplot2::geom_line(ggplot2::aes(color = Method))
+  # Return data and graphic
+  return(list(data=result_data, graph=result_graph))
+}
+
+#' Graph the PSM survival functions
+#' @description EXPERIMENTAL. Graph the PSM survival functions
+#' @inheritParams graph_psm_hazards
+#' @return List of data and graph
+#' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
+#' Graph is a line graphic of the hazards plotted against the time-range
+#' @importFrom rlang .data
+#' @export
+#' @examples
+#' bosonc <- create_dummydata("flexbosms")
+#' fits <- fit_ends_mods_par(bosonc)
+#' # Pick out best distribution according to min AIC
+#' params <- list(
+#'   ppd = find_bestfit_par(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit_par(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
+#'   os = find_bestfit_par(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
+#' )
+#' # Original OS graphic
+#' graph_orig <- graph_survs(ptdata=bosonc, dpam=params)
+#' graph_orig$graph$os
+#' # New graphic illustrating effect of constraints on OS model
+#' # psms_simple <- graph_psm_survs(
+#' # timerange=6*(0:10),
+#' # endpoint="OS",
+#' # ptdata=bosonc,
+#' # dpam=params,
+#' # psmtype="simple")
+#' # psms_simple$graph
+graph_psm_survs <- function(timevar, endpoint, ptdata, dpam, psmtype) {
+  # Convert endpoint to upper case text
+  endpoint <- toupper(endpoint)
+  # Unadjusted hazard
+  haz_unadj <- function(time) {
+    pickout_psmhaz(time, endpoint, ptdata, dpam, psmtype)$unadj
+  }
+  # Adjusted hazard
+  haz_adj <- function(time) {
+    pickout_psmhaz(time, endpoint, ptdata, dpam, psmtype)$adj
+  }
+  # Unadjusted cumulative hazard
+  cumhaz_unadj <- function(time) {
+    intU <- stats::integrate(haz_unadj, lower=0, upper=time)
+    if (intU$message=="OK") intU$value else NA
+  }
+  # Adjusted cumulative hazard
+  cumhaz_adj <- function(time) {
+    intA <- stats::integrate(haz_adj, lower=0, upper=time)
+    if (intA$message=="OK") intA$value else NA
+  }
+  # Calculate cumulative hazards
+  cumH_unadj <- seq(timevar) |> purrr::map_dbl(~cumhaz_unadj(.x))
+  cumH_adj <- seq(timevar) |> purrr::map_dbl(~cumhaz_adj(.x))
+  # Calculate survival values
+  S_unadj <- exp(-cumH_unadj)
+  S_adj <- exp(-cumH_adj)
+  # Create dataset for graphic
+  result_data <- dplyr::tibble(Time=timevar, Adjusted=S_adj, Unadjusted=S_unadj) |>
+    tidyr::pivot_longer(cols=c(Adjusted, Unadjusted),
+                        names_to="Method", values_to="Survival")
+  # Draw graphic
+  result_graph <- ggplot2::ggplot(result_data, ggplot2::aes(Time, Survival)) +
+    ggplot2::geom_line(ggplot2::aes(color = Method))
+  # Return data and graphic
+  return(list(data=result_data, graph=result_graph))
 }

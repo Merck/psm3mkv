@@ -415,27 +415,27 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' Graph the observed and fitted state membership probabilities
 #' @description Graph the observed and fitted state membership probabilities for PF, PD, OS and PPS.
 #' @param ptdata is the patient-level dataset of TTP, PFS and OS.
-#' @param dpam is the listList of survival regressions for model endpoints. All endpoints are required.
+#' @param dpam is the list of survival regressions for model endpoints. All endpoints are required.
 #' @param cuttime is the cut-off time for a two-piece model (default 0, indicating a one-piece model)
 #' @param tpoints indicates how many timepoints should be included in the graphics (default 100)
 #' @return Four datasets and graphics as a list
-#' @importFrom rlang .data
 #' @export
+#' @importFrom rlang .data
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
+#' fits <- fit_ends_mods_par(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit_par(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit_par(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
+#'   os = find_bestfit_par(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 #' )
-#' ptdgraphs <- graph_survs(bosonc, params)
-#' ptdgraphs$data$pps[1:10,]
-#' ptdgraphs$graph$pf
+#' # Create graphics
+#' gs <- graph_survs(ptdata=bosonc, dpam=params)
+#' gs$graph$pd
 graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   cat("Creating KM \n")
   # Declare local variables
@@ -551,29 +551,28 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
     dplyr::select(Time, pf, os) |>
     tidyr::pivot_longer(cols=c(pf, os),
                         names_to="Endpoint", values_to="Probability")
-  # Draw graphic
+  # Summarise datasets to a list
+  datalist <- list(
+    pf=pfdata,
+    pd=pddata,
+    os=osdata,
+    pps=ppsdata
+  )
+  # Internal function to draw graphic
   cat("Drawing plots \n")
-  # Removed from geom_line: + labs(subtitle="[title]")
-  graphic_pf <- ggplot2::ggplot(pfdata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Method))
-  graphic_pd <- ggplot2::ggplot(pddata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Method))
-  graphic_os <- ggplot2::ggplot(osdata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Method))
-  graphic_psm <- ggplot2::ggplot(psmdata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Endpoint))
-  graphic_pps <- ggplot2::ggplot(ppsdata, ggplot2::aes(Time, Probability)) +
-    ggplot2::geom_line(ggplot2::aes(color = Method)) +
-    ggplot2::xlab("Time from progression")
-  return(list(
-    data=list(pf=pfdata,
-              pd=pddata,
-              os=osdata,
-              pps=ppsdata),
-    graph=list(pf=graphic_pf,
-               pd=graphic_pd,
-               os=graphic_os,
-               psm=graphic_psm,
-               pps=graphic_pps)))
+  draw_2pgraphic <- function(ds, xlabel="Time from baseline") {
+    ggplot2::ggplot(ds, ggplot2::aes(Time, Probability)) +
+      ggplot2::geom_line(ggplot2::aes(color = Method)) +
+      ggplot2::xlab(xlabel)
+  }
+  # Draw graphics
+  graphlist <- list(
+    pf = draw_2pgraphic(pfdata),
+    pd = draw_2pgraphic(pddata),
+    os = draw_2pgraphic(osdata),
+    psm = draw_2pgraphic(psmdata),
+    pps = draw_2pgraphic(ppsdata, xlabel="Time from progression")
+  )
+  return(list(data=datalist, graph=graphlist))
 }
 

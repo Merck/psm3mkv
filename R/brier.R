@@ -41,7 +41,8 @@
 #'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 #'   )
-#' calc_ibs(bosonc, params)
+#' # Not run (takes a long time)
+#' # calc_ibs(bosonc, params)
 calc_ibs <- function(ptdata, dpam) {
   cat("Initial calculations \n")
   # Pull out event times

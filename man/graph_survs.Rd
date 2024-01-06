@@ -9,7 +9,7 @@ graph_survs(ptdata, dpam, cuttime = 0, tpoints = 100)
 \arguments{
 \item{ptdata}{is the patient-level dataset of TTP, PFS and OS.}
 
-\item{dpam}{is the listList of survival regressions for model endpoints. All endpoints are required.}
+\item{dpam}{is the list of survival regressions for model endpoints. All endpoints are required.}
 
 \item{cuttime}{is the cut-off time for a two-piece model (default 0, indicating a one-piece model)}
 
@@ -23,17 +23,17 @@ Graph the observed and fitted state membership probabilities for PF, PD, OS and 
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")
-fits <- fit_ends_mods_spl(bosonc)
+fits <- fit_ends_mods_par(bosonc)
 # Pick out best distribution according to min AIC
 params <- list(
-  ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-  ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-  pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-  os = find_bestfit_spl(fits$os, "aic")$fit,
-  pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-  pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+  ppd = find_bestfit_par(fits$ppd, "aic")$fit,
+  ttp = find_bestfit_par(fits$ttp, "aic")$fit,
+  pfs = find_bestfit_par(fits$pfs, "aic")$fit,
+  os = find_bestfit_par(fits$os, "aic")$fit,
+  pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
+  pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 )
-ptdgraphs <- graph_survs(bosonc, params)
-ptdgraphs$data$pps[1:10,]
-ptdgraphs$graph$pf
+# Create graphics
+gs <- graph_survs(ptdata=bosonc, dpam=params)
+gs$graph$pd
 }
