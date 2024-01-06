@@ -16,10 +16,10 @@ vlookup(indexval, indexvec, valvec)
 \value{
 A tibble where each row provides results for each index value. Columns are:
 \itemize{
-\item floor: Floor value, where interpolation is required between measured values
-\item ceiling: Ceiling value, where interpolation is required between measured values
-\item arith: Arithmetic mean, where interpolation is required between measured values
-\item geom: Geometric mean, where interpolation is required between measured values
+\item \code{floor}: Floor value, where interpolation is required between measured values
+\item \code{ceiling}: Ceiling value, where interpolation is required between measured values
+\item \code{arith}: Arithmetic mean, where interpolation is required between measured values
+\item \code{geom}: Geometric mean, where interpolation is required between measured values
 }
 }
 \description{
@@ -31,7 +31,12 @@ times <- 0:20
 survival <- 1-times*0.04
 # We would like to look-up the survival probability at time 7
 vlookup(7, times, survival)
-# In this case, the floor, ceiling, arith and geom values are identical because survival time 7 is known, and no interpolation is necessary
+# In this case, the floor, ceiling, arith and geom values are identical
+# because survival time 7 is known, and no interpolation is necessary
 vlookup(c(7, 7.5), times, survival)
-# The second row of the returned tibble reveal different estimates of the survival at time 7.5, depending on our use of the observed survival values at times 7 and 8
+# The second row of the returned tibble reveal different estimates of the survival at time 7.5.
+# The values vary according to the interpolation method between observed survival values at times 7 and 8.
+}
+\seealso{
+\link[HMDHFDplus:readHMDweb]{HMDHFDplus::readHMDweb} can be used to obtain lifetables from the Human Mortality Database
 }
