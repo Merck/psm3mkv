@@ -419,6 +419,7 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' @param cuttime is the cut-off time for a two-piece model (default 0, indicating a one-piece model)
 #' @param tpoints indicates how many timepoints should be included in the graphics (default 100)
 #' @return Four datasets and graphics as a list
+#' @export
 #' @importFrom rlang .data
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")

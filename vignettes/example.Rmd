@@ -26,6 +26,8 @@ library(psm3mkv)
 library(dplyr) # for data wrangling
 library(boot) # for bootstrapping
 library(ggsci) # for nice graphics
+library(flexsurv) # for data to work
+library(survival) # for data to work
 ```
 
 ## Obtaining a suitable dataset

@@ -167,7 +167,7 @@ pickout_psmhaz <- function(timepoint, endpoint, ptdata, dpam, psmtype) {
   # Run calculation of all hazards
   allhaz <- calc_haz_psm(timepoint, ptdata, dpam, type)
   # Required hazard, unadjusted
-  h_unadj <- case_when(
+  h_unadj <- dplyr::case_when(
     endpoint=="TTP" ~ allhaz$unadj$ttp,
     endpoint=="PPD" ~ allhaz$unadj$ppd,
     endpoint=="PFS" ~ allhaz$unadj$pfs,
@@ -176,7 +176,7 @@ pickout_psmhaz <- function(timepoint, endpoint, ptdata, dpam, psmtype) {
     .default = NA
   )
   # Required hazard, adjusted
-  h_adj <- case_when(
+  h_adj <- dplyr::case_when(
     endpoint=="TTP" ~ allhaz$adj$ttp,
     endpoint=="PPD" ~ allhaz$adj$ppd,
     endpoint=="PFS" ~ allhaz$adj$pfs,
