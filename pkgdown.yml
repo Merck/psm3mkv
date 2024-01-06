@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   example: example.html
-last_built: 2024-01-01T21:22Z
+last_built: 2024-01-06T04:31Z
 urls:
   reference: https://merck.github.io/psm3mkv/reference
   article: https://merck.github.io/psm3mkv/articles

@@ -99,32 +99,94 @@
 <span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">calc_haz_psm</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span>, ptdata<span class="op">=</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, type<span class="op">=</span><span class="st">"simple"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $pre</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$ttp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.04742078 0.04722152 0.04707233 0.04682576 0.04650723</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.04614387 0.04575442 0.04533051 0.04479742 0.04418546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$ppd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.000000000 0.009903692 0.013295380 0.013253374 0.013183952 0.013094269</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.012991963 0.012882314 0.012762960 0.012612865 0.012440568</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $post</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$pfs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.05732447 0.06051690 0.06032570 0.06000971 0.05960150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.05913583 0.05863674 0.05809348 0.05741028 0.05662603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$os</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.000000000 0.009300758 0.012253823 0.014430772 0.016195615 0.017678549</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.018943502 0.020027650 0.020955175 0.021743175 0.022404577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$pps</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.000000000 0.000000000 0.005094092 0.024838109 0.034454269 0.040318847</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.044430336 0.047603965 0.050244788 0.052614795 0.054815057</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $diff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]          NaN 6.241669e-05 2.187638e-04 4.605147e-04 7.856497e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] 1.193124e-03 1.682019e-03 2.251284e-03 2.899637e-03 3.625538e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] 4.427179e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$ttp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.04742078 0.04722152 0.04707233 0.04682576 0.04650723</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.04614387 0.04575442 0.04533051 0.04479742 0.04418546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$ppd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.01335148 0.01329538 0.01325337 0.01318395 0.01309427</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.01299196 0.01288231 0.01276296 0.01261286 0.01244057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$pfs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.06077226 0.06051690 0.06032570 0.06000971 0.05960150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.05913583 0.05863674 0.05809348 0.05741028 0.05662603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$os</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.000000000 0.009363175 0.012472587 0.014891286 0.016981265 0.018871673</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.020625521 0.022278934 0.023854812 0.025368713 0.026831756</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$pps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]         NaN 0.000000000 0.005094092 0.024838109 0.034454269 0.040318847</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.044430336 0.047603965 0.050244788 0.052614795 0.054815057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">calc_haz_psm</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span>, ptdata<span class="op">=</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, type<span class="op">=</span><span class="st">"complex"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $pre</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$ttp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.05758869 0.05337416 0.05075486 0.04878425 0.04717919</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.04581438 0.04459666 0.04337732 0.04216807 0.04098853</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$ppd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.000000000 0.003183577 0.007142746 0.009570846 0.011225462 0.012422312</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.013321453 0.014040074 0.014716157 0.015242215 0.015637501</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $post</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$pfs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.06077226 0.06051690 0.06032570 0.06000971 0.05960150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.05913583 0.05863674 0.05809348 0.05741028 0.05662603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$os</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.000000000 0.009300758 0.012253823 0.014430772 0.016195615 0.017678549</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.018943502 0.020027650 0.020955175 0.021743175 0.022404577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adj$pps</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.11640992 0.06026855 0.04720160 0.04346609 0.04281332</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.04340284 0.04448366 0.04559770 0.04699859 0.04859870</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $diff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]          NaN 6.241669e-05 2.187638e-04 4.605147e-04 7.856497e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] 1.193124e-03 1.682019e-03 2.251284e-03 2.899637e-03 3.625538e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] 4.427179e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$ttp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.05758869 0.05337416 0.05075486 0.04878425 0.04717919</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.04581438 0.04459666 0.04337732 0.04216807 0.04098853</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$ppd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.000000000 0.003183577 0.007142746 0.009570846 0.011225462 0.012422312</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.013321453 0.014040074 0.014716157 0.015242215 0.015637501</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$pfs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.06077226 0.06051690 0.06032570 0.06000971 0.05960150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.05913583 0.05863674 0.05809348 0.05741028 0.05662603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$os</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.000000000 0.009363175 0.012472587 0.014891286 0.016981265 0.018871673</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.020625521 0.022278934 0.023854812 0.025368713 0.026831756</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $unadj$pps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]        NaN 0.11640992 0.06026855 0.04720160 0.04346609 0.04281332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.04340284 0.04448366 0.04559770 0.04699859 0.04859870</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

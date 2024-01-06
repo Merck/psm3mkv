@@ -121,10 +121,19 @@
     <loc>https://merck.github.io/psm3mkv/reference/give_noparams_par.html</loc>
   </url>
   <url>
+    <loc>https://merck.github.io/psm3mkv/reference/graph_psm_hazards.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/graph_psm_survs.html</loc>
+  </url>
+  <url>
     <loc>https://merck.github.io/psm3mkv/reference/graph_survs.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/pickout_psmhaz.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/prmd_os_psm.html</loc>
