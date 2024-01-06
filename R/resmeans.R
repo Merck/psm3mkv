@@ -37,6 +37,7 @@
 #' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param starting Vector of membership probabilities at time zero.
 #' @param lifetable Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
+#' @param discrate Discount rate (%) per year
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pf_stm] by [calc_allrmds]
 #' @export
