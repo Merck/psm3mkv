@@ -4,9 +4,11 @@
 \alias{graph_psm_survs}
 \title{Graph the PSM survival functions}
 \usage{
-graph_psm_survs(timerange, endpoint, ptdata, dpam, psmtype)
+graph_psm_survs(timevar, endpoint, ptdata, dpam, psmtype)
 }
 \arguments{
+\item{timevar}{Vector of times at which to calculate the hazards}
+
 \item{endpoint}{Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)}
 
 \item{ptdata}{Patient-level dataset}

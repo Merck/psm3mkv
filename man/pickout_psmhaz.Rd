@@ -4,9 +4,11 @@
 \alias{pickout_psmhaz}
 \title{Obtain adjusted and unadjusted PSM hazards}
 \usage{
-pickout_psmhaz(timepoint, endpoint, ptdata, dpam, psmtype)
+pickout_psmhaz(timevar, endpoint, ptdata, dpam, psmtype)
 }
 \arguments{
+\item{timevar}{Vector of times at which to calculate the hazards}
+
 \item{endpoint}{Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)}
 
 \item{ptdata}{Patient-level dataset}
