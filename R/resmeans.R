@@ -71,7 +71,7 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     vn <- (1+discrate)^(-convert_wks2yrs(x))
     sttp <- calc_surv(x, ttp.ts$type, ttp.ts$spec)
     sppd <- calc_surv(x, ppd.ts$type, ppd.ts$spec)
-    if (is.na(lifetable)) {
+    if (!is.data.frame(lifetable)) {
       vn*sttp*sppd
     } else {
       vn*pmin(sttp*sppd, vn*calc_ltsurv(conv_wks2yrs(x), lifetable))
@@ -130,7 +130,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
     http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
     spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
-    if (is.na(lifetable)) {
+    if (!is.data.frame(lifetable)) {
       vn*sttp*sppd*http*spps
     } else {
       vn*pmin(sttp*sppd*http*spps, calc_ltsurv(conv_wks2yrs(x[2]), lifetable))
@@ -201,7 +201,7 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
     sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
     if (sos1==0) 0 else {
-      if (is.na(lifetable)) {
+      if (!is.data.frame(lifetable)) {
         vn * sttp*sppd*http*sos2/sos1
       } else {
         vn * pmin(sttp*sppd*http*sos2/sos1, calc_ltsurv(conv_wks2yrs(x[2]), lifetable))
@@ -259,7 +259,7 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Lifetable constraint
   ltc <- if (is.data.frame(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
   # Calculate discounted restricted mean duration
-  rmd <- if (is.na(lifetable)) {
+  rmd <- if (!is.data.frame(lifetable)) {
     calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate)
   } else {
     pmin(ltc, calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate))
@@ -306,7 +306,7 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Lifetable constraint
   ltc <- if (is.data.frame(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
   # Calculate discounted restricted mean duration
-  rmd <- if (is.na(lifetable)) {
+  rmd <- if (!is.data.frame(lifetable)) {
     calc_rmd(Tw, os.ts$type, os.ts$spec, discrate)
   } else {
     pmin(ltc, calc_rmd(Tw, os.ts$type, os.ts$spec, discrate))
