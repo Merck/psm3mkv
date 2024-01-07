@@ -263,10 +263,10 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   starting <- starting/sum(starting)
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
-  # Create an integrand
+  # Create an integrand for PF survival
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    pf_psm <- calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate)
+    pf_psm <- calc_surv(Tw, pfs.ts$type, pfs.ts$spec, discrate)
     if (is.data.frame(lifetable)) {
       osmax <- calc_ltsurv(convert_wks2yrs(x[2]))
       vn * pmin(pf_psm, osmax)                     
@@ -316,16 +316,20 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   starting <- starting/sum(starting)
   # Pull out type and spec for OS
   os.ts <- convert_fit2spec(dpam$os)
-  # Lifetable constraint
-  ltc <- if (is.data.frame(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
-  # Calculate discounted restricted mean duration
-  rmd <- if (!is.data.frame(lifetable)) {
-    calc_rmd(Tw, os.ts$type, os.ts$spec, discrate)
-  } else {
-    pmin(ltc, calc_rmd(Tw, os.ts$type, os.ts$spec, discrate))
+  # Create an integrand for overall survival
+  integrand_os <- function(x) {
+    vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
+    os_psm <- calc_surv(Tw, os.ts$type, os.ts$spec, discrate)
+    if (is.data.frame(lifetable)) {
+      osmax <- calc_ltsurv(convert_wks2yrs(x[2]))
+      vn * pmin(os_psm, osmax)                     
+    } else {
+      vn * os_psm
+    }
   }
+  int_os <- stats::integrate(integrand_os, 0, Tw)
   # Finally multiply by starting population in OS
-  (starting[1] + starting[2]) * rmd
+  (starting[1] + starting[2]) * int_os$integral
 }
 
 #' Safely calculate restricted mean duration for overall survival in the partitioned survival model
