@@ -110,7 +110,7 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' rmd_pd_stm_cr(dpam=params)
 rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare error if starting[2]>0 and lifetable!=NA
-  if ((!is.na(lifetable))*starting[2]!=0) stop("Cannot apply lifetable constraint when PD state not initially empty")
+  if ((is.data.frame(lifetable))*starting[2]!=0) stop("Cannot apply lifetable constraint when PD state not initially empty")
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
@@ -179,7 +179,7 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' rmd_pd_stm_cf(dpam=params)
 rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare error if starting[2]>0 and lifetable!=NA
-  if ((!is.na(lifetable))*starting[2]!=0) stop("Cannot apply life-table constraint when PD state not initially empty")
+  if ((is.data.frame(lifetable))*starting[2]!=0) stop("Cannot apply life-table constraint when PD state not initially empty")
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
@@ -257,7 +257,7 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
   # Lifetable constraint
-  ltc <- if (!is.na(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
+  ltc <- if (is.data.frame(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
   # Calculate discounted restricted mean duration
   rmd <- if (is.na(lifetable)) {
     calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate)
@@ -304,7 +304,7 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Pull out type and spec for OS
   os.ts <- convert_fit2spec(dpam$os)
   # Lifetable constraint
-  ltc <- if (!is.na(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
+  ltc <- if (is.data.frame(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
   # Calculate discounted restricted mean duration
   rmd <- if (is.na(lifetable)) {
     calc_rmd(Tw, os.ts$type, os.ts$spec, discrate)
