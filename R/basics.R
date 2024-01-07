@@ -331,8 +331,6 @@ give_noparams <- function(type, spec) {
 #' @param weeks Number of weeks
 #' @return Number of years = weeks x 7 / 365.25
 #' @seealso [psm3mkv::convert_yrs2wks]
-#' @examples
-#' convert_wks2yrs(52)
 convert_wks2yrs <- function(weeks) {
   weeks*7/365.25
 }
@@ -342,8 +340,6 @@ convert_wks2yrs <- function(weeks) {
 #' @param weeks Number of years
 #' @return Number of weeks = years / 7 * 365.25
 #' @seealso [psm3mkv::convert_wks2yrs]
-#' @examples
-#' convert_yrs2wks(1)
 convert_yrs2wks <- function(years) {
   years*365.25/7
 }

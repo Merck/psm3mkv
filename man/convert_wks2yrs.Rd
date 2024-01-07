@@ -15,9 +15,6 @@ Number of years = weeks x 7 / 365.25
 \description{
 Convert weeks to years. Function allows hard-coding to be minimized elsewhere in the package.
 }
-\examples{
-convert_wks2yrs(52)
-}
 \seealso{
 \link{convert_yrs2wks}
 }
