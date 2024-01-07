@@ -40,3 +40,15 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Collate: 
+    'basics.R'
+    'brier.R'
+    'datasets.R'
+    'fitting-spl.R'
+    'fitting.R'
+    'lhoods.R'
+    'ltablesurv.R'
+    'ppdpps.R'
+    'probgraphs.R'
+    'psm3mkv-package.R'
+    'resmeans.R'
