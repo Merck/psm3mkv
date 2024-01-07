@@ -19,7 +19,6 @@
 # ==================================================================
 # Basic helper functions
 # All these functions heavily rely on the flexsurv or stats packages
-# None should be externally visible, but some are for now
 # basics.R
 # ==================================================================
 

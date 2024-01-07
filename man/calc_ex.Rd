@@ -9,7 +9,7 @@ calc_ex(Ty = 10, lifetable, discrate = 0)
 \arguments{
 \item{Ty}{Time duration over which to calculate (default is 10 years). Assumes input is in years, and patient-level data is recorded in weeks.}
 
-\item{lifetable}{The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.}
+\item{lifetable}{The lifetable must be a dataframe with columns named \code{lttime} (years) and \code{lx}. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.}
 
 \item{discrate}{Discount rate (\%) per year}
 }
@@ -22,7 +22,7 @@ Calculate restricted life expectancy from a lifetable
 }
 \examples{
 # Create a lifetable. Must end with lx=0.
-ltable <- tibble::tibble(time=0:20, lx=1-time*0.05)
+ltable <- tibble::tibble(lttime=0:20, lx=1-time*0.05)
 calc_ex(lifetable=ltable, discrate=0.03)
 calc_ex(Ty=Inf, lifetable=ltable)
 }

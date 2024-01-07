@@ -4,12 +4,12 @@
 \alias{calc_ltsurv}
 \title{Calculate survival from a lifetable}
 \usage{
-calc_ltsurv(time, lifetable)
+calc_ltsurv(looktime, lifetable)
 }
 \arguments{
-\item{time}{The time(s) to which survival is to be estimated (from time zero).}
-
 \item{lifetable}{The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.}
+
+\item{time}{The time(s) to which survival is to be estimated (from time zero).}
 }
 \value{
 Numeric survival probability
