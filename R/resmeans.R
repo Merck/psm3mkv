@@ -263,16 +263,20 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   starting <- starting/sum(starting)
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
-  # Lifetable constraint
-  ltc <- if (is.data.frame(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
-  # Calculate discounted restricted mean duration
-  rmd <- if (!is.data.frame(lifetable)) {
-    calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate)
-  } else {
-    pmin(ltc, calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate))
+  # Create an integrand
+  integrand_pf <- function(x) {
+    vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
+    pf_psm <- calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate)
+    if (is.data.frame(lifetable)) {
+      osmax <- calc_ltsurv(convert_wks2yrs(x[2]))
+      vn * pmin(pf_psm, osmax)                     
+    } else {
+      vn * pf_psm
+    }
   }
+  int_pf <- stats::integrate(integrand_pf, 0, Tw)          
   # Finally multiply by starting population in PF
-  starting[1] * rmd
+  starting[1] * int_pf$integral
 }
 
 #' Safely calculate restricted mean duration in progression free state for the partitioned survival model
