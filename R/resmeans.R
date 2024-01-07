@@ -133,11 +133,12 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
     http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
     spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
-    if (!is.data.frame(lifetable)) {
-      vn*sttp*sppd*http*spps
-    } else {
-      vn*pmin(sttp*sppd*http*spps, calc_ltsurv(convert_wks2yrs(x[2]), lifetable))
-    }
+    if (is.data.frame(lifetable)) {
+      osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
+      osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
+      osadj <- pmin(osmax2/osmax1, spps) / spps
+    } else {osadj <- 1}
+    vn*sttp*sppd*http*spps*osadj
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
@@ -205,13 +206,13 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
     sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
     sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
-    if (sos1==0) 0 else {
-      if (!is.data.frame(lifetable)) {
-        vn * sttp*sppd*http*sos2/sos1
-      } else {
-        vn * pmin(sttp*sppd*http*sos2/sos1, calc_ltsurv(convert_wks2yrs(x[2]), lifetable))
-      }
-    }
+    osadj <- pmin(sos2/sos1, osmax2/osmax1) / (sos2/sos1)
+    if (is.data.frame(lifetable)) {
+      osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
+      osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
+      osadj <- pmin(sos2/sos1, osmax2/osmax1) / (sos2/sos1)
+    } else {osadj <- 1}
+    if (sos1==0) 0 else {vn*sttp*sppd*http*sos2/sos1*osadj}
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
