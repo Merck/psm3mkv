@@ -75,7 +75,7 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     if (!is.data.frame(lifetable)) {
       vn*sttp*sppd
     } else {
-      vn*pmin(sttp*sppd, vn*calc_ltsurv(conv_wks2yrs(x), lifetable))
+      vn*pmin(sttp*sppd, vn*calc_ltsurv(convert_wks2yrs(x), lifetable))
     }
   }
   int <- stats::integrate(integrand, 0, Tw)
@@ -136,7 +136,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     if (!is.data.frame(lifetable)) {
       vn*sttp*sppd*http*spps
     } else {
-      vn*pmin(sttp*sppd*http*spps, calc_ltsurv(conv_wks2yrs(x[2]), lifetable))
+      vn*pmin(sttp*sppd*http*spps, calc_ltsurv(convert_wks2yrs(x[2]), lifetable))
     }
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
@@ -209,7 +209,7 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
       if (!is.data.frame(lifetable)) {
         vn * sttp*sppd*http*sos2/sos1
       } else {
-        vn * pmin(sttp*sppd*http*sos2/sos1, calc_ltsurv(conv_wks2yrs(x[2]), lifetable))
+        vn * pmin(sttp*sppd*http*sos2/sos1, calc_ltsurv(convert_wks2yrs(x[2]), lifetable))
       }
     }
   }
