@@ -83,9 +83,9 @@ vlookup <- function(indexval, indexvec, valvec) {
 #' @examples
 #' ltable <- tibble::tibble(time=0:10, lx=1-time*0.1)
 #' calc_ltsurv(c(2, 2.5, 9.3), ltable)
-calc_ltsurv <- function(time, lifetable){
-  if (lifetable$time[1]!=0) stop("Lifetable must run from time zero")
-  vlookup(time, lifetable$time, lifetable$lx)$geom / lifetable$lx[1]
+calc_ltsurv <- function(looktime, lifetable){
+  if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
+  vlookup(looktime, lifetable$lttime, lifetable$lx)$geom / lifetable$lx[1]
 }
 
 #' Calculate restricted life expectancy from a lifetable
