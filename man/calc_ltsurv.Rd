@@ -19,5 +19,5 @@ Calculate survival from time zero to a given time, according to a provided lifet
 }
 \examples{
 ltable <- tibble::tibble(time=0:10, lx=1-time*0.1)
-calc_ltsurv(c(2, 2.5, 11), ltable)
+calc_ltsurv(c(2, 2.5, 9.3), ltable)
 }

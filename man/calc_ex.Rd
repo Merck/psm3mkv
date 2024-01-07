@@ -14,7 +14,8 @@ calc_ex(Ty = 10, lifetable, discrate = 0)
 \item{discrate}{Discount rate (\%) per year}
 }
 \value{
-List containing \code{ex}, the numeric (restricted) life expectancy, and \code{calcs}, a dataframe of the calculations.
+List containing \code{ex_y} and \verb{ex_w'}, the numeric (restricted) life expectancy in years and weeks respectively,
+and \code{calcs}, a dataframe of the calculations.
 }
 \description{
 Calculate restricted life expectancy from a lifetable

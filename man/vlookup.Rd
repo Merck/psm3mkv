@@ -35,7 +35,8 @@ vlookup(7, times, survival)
 # because survival time 7 is known, and no interpolation is necessary
 vlookup(c(7, 7.5), times, survival)
 # The second row of the returned tibble reveal different estimates of the survival at time 7.5.
-# The values vary according to the interpolation method between observed survival values at times 7 and 8.
+# The values vary according to the interpolation method between
+# observed survival values at times 7 and 8.
 }
 \seealso{
 \link[HMDHFDplus:readHMDweb]{HMDHFDplus::readHMDweb} can be used to obtain lifetables from the Human Mortality Database
