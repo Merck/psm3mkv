@@ -74,7 +74,7 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     if (is.na(lifetable)) {
       vn*sttp*sppd
     } else {
-      vn*pmin(sttp*sppd, vn*calc_ltsurv(x, lifetable))
+      vn*pmin(sttp*sppd, vn*calc_ltsurv(conv_wks2yrs(x), lifetable))
     }
   }
   int <- stats::integrate(integrand, 0, Tw)
@@ -133,7 +133,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     if (is.na(lifetable)) {
       vn*sttp*sppd*http*spps
     } else {
-      vn*pmin(sttp*sppd*http*spps, calc_ltsurv(x[2], lifetable))
+      vn*pmin(sttp*sppd*http*spps, calc_ltsurv(conv_wks2yrs(x[2]), lifetable))
     }
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
@@ -204,7 +204,7 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
       if (is.na(lifetable)) {
         vn * sttp*sppd*http*sos2/sos1
       } else {
-        vn * pmin(sttp*sppd*http*sos2/sos1, calc_ltsurv(x[2], lifetable))
+        vn * pmin(sttp*sppd*http*sos2/sos1, calc_ltsurv(conv_wks2yrs(x[2]), lifetable))
       }
     }
   }
@@ -257,7 +257,7 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
   # Lifetable constraint
-  ltc <- if (!is.na(lifetable)) calc_ex(Ty, lifetable, discrate) else NA
+  ltc <- if (!is.na(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
   # Calculate discounted restricted mean duration
   rmd <- if (is.na(lifetable)) {
     calc_rmd(Tw, pfs.ts$type, pfs.ts$spec, discrate)
@@ -304,7 +304,7 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Pull out type and spec for OS
   os.ts <- convert_fit2spec(dpam$os)
   # Lifetable constraint
-  ltc <- if (!is.na(lifetable)) calc_ex(Ty, lifetable, discrate) else NA
+  ltc <- if (!is.na(lifetable)) calc_ex(Ty, lifetable, discrate)$ex_w else NA
   # Calculate discounted restricted mean duration
   rmd <- if (is.na(lifetable)) {
     calc_rmd(Tw, os.ts$type, os.ts$spec, discrate)

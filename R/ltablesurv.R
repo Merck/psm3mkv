@@ -90,14 +90,14 @@ calc_ltsurv <- function(time, lifetable){
 
 #' Calculate restricted life expectancy from a lifetable
 #' @param Ty Time duration over which to calculate (default is 10 years). Assumes input is in years, and patient-level data is recorded in weeks.
-#' @param lifetable The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
+#' @param lifetable The lifetable must be a dataframe with columns named `lttime` (years) and `lx`. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @param discrate Discount rate (%) per year
 #' @return List containing `ex_y` and `ex_w'`, the numeric (restricted) life expectancy in years and weeks respectively,
 #' and `calcs`, a dataframe of the calculations.
 #' @export
 #' @examples
 #' # Create a lifetable. Must end with lx=0.
-#' ltable <- tibble::tibble(time=0:20, lx=1-time*0.05)
+#' ltable <- tibble::tibble(lttime=0:20, lx=1-time*0.05)
 #' calc_ex(lifetable=ltable, discrate=0.03)
 #' calc_ex(Ty=Inf, lifetable=ltable)
 calc_ex <- function(Ty=10, lifetable, discrate=0) {
@@ -106,10 +106,10 @@ calc_ex <- function(Ty=10, lifetable, discrate=0) {
   # Calculation
   res1 <- lifetable |>
     dplyr::mutate(
-      midtime = dplyr::if_else(lx>0, (time + dplyr::lead(time))/2, 0),
+      midtime = dplyr::if_else(lx>0, (lttime + dplyr::lead(lttime))/2, 0),
       vn = (1+discrate)^(-midtime),
       lxvn = lx*vn,
-      beyond = (time>Ty)*1,
+      beyond = (lttime>Ty)*1,
       blxvn = beyond*lxvn
     )
   res2 <- res1 |>
