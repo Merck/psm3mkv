@@ -97,7 +97,7 @@ calc_ltsurv <- function(looktime, lifetable){
 #' @export
 #' @examples
 #' # Create a lifetable. Must end with lx=0.
-#' ltable <- tibble::tibble(lttime=0:20, lx=1-time*0.05)
+#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
 #' calc_ex(lifetable=ltable, discrate=0.03)
 #' calc_ex(Ty=Inf, lifetable=ltable)
 calc_ex <- function(Ty=10, lifetable, discrate=0) {
