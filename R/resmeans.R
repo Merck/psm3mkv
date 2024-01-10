@@ -75,7 +75,7 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     if (!is.data.frame(lifetable)) {
       vn*sttp*sppd
     } else {
-      vn*pmin(sttp*sppd, vn*calc_ltsurv(convert_wks2yrs(x), lifetable))
+      vn*sttp*pmin(sppd, calc_ltsurv(convert_wks2yrs(x), lifetable))
     }
   }
   int <- stats::integrate(integrand, 0, Tw)
@@ -136,9 +136,10 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     if (is.data.frame(lifetable)) {
       osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
       osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
-      osadj <- pmin(osmax2/osmax1, spps) / spps
+      osadj_ppd <- pmin(osmax1, sppd)/sppd
+      osadj_pps <- pmin(osmax2/osmax1, spps) / spps
     } else {osadj <- 1}
-    vn*sttp*sppd*http*spps*osadj
+    vn*sttp*sppd*http*spps*osadj_ppd*osadj_pps
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
@@ -210,9 +211,10 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     if (is.data.frame(lifetable)) {
       osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
       osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
-      osadj <- pmin(sos2/sos1, osmax2/osmax1) / (sos2/sos1)
-    } else {osadj <- 1}
-    if (sos1==0) 0 else {vn*sttp*sppd*http*sos2/sos1*osadj}
+      osadj_ppd <- pmin(osmax1, sppd)/sppd
+      osadj_pps <- pmin(osmax2/osmax1, sos2/sos1) / (sos2/sos1)
+      } else {osadj <- 1}
+    if (sos1==0) 0 else {vn*sttp*sppd*http*sos2/sos1*osadj_ppd*osadj_pps}
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
@@ -264,13 +266,16 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   starting <- starting/sum(starting)
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
+  ttp.ts <- convert_fit2spec(dpam$ttp)
   # Create an integrand for PF survival
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
     pf_psm <- calc_surv(Tw, pfs.ts$type, pfs.ts$spec, discrate)
     if (is.data.frame(lifetable)) {
+      ttp.ts <- convert_fit2spec(dpam$ttp)
+      ttp <- calc_surv(Tw, ttp.ts$type, ttp.ts$spec, discrate)
       osmax <- calc_ltsurv(convert_wks2yrs(x[2]))
-      vn * pmin(pf_psm, osmax)                     
+      vn * pmin(pf_psm, ttp*osmax)                     
     } else {
       vn * pf_psm
     }
