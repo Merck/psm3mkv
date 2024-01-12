@@ -270,10 +270,10 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Create an integrand for PF survival
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    pf_psm <- calc_surv(Tw, pfs.ts$type, pfs.ts$spec, discrate)
+    pf_psm <- calc_surv(Tw, pfs.ts$type, pfs.ts$spec)
     if (is.data.frame(lifetable)) {
       ttp.ts <- convert_fit2spec(dpam$ttp)
-      ttp <- calc_surv(Tw, ttp.ts$type, ttp.ts$spec, discrate)
+      ttp <- calc_surv(Tw, ttp.ts$type, ttp.ts$spec)
       osmax <- calc_ltsurv(convert_wks2yrs(x[2]))
       vn * pmin(pf_psm, ttp*osmax)                     
     } else {
@@ -325,7 +325,7 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Create an integrand for overall survival
   integrand_os <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    os_psm <- calc_surv(Tw, os.ts$type, os.ts$spec, discrate)
+    os_psm <- calc_surv(Tw, os.ts$type, os.ts$spec)
     if (is.data.frame(lifetable)) {
       osmax <- calc_ltsurv(convert_wks2yrs(x[2]))
       vn * pmin(os_psm, osmax)                     
