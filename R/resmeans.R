@@ -282,7 +282,7 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   }
   int_pf <- stats::integrate(integrand_pf, 0, Tw)          
   # Finally multiply by starting population in PF
-  starting[1] * int_pf$integral
+  starting[1] * int_pf$value
 }
 
 #' Safely calculate restricted mean duration in progression free state for the partitioned survival model
@@ -335,7 +335,7 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   }
   int_os <- stats::integrate(integrand_os, 0, Tw)
   # Finally multiply by starting population in OS
-  (starting[1] + starting[2]) * int_os$integral
+  (starting[1] + starting[2]) * int_os$value
 }
 
 #' Safely calculate restricted mean duration for overall survival in the partitioned survival model
