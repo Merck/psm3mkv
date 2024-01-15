@@ -194,7 +194,8 @@ We are skipping over any internal or external validation for the purposes of thi
 First we derive a projection without lifetable constraints over a 20 year time horizon.
 
 ```{r proj1}
-proj1 <- calc_allrmds(bosonc, dpam=params, Ty=20)
+thoz <- 10 # Time horizon
+proj1 <- calc_allrmds(bosonc, dpam=params, Ty=thoz)
 res1 <- proj1$results |> dplyr::mutate(lxadj="no", disc=0)
 res1 |> dplyr::mutate(
   dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
@@ -203,7 +204,7 @@ res1 |> dplyr::mutate(
 Then we derive a projection with lifetable constraints over the same time horizon.
 
 ```{r proj2}
-proj2 <- calc_allrmds(bosonc, dpam=params, Ty=20, lifetable=ltable)
+proj2 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, lifetable=ltable)
 res2 <- proj2$results |> dplyr::mutate(lxadj="yes", disc=0)
 res2 |> dplyr::mutate(
   dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
@@ -216,7 +217,7 @@ The State Transition Model Clock Reset (STM-CR) estimate of mean time in PF has 
 Let us compare the effects of the lifetable constraint with the effect of discounting. First we run a model with discounting at 3.5\% per year, but no lifetable constraint.
 
 ```{r proj3}
-proj3 <- calc_allrmds(bosonc, dpam=params, Ty=20, discrate=0.035)
+proj3 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, discrate=0.035)
 res3 <- proj3$results |>
   dplyr::mutate(lxadj="no", disc=3.5)
 res3 |> dplyr::mutate(
@@ -228,7 +229,7 @@ Discounting alone reduces the STM-CR estimate of mean time in PF by `r round(res
 Applying a lifetable constraint and discounting at 3.5\% per year produces our final model for this vignette.
 
 ```{r proj4}
-proj4 <- calc_allrmds(bosonc, dpam=params, Ty=20, lifetable=ltable, discrate=0.035)
+proj4 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, lifetable=ltable, discrate=0.035)
 res4 <- proj4$results |> dplyr::mutate(lxadj="yes", disc=3.5)
 res4 |> dplyr::mutate(
     dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
