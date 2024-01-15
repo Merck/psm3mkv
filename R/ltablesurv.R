@@ -83,7 +83,8 @@ vlookup <- function(indexval, indexvec, valvec) {
 #' @examples
 #' ltable <- tibble::tibble(time=0:10, lx=1-time*0.1)
 #' calc_ltsurv(c(2, 2.5, 9.3), ltable)
-calc_ltsurv <- function(looktime, lifetable){
+calc_ltsurv <- function(looktime, lifetable=NA){
+  if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
   if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
   vlookup(looktime, lifetable$lttime, lifetable$lx)$geom / lifetable$lx[1]
 }

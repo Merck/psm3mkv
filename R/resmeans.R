@@ -207,7 +207,6 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
     sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
     sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
-    osadj <- pmin(sos2/sos1, osmax2/osmax1) / (sos2/sos1)
     if (is.data.frame(lifetable)) {
       osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
       osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
@@ -274,7 +273,7 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     if (is.data.frame(lifetable)) {
       ttp.ts <- convert_fit2spec(dpam$ttp)
       ttp <- calc_surv(Tw, ttp.ts$type, ttp.ts$spec)
-      osmax <- calc_ltsurv(convert_wks2yrs(x))
+      osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
       vn * pmin(pf_psm, ttp*osmax)                     
     } else {
       vn * pf_psm
@@ -327,7 +326,7 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     vn <- (1+discrate)^(-convert_wks2yrs(x))
     os_psm <- calc_surv(x, os.ts$type, os.ts$spec)
     if (is.data.frame(lifetable)) {
-      osmax <- calc_ltsurv(convert_wks2yrs(x))
+      osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
       vn * pmin(os_psm, osmax)                     
     } else {
       vn * os_psm
