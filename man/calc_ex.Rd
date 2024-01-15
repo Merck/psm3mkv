@@ -22,7 +22,7 @@ Calculate restricted life expectancy from a lifetable
 }
 \examples{
 # Create a lifetable. Must end with lx=0.
-ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-calc_ex(lifetable=ltable, discrate=0.03)
-calc_ex(Ty=Inf, lifetable=ltable)
+# ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+# calc_ex(lifetable=ltable, discrate=0.03)
+# calc_ex(Ty=Inf, lifetable=ltable)
 }
