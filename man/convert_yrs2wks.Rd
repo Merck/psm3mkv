@@ -7,7 +7,7 @@
 convert_yrs2wks(years)
 }
 \arguments{
-\item{weeks}{Number of years}
+\item{years}{Number of years}
 }
 \value{
 Number of weeks = years / 7 * 365.25
