@@ -18,6 +18,6 @@ Numeric survival probability
 Calculate survival from time zero to a given time, according to a provided lifetable
 }
 \examples{
-ltable <- tibble::tibble(time=0:10, lx=1-time*0.1)
+ltable <- tibble::tibble(lttime=0:10, lx=1-time*0.1)
 calc_ltsurv(c(2, 2.5, 9.3), ltable)
 }

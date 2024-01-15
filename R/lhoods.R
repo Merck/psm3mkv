@@ -100,7 +100,7 @@ convert_fit2spec <- function(fitsurv) {
 #' calc_likes_psm_simple(bosonc, dpam=params)
 calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
-  pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- NULL
+  pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- pfs.durn <- NULL
   os.ts <- os.type <- os.spec <- os.npars <- NULL
   s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # PFS
@@ -201,7 +201,7 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
-  pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- NULL
+  pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- pfs.durn <- NULL
   os.ts <- os.type <- os.spec <- os.npars <- NULL
   s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # TTP
@@ -306,7 +306,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- ppd.npars <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- ppd.npars <- pfs.durn <- NULL
   pps.ts <- pps.type <- pps.spec <- pps.npars <- NULL
   s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # Pull out distributions and parameters - PPD
@@ -399,7 +399,7 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- ppd.npars <- NULL
+  ppd.ts <- ppd.type <- ppd.spec <- ppd.npars <- pfs.durn <- NULL
   pps.ts <- pps.type <- pps.spec <- pps.npars <- NULL
   s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # Pull out distributions and parameters - PPD
@@ -511,8 +511,9 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 calc_likes <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   methodnames <- list1 <- list2 <- list3 <- list4 <- NULL
-  lldata1 <- lldata2 <- lldata3 <- lldata4 <- NULL
+  lldata1 <- lldata2 <- lldata3 <- lldata4 <- methono <- methname <- NULL
   llvdata <- lldata <- s1_long <- s1_wide <- s2_long <- s2_wide <- s3_long <- NULL
+  ptid <- outcome <- llike <- valid <- valid.x <- valid.y <- valid.x.x <- valid.y.y <- validall <- NULL
   methodnames <- c("psm_simple", "psm_complex", "stm_cf", "stm_cr")
   # Call PSM and STM functions
   list1 <- calc_likes_psm_simple(ptdata, dpam, cuttime)

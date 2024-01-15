@@ -90,7 +90,7 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
 #' @return Numeric survival probability
 #' @export
 #' @examples
-#' ltable <- tibble::tibble(time=0:10, lx=1-time*0.1)
+#' ltable <- tibble::tibble(lttime=0:10, lx=1-time*0.1)
 #' calc_ltsurv(c(2, 2.5, 9.3), ltable)
 calc_ltsurv <- function(looktime, lifetable=NA){
   if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
@@ -106,10 +106,11 @@ calc_ltsurv <- function(looktime, lifetable=NA){
 #' and `calcs`, a dataframe of the calculations.
 #' @examples
 #' # Create a lifetable. Must end with lx=0.
-#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-#' calc_ex(lifetable=ltable, discrate=0.03)
-#' calc_ex(Ty=Inf, lifetable=ltable)
+#' # ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+#' # calc_ex(lifetable=ltable, discrate=0.03)
+#' # calc_ex(Ty=Inf, lifetable=ltable)
 calc_ex <- function(Ty=10, lifetable, discrate=0) {
+  lx <- lttime <- midtime <- vn <- beyond <- lxvn <- blxvn <- NULL
   # Lifetable must have minimum lx = 0
   if (min(lifetable$lx)!=0) stop("Lifetable must end with a zero lx")
   # Calculation

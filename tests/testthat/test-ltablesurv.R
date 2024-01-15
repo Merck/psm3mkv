@@ -65,11 +65,11 @@ lookval1.arith <- (lookval1.lo*(indval1.hi-indval1.act) + lookval1.hi*(indval1.a
 lookval1.geom <- (lookval1.lo^(indval1.hi-indval1.act) * lookval1.hi^(indval1.act-indval1.lo))^(1/(indval1.hi-indval1.lo))
 
 test_that("Single value interpolation produces the right result with each method", {
-  expect_equal(vlookup(indval.act, looktab1$ind, looktab1$val, method="floor"), lookval1.lo)
-  expect_equal(vlookup(indval.act, looktab1$ind, looktab1$val, method="ceiling"), lookval1.hi)
-  expect_equal(vlookup(indval.act, looktab1$ind, looktab1$val, method="arith"), lookval1.arith)
-  expect_equal(vlookup(indval.act, looktab1$ind, looktab1$val, method="geom"), lookval1.geom)
-  expect_equal(vlookup(indval.act, looktab1$ind, looktab1$val, method=""), lookval1.geom)
+  expect_equal(vlookup(indval1.act, looktab1$ind, looktab1$val, method="floor"), lookval1.lo)
+  expect_equal(vlookup(indval1.act, looktab1$ind, looktab1$val, method="ceiling"), lookval1.hi)
+  expect_equal(vlookup(indval1.act, looktab1$ind, looktab1$val, method="arith"), lookval1.arith)
+  expect_equal(vlookup(indval1.act, looktab1$ind, looktab1$val, method="geom"), lookval1.geom)
+  expect_equal(vlookup(indval1.act, looktab1$ind, looktab1$val, method=""), lookval1.geom)
 })
 
 # Multi values with interpolations

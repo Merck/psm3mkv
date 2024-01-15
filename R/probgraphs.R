@@ -439,7 +439,9 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   cat("Creating KM \n")
   # Declare local variables
-  ds <- pfsfit <- osfit <- ppsfit <- NULL
+  ds <- pfsfit <- osfit <- ppsfit <- pfs <- os <- time <- NULL
+  km_pf <- km <- psm <- stm_cr <- stm_cf <- NULL
+  km_pd <- km_os <- km_pps <- stm_cr_pps <- stm_cf_pps <- Time <- pf <- NULL
   rnding <- timevar <- kmpfs <- kmos <- kmpps <- timeos <- gdata <- NULL
   pfdata <- osdata <- ppsdata <- cut_pf <- cut_os <- starting <- NULL
   # Calculations
@@ -489,7 +491,7 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
       psm_os = prob_os_psm(.data$timeplus, dpam, starting),
       psm_pd = .data$psm_os-.data$psm_pf,
       stm_cf_pf = prob_pf_stm(.data$timeplus, dpam, starting),
-      stm_cr_pf = stm_cf_pf,
+      stm_cr_pf = .data$stm_cf_pf,
       stm_cf_pd = prob_pd_stm_cf(.data$timeplus, dpam, starting),
       stm_cr_pd = prob_pd_stm_cr(.data$timeplus, dpam, starting),
       stm_cf_os = .data$stm_cf_pf + .data$stm_cf_pd,
@@ -561,6 +563,9 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   # Internal function to draw graphic
   cat("Drawing plots \n")
   draw_2pgraphic <- function(ds, xlabel="Time from baseline") {
+    # Declare local variable
+    Time <- Probability <- Method <- NULL
+    # Draw graphic
     ggplot2::ggplot(ds, ggplot2::aes(Time, Probability)) +
       ggplot2::geom_line(ggplot2::aes(color = Method)) +
       ggplot2::xlab(xlabel)
