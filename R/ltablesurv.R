@@ -90,7 +90,7 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
 #' @return Numeric survival probability
 #' @export
 #' @examples
-#' ltable <- tibble::tibble(lttime=0:10, lx=1-time*0.1)
+#' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
 #' calc_ltsurv(c(2, 2.5, 9.3), ltable)
 calc_ltsurv <- function(looktime, lifetable=NA){
   if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
