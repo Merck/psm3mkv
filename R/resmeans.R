@@ -358,6 +358,8 @@ prmd_os_psm <- purrr::possibly(rmd_os_psm, otherwise=NA_real_)
 #' @param cuttime Time cutoff - this is nonzero for two-piece models.
 #' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param dpam List of statistical fits to each endpoint required in PSM, STM-CF and STM-CR models.
+#' @param lifetable Optional, a life table. Columns must include `lttime` (time in years, or 52.18 times shorter than the time index elsewhere, starting from zero) and `lx`
+#' @param discrate Discount rate (% per year)
 #' @return List of detailed numeric results
 #' - cutadj indicates the survival function and area under the curves for PFS and OS up to the cutpoint
 #' - results provides results of the restricted means calculations, by model and state.

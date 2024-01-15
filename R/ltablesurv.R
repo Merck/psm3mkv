@@ -74,7 +74,7 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
   ret <- matrix(unlist(sapply(indexval, onelookup)), ncol=length(indexval))
   ret <- tibble::tibble(floor=ret[1,], ceiling=ret[2,], arith=ret[3,], geom=ret[4,])
   # Return depending on method
-  case_when(
+  dplyr::case_when(
     method == "floor" ~ ret$floor,
     method == "ceiling" ~ ret$ceiling,
     method == "arith" ~ ret$arith,
@@ -85,7 +85,7 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
 
 #' Calculate survival from a lifetable
 #' @description Calculate survival from time zero to a given time, according to a provided lifetable
-#' @param time The time(s) to which survival is to be estimated (from time zero).
+#' @param looktime The time(s) to which survival is to be estimated (from time zero).
 #' @param lifetable The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @return Numeric survival probability
 #' @export

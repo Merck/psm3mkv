@@ -337,7 +337,7 @@ convert_wks2yrs <- function(weeks) {
 
 #' Convert years to weeks
 #' @description Convert weeks to years. Function allows hard-coding to be minimized elsewhere in the package.
-#' @param weeks Number of years
+#' @param years Number of years
 #' @return Number of weeks = years / 7 * 365.25
 #' @seealso [psm3mkv::convert_wks2yrs]
 #' @export
