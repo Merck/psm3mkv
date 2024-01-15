@@ -4,7 +4,7 @@
 \alias{calc_ltsurv}
 \title{Calculate survival from a lifetable}
 \usage{
-calc_ltsurv(looktime, lifetable)
+calc_ltsurv(looktime, lifetable = NA)
 }
 \arguments{
 \item{lifetable}{The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.}

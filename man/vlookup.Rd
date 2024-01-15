@@ -4,7 +4,7 @@
 \alias{vlookup}
 \title{VLOOKUP function}
 \usage{
-vlookup(indexval, indexvec, valvec)
+vlookup(indexval, indexvec, valvec, method = "geom")
 }
 \arguments{
 \item{indexval}{The index value to be looked-up (may be a vector of multiple values)}
@@ -12,9 +12,11 @@ vlookup(indexval, indexvec, valvec)
 \item{indexvec}{The vector of indices to look-up in}
 
 \item{valvec}{The vector of values corresponding to the vector of indices}
+
+\item{method}{Method may be \code{floor}, \code{ceiling}, \code{arith} or \code{geom} (default).}
 }
 \value{
-A tibble where each row provides results for each index value. Columns are:
+Numeric value or vector, depending on the lookup/interpolation method chosen:
 \itemize{
 \item \code{floor}: Floor value, where interpolation is required between measured values
 \item \code{ceiling}: Ceiling value, where interpolation is required between measured values
