@@ -33,6 +33,10 @@ calc_allrmds(
 \item{cuttime}{Time cutoff - this is nonzero for two-piece models.}
 
 \item{Ty}{Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.}
+
+\item{lifetable}{Optional, a life table. Columns must include \code{lttime} (time in years, or 52.18 times shorter than the time index elsewhere, starting from zero) and \code{lx}}
+
+\item{discrate}{Discount rate (\% per year)}
 }
 \value{
 List of detailed numeric results
