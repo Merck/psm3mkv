@@ -26,7 +26,8 @@
 #' @param indexval The index value to be looked-up (may be a vector of multiple values)
 #' @param indexvec The vector of indices to look-up in
 #' @param valvec The vector of values corresponding to the vector of indices
-#' @return A tibble where each row provides results for each index value. Columns are:
+#' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default).
+#' @return Numeric value or vector, depending on the lookup/interpolation method chosen:
 #' - `floor`: Floor value, where interpolation is required between measured values
 #' - `ceiling`: Ceiling value, where interpolation is required between measured values
 #' - `arith`: Arithmetic mean, where interpolation is required between measured values
@@ -55,7 +56,9 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
   ret <- NULL
   # Function for looking up value for one index value (oneindexval)
   onelookup <- function(oneindexval) {
-    stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
+    if (oneindexval<min(indexval)) stop("Lookup value is below range of lookup table")
+    if (oneindexval>max(indexval)) stop("Lookup value is above range of lookup table")
+    # stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
     loc <- indexrange <- valrange <- NULL
     # Location of index values
     loc <- match(1, (oneindexval>=indexvec)*(oneindexval<=dplyr::lead(indexvec)))
@@ -101,7 +104,6 @@ calc_ltsurv <- function(looktime, lifetable=NA){
 #' @param discrate Discount rate (%) per year
 #' @return List containing `ex_y` and `ex_w'`, the numeric (restricted) life expectancy in years and weeks respectively,
 #' and `calcs`, a dataframe of the calculations.
-#' @export
 #' @examples
 #' # Create a lifetable. Must end with lx=0.
 #' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
