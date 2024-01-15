@@ -45,7 +45,7 @@
 #' # The second row of the returned tibble reveal different estimates of the survival at time 7.5.
 #' # The values vary according to the interpolation method between
 #' # observed survival values at times 7 and 8.
-vlookup <- function(indexval, indexvec, valvec) {
+vlookup <- function(indexval, indexvec, valvec, method="geom") {
   # Checks that inputs are reasonable
   if (!is.numeric(indexvec)) stop("Index vector must be numeric")
   if (!is.numeric(valvec)) stop("Values vector must be numeric")
@@ -70,8 +70,14 @@ vlookup <- function(indexval, indexvec, valvec) {
   }
   ret <- matrix(unlist(sapply(indexval, onelookup)), ncol=length(indexval))
   ret <- tibble::tibble(floor=ret[1,], ceiling=ret[2,], arith=ret[3,], geom=ret[4,])
-  # Location
-  return(ret)
+  # Return depending on method
+  case_when(
+    method == "floor" ~ ret$floor,
+    method == "ceiling" ~ ret$ceiling,
+    method == "arith" ~ ret$arith,
+    method == "geom" ~ ret$geom,
+    .default = ret$geom
+  )
 }
 
 #' Calculate survival from a lifetable
@@ -86,7 +92,7 @@ vlookup <- function(indexval, indexvec, valvec) {
 calc_ltsurv <- function(looktime, lifetable=NA){
   if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
   if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
-  vlookup(looktime, lifetable$lttime, lifetable$lx)$geom / lifetable$lx[1]
+  vlookup(looktime, lifetable$lttime, lifetable$lx) / lifetable$lx[1]
 }
 
 #' Calculate restricted life expectancy from a lifetable
