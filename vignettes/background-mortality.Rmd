@@ -88,7 +88,7 @@ When these functions are called in *psm3mkv*, both in fitting survival models to
 
 ### Initializing
 
-First we load the packages we need.
+First we load the packages we need - all of which are suggested for or imported to *psm3mkv*.
 
 ```{r packages, message=FALSE}
 library(psm3mkv) # Load psm3mkv itself

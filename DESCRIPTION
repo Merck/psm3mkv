@@ -33,6 +33,7 @@ Suggests:
     boot,
     covr,
     ggsci,
+    HMDHFDplus,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
