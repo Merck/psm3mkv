@@ -1,0 +1,253 @@
+---
+title: "Constraining projections for background mortality"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{background-mortality}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This vignette walks through the process of making projections of
+restricted mean survival times using pre-fitted models, but where those
+projections are constrained for mortality to be at least as great as (a
+given multiple of the) background mortality.
+
+First, we discussing some underpinning math(s). Then we provide a demonstration of the calculations and modeling using some illustrative data.
+
+## The math bit
+
+Following the notation in the journal article supporting this
+package, where membership probabilities at time $t$ from baseline are
+defined in terms of survival and hazard functions of $t$ [1], let us define
+the background mortality survival function as follows
+
+$$
+S_{gen}(t) = 1 - R \left(1 - \frac{l_{x_0 + t}}{l_{x_0}} \right)
+$$
+
+where $x_0$ is the mean age of the study population at baseline, and
+$l_x$ is an appropriate lifetable. We assume a Standardized Mortality
+Ratio (SMR) of $R=1$ for now. In that case, the hazard function between
+time $t$ and $t+1$ is
+
+$$
+h_{gen}(t) = H_{gen}(t+1) - H_{gen}(t)
+$$
+
+$$
+= -\log \left( \frac{l_{x_{0} +t+1}}{l_{x_{0}}} \right) + \log \left( \frac{l_{x_{0} +t}}{l_{x_{0}}} \right)
+$$
+
+$$
+= \log(l_{x_0 +t}) - \log(l_{x_0 +t+1})
+$$
+
+where $H(t) = -\log[S(t)]$ is the cumulative hazard function.
+
+State membership probabilities are projected, according to the
+accompanying article, following equations 3-4. With constraints for
+background mortality, we make the following replacements in survival functions.
+
+|Unadjusted function|Adjusted function|
+|:------------------|:-----------------------------------------|
+| $S_{TTP}(t)$ | No change |
+| $S_{PPD}(t)$ | $\min[ S_{PPD}(t), S_{gen}(t)]$ |
+| $S_{PFS}(t)$ | $\min[ S_{PFS}(t), S_{TTP}(t) \cdot S_{gen}(t)]$ |
+| $S_{OS}(t)$ | $\min [S_{OS}(t), S_{gen}(t)]$ |
+| $S_{PPS}(u,t)$ | $\min \left[ S_{PPS}(u,t), \frac{S_{gen}(t)}{S_{gen}(u)} \right]$ |
+
+And the following replacements in hazard functions.
+
+|Unadjusted function|Adjusted function|
+|:-------------------------|:-----------------------------------------|
+| $h_{TTP}(t)$ | No change |
+| $h_{PPD}(t)$ | $\max [ h_{PPD}(t), h_{gen}(t) ]$ |
+| $h_{PFS}(t)$ | $\max [ h_{PFS}(t), h_{TTP}(t) + h_{gen}(t)]$ |
+| $h_{OS}(t)$ | $\max [h_{OS}(t), h_{gen}(t)]$ |
+| $h_{PPS}(u,t)$ | $\max \left[ h_{PPS}(u,t), \frac{\log(l_{x_0 +t}) - \log(l_{x_0 +u})}{t-u} \right]$ |
+
+### Programming implications
+
+The *psm3mkv* package relies heavily on functions *calc_haz()* and *calc_surv()* to derive hazard and survival functions respectively. These functions in turn depend heavily on the *flexsurv* package[2] (essentially a rather elementary wrapper).
+
+When these functions are called in *psm3mkv*, both in fitting survival models to endpoints and in making projections of membership probabilities, they are adjusted according to the tables above for any lifetable handed to them. The default is for there to be no lifetable and no adjustment for background general mortality.
+
+## Demonstration
+
+### Initializing
+
+First we load the packages we need.
+
+```{r packages, message=FALSE}
+library(psm3mkv) # Load psm3mkv itself
+library(dplyr) # for data wrangling
+library(ggsci) # for nice graphics
+library(flexsurv) # for the datasets attached
+library(HMDHFDplus) # to create lifetables from the Human Mortality Database
+```
+
+### Creating the life table
+
+In order to apply constraints to background mortality, we need some background mortality data, in the form of a lifetable. We can take this from the Human Mortality Database using the *HMDHFDplus* package mentioned above (with thanks to Robert Hettle for the recommendation). The lifetable will need to start from an assumed age at baseline. Lifetables are constructed by time in years.
+
+```{r ltable1, eval=FALSE}
+# Assumed population age at baseline (time=0)
+baseage <- 51.0
+
+# Mortality data - England & Wales, Female, 2019
+mort <- HMDHFDplus::readHMDweb(CNTRY="GBRTENW",
+                        item="fltper_1x1",
+                        username="",
+                        password=""
+                        ) |>
+              filter(Year==2019) |>
+              select(Age, lx, dx) |>
+              mutate(Timey = ceiling(Age-baseage)) |>
+              filter(Timey>=0)
+
+# The table needs to end with lx=0
+mort <- dplyr::add_row(mort, Age=111, lx=0, Timey=60)
+```
+
+You will see that the above code cannot run without a login for the Human Mortality Database (www.mortality.org). Alternatively, we could just make up a mortality table.
+
+```{r ltable2}
+mort <- tibble::tibble(
+  Timey=0:30,
+  Age=50+Timey,
+  lx=10000 * exp(-0.03 * Timey^1.1),
+  dx=lx-dplyr::lead(lx)
+  )
+```
+
+However we do it, once we have the mortality data, we can apply the SMR ($R$) and derive a lifetable from time zero as required.
+
+```{r ltable3}
+# Assumed Standardized Mortality Ratio
+SMR <- 2
+
+# Recalculate the lifetable with the SMR applied
+mort$adjlx <- mort$lx
+for (i in 2:length(mort$lx)) {
+  mort$adjlx[i] <- mort$adjlx[i-1] - SMR * mort$dx[i-1]
+}
+
+# Ensure lx>=0
+mort$adjlx[mort$adjlx<0] <- 0
+
+# Create and view lifetable
+ltable <- tibble::tibble(lttime=mort$Timey, lx=mort$adjlx)
+head(ltable)
+```
+
+Next we get some patient-level data and fit the PSM and STMs. So far, we are closely following the *example* vignette. Time is assumed to be recorded in the patient-level data in weeks, with approximately `r round(365.25/7,2)` weeks per year.
+
+```{r datafit}
+# Get some data
+bosonc <- create_dummydata("flexbosms")
+
+# We'll make the durations a lot longer so that they will be definitely constrained by the lifetable
+bosonc <- bosonc |>
+  dplyr:: mutate(
+    pfs.durn = 20 * pfs.durn,
+    os.durn = 20 * os.durn,
+    ttp.durn = 20 * ttp.durn
+  )
+
+# Fit Royston Parmar splines models to each endpoint
+allfits <- fit_ends_mods_spl(bosonc)
+
+# Pick out best distributions according to min AIC
+fit.ppd <- find_bestfit_spl(allfits$ppd, "aic")
+fit.ttp <- find_bestfit_spl(allfits$ttp, "aic")
+fit.pfs <- find_bestfit_spl(allfits$pfs, "aic")
+fit.os <- find_bestfit_spl(allfits$os, "aic")
+fit.pps_cf <- find_bestfit_spl(allfits$pps_cf, "aic")
+fit.pps_cr <- find_bestfit_spl(allfits$pps_cr, "aic")
+
+# Bring together our preferred fits for each endpoint in a list
+params <- list(ppd = fit.ppd$fit,
+               ttp = fit.ttp$fit,
+               pfs = fit.pfs$fit,
+               os = fit.os$fit,
+               pps_cf = fit.pps_cf$fit,
+               pps_cr = fit.pps_cr$fit
+               )
+```
+
+### Making the projections
+
+We are skipping over any internal or external validation for the purposes of this vignette, and jump instead straight to making the survival projections.
+
+First we derive a projection without lifetable constraints over a 20 year time horizon.
+
+```{r proj1}
+thoz <- 10 # Time horizon
+proj1 <- calc_allrmds(bosonc, dpam=params, Ty=thoz)
+res1 <- proj1$results |> dplyr::mutate(lxadj="no", disc=0)
+res1 |> dplyr::mutate(
+  dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+```
+
+Then we derive a projection with lifetable constraints over the same time horizon.
+
+```{r proj2}
+proj2 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, lifetable=ltable)
+res2 <- proj2$results |> dplyr::mutate(lxadj="yes", disc=0)
+res2 |> dplyr::mutate(
+  dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+```
+
+The State Transition Model Clock Reset (STM-CR) estimate of mean time in PF has reduced by `r round(res1$pf[3]-res2$pf[3],1)` weeks for example, from `r round(res1$pf[3],1)` to `r round(res2$pf[3],1)` weeks.
+
+### Discounting
+
+Let us compare the effects of the lifetable constraint with the effect of discounting. First we run a model with discounting at 3.5\% per year, but no lifetable constraint.
+
+```{r proj3}
+proj3 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, discrate=0.035)
+res3 <- proj3$results |>
+  dplyr::mutate(lxadj="no", disc=3.5)
+res3 |> dplyr::mutate(
+    dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+```
+
+Discounting alone reduces the STM-CR estimate of mean time in PF by `r round(res1$pf[3]-res3$pf[3],1)` weeks for example, from `r round(res1$pf[3],1)` to `r round(res3$pf[3],1)` weeks.
+
+Applying a lifetable constraint and discounting at 3.5\% per year produces our final model for this vignette.
+
+```{r proj4}
+proj4 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, lifetable=ltable, discrate=0.035)
+res4 <- proj4$results |> dplyr::mutate(lxadj="yes", disc=3.5)
+res4 |> dplyr::mutate(
+    dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+```
+
+The final STM-CR estimate of mean time in PF, with both a lifetable constraint and discounting at 3.5\% per year is `r round(res4$pf[3],1)` weeks.
+
+A summary of the STM-CR estimates of mean time in PF is given in the table below.
+
+|Model | Estimate of mean time in PF (weeks) | Change from starting estimate (weeks)
+|:-----|:---------|:-----------------------------|
+| No lifetable constraint, no discounting | `r round(res1$pf[3],1)` | - |
+| With lifetable constraint, no discounting | `r round(res2$pf[3],1)` | `r round(res2$pf[3]-res1$pf[3],1)` |
+| No lifetable constraint, discounting at 3.5\% pa | `r round(res3$pf[3],1)` | `r round(res3$pf[3]-res1$pf[3],1)` |
+| With lifetable constraint, discounting at 3.5\% pa | `r round(res4$pf[3],1)` | `r round(res4$pf[3]-res1$pf[3],1)` |
+
+## References
+
+1. Muston D. Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit. In review. Applied Health Economics and Health Policy.
+
+2. Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M, Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State Models. Available at: https://cran.r-project.org/package=flexsurv.

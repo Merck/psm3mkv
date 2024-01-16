@@ -4,7 +4,7 @@
 \alias{calc_rmd}
 \title{Calculate restricted mean durations}
 \usage{
-calc_rmd(Tw, type, spec)
+calc_rmd(Tw, type, spec, discrate = 0)
 }
 \arguments{
 \item{Tw}{is the time horizon (weeks) over which the mean should be calculated.}
@@ -31,6 +31,8 @@ calc_rmd(Tw, type, spec)
 ** knots - Locations of knots on the axis of log time, supplied in increasing order. Unlike in \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline}, these include the two boundary knots.
 ** scale - "hazard", "odds", or "normal", as described in \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline}. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
 }}
+
+\item{discrate}{Discounting rate (\%) per year}
 }
 \value{
 The value of a hazard function, a numeric value.

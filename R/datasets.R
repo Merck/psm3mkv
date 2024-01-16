@@ -47,6 +47,9 @@ create_dummydata <- function(dsname) {
 #' @seealso [create_dummydata()]
 #' @importFrom rlang .data
 create_dummydata_survcan <- function() {
+  # Declare local variables
+  ptid <- os.durn <- os.flag <- NULL
+  # Create dataset
   survival::cancer |>
     dplyr::mutate(
       ptid = dplyr::row_number(),
@@ -62,6 +65,10 @@ create_dummydata_survcan <- function() {
 #' @seealso [create_dummydata()]
 #' @importFrom rlang .data
 create_dummydata_flexbosms <- function() {
+  # Declare local variables
+  id <- pfs.durn <- pfs.flag <- NULL
+  os.durn <- os.flag <- ttp.durn <- ttp.flag <- NULL
+  # Create dataset
   flexsurv::bosms3 |>
         tidyr::pivot_wider(id_cols = "id",
                      names_from = "trans",

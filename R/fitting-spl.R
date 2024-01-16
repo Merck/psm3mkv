@@ -104,7 +104,7 @@ fit_ends_mods_spl <- function(ds,
                               expvar = NA
                               ) {
   # Declare local variables
-  dspps <- fits.ppd <- fits.ttp <- fits.pfs <- NULL
+  dspps <- pps.durn <- fits.ppd <- fits.ttp <- fits.pfs <- NULL
   fits.os <- fits.pps_cf <- fits.pps_cr <- NULL
   # Derive additional fields, as with regular function
   ds <- create_extrafields(ds, cuttime=0)

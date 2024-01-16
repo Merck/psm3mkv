@@ -217,6 +217,8 @@ pickout_psmhaz <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 #' #   psmtype="simple")
 #' # psmh_simple$graph
 graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
+  # Declare local variables
+  Adjusted <- Unadjusted <- Time <- Hazard <- Method <- NULL
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Pull out hazards to plot (inefficiently calls function twice, but is quite quick)
@@ -265,6 +267,8 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 #' # psmtype="simple")
 #' # psms_simple$graph
 graph_psm_survs <- function(timevar, endpoint, ptdata, dpam, psmtype) {
+  # Declare local variables
+  Adjusted <- Unadjusted <- Time <- Survival <- Method <- NULL
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Unadjusted hazard
