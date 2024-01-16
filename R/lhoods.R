@@ -510,7 +510,7 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #' calc_likes(bosonc, dpam=params)
 calc_likes <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
-  methodnames <- list1 <- list2 <- list3 <- list4 <- NULL
+  methodnames <- list1 <- list2 <- list3 <- list4 <- methno <- NULL
   lldata1 <- lldata2 <- lldata3 <- lldata4 <- methono <- methname <- NULL
   llvdata <- lldata <- s1_long <- s1_wide <- s2_long <- s2_wide <- s3_long <- NULL
   ptid <- outcome <- llike <- valid <- valid.x <- valid.y <- valid.x.x <- valid.y.y <- validall <- NULL
