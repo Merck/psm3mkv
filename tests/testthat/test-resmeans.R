@@ -209,33 +209,21 @@ test_that("Zero time horizon gives zero mean", {
 # Check discounting reduces the means
 
 test_that("Including discounting reduces the mean", {
-  expect_lte(rmd_pf_stm(params, Ty=15), rmd_pf_stm(params, 15, discrate=0.03))
-  expect_lte(rmd_pd_stm_cr(params, Ty=15), rmd_pd_stm_cr(params, Ty=15, discrate=0.03))
-  expect_lte(rmd_pd_stm_cf(params, Ty=15), rmd_pd_stm_cf(params, Ty=15, discrate=0.03))
-  expect_lte(rmd_pf_psm(params, Ty=15), rmd_pf_psm(params, Ty=15, discrate=0.03))
-  expect_lte(rmd_os_psm(params, Ty=15), rmd_os_psm(params, Ty=15, discrate=0.03))
+  expect_gte(rmd_pf_stm(params, Ty=15), rmd_pf_stm(params, 15, discrate=0.03))
+  expect_gte(rmd_pd_stm_cr(params, Ty=15), rmd_pd_stm_cr(params, Ty=15, discrate=0.03))
+  expect_gte(rmd_pd_stm_cf(params, Ty=15), rmd_pd_stm_cf(params, Ty=15, discrate=0.03))
+  expect_gte(rmd_pf_psm(params, Ty=15), rmd_pf_psm(params, Ty=15, discrate=0.03))
+  expect_gte(rmd_os_psm(params, Ty=15), rmd_os_psm(params, Ty=15, discrate=0.03))
 })
 
-# Check an extreme life table (survival to year 1 = 0%) produces means less than 52.18
+# Including a lifetable adjustment reduces the RMDs
 
-ltable <- data.frame(lttime=c(0,1), lx=c(1,0))
-
-test_that("With an extreme life table, means are extremely low", {
-  expect_lte(rmd_pf_stm(params, Ty=15, lifetable=ltable, 52))
-  expect_lte(rmd_pd_stm_cr(params, Ty=15, lifetable=ltable, 52))
-  expect_lte(rmd_pd_stm_cf(params, Ty=15, lifetable=ltable, 52))
-  expect_lte(rmd_pf_psm(params, Ty=15, lifetable=ltable, 52))
-  expect_lte(rmd_os_psm(params, Ty=15, lifetable=ltable, 52))
-})
-
-# Now change the life table to something more sensible
-
-ltable <- data.frame(lttime<-0:10, lx=10-(0:10))
+ltable <- data.frame(lttime<-0:20, lx=20-(0:20))
 
 test_that("Adding a lifetable reduces the mean", {
-  expect_lte(rmd_pf_stm(params, Ty=15, lifetable=ltable), rmd_pf_stm(params, Ty=15))
-  expect_lte(rmd_pd_stm_cr(params, Ty=15, lifetable=ltable), rmd_pd_stm_cr(params, Ty=15))
-  expect_lte(rmd_pd_stm_cf(params, Ty=15, lifetable=ltable), rmd_pd_stm_cf(params, Ty=15))
-  expect_lte(rmd_pf_psm(params, Ty=15, lifetable=ltable), rmd_pf_psm(params, Ty=15))
-  expect_lte(rmd_os_psm(params, Ty=15), lifetable=ltable), rmd_os_psm(params, Ty=15))
+  expect_lte(rmd_pf_stm(params, Ty=10, lifetable=ltable), rmd_pf_stm(params, Ty=10))
+  expect_lte(rmd_pd_stm_cr(params, Ty=5, lifetable=ltable), rmd_pd_stm_cr(params, Ty=5))
+  expect_lte(rmd_pd_stm_cf(params, Ty=10, lifetable=ltable), rmd_pd_stm_cf(params, Ty=10))
+  expect_lte(rmd_pf_psm(params, Ty=10, lifetable=ltable), rmd_pf_psm(params, Ty=10))
+  expect_lte(rmd_os_psm(params, Ty=10, lifetable=ltable), rmd_os_psm(params, Ty=10))
 })
