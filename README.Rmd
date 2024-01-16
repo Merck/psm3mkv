@@ -66,7 +66,7 @@ Additionally, for parametric modeling of STM structures, the model for survival 
 
 The accompanying `vignette("example")` illustrates how the package can be used for the one-piece parametric and spline modeling.
 
-A second vignette is in development to illustrate the use of this package for the modeling of PPS in relation to explanatory variables such as TTP.
+A second vignette, `vignette("background-mortality")` illustrates how, after fitting models, estimates of restricted mean durations in health states can be calculated after constraining for background mortality from a given life table. This mortality is assumed to add to the mortality hazard observed in the dataset.
 
 ## Installation
 
