@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/background-mortality.html">Constraining projections for background mortality</a>
     <a class="dropdown-item" href="../articles/example.html">Example use of psm3mkv</a>
   </div>
 </li>
@@ -57,7 +58,15 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_allrmds</span><span class="op">(</span><span class="va">simdat</span>, inclset <span class="op">=</span> <span class="fl">0</span>, <span class="va">dpam</span>, cuttime <span class="op">=</span> <span class="fl">0</span>, Ty <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_allrmds</span><span class="op">(</span></span>
+<span>  <span class="va">simdat</span>,</span>
+<span>  inclset <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  <span class="va">dpam</span>,</span>
+<span>  cuttime <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  Ty <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  lifetable <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  discrate <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -87,6 +96,14 @@
 
 <dt>Ty</dt>
 <dd><p>Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.</p></dd>
+
+
+<dt>lifetable</dt>
+<dd><p>Optional, a life table. Columns must include <code>lttime</code> (time in years, or 52.18 times shorter than the time index elsewhere, starting from zero) and <code>lx</code></p></dd>
+
+
+<dt>discrate</dt>
+<dd><p>Discount rate (% per year)</p></dd>
 
 </dl></div>
     <div class="section level2">

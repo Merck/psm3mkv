@@ -10,6 +10,9 @@
     <loc>https://merck.github.io/psm3mkv/LICENSES_THIRD_PARTY.html</loc>
   </url>
   <url>
+    <loc>https://merck.github.io/psm3mkv/articles/background-mortality.html</loc>
+  </url>
+  <url>
     <loc>https://merck.github.io/psm3mkv/articles/example.html</loc>
   </url>
   <url>
@@ -29,6 +32,9 @@
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_allrmds_boot.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/calc_ex.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_haz.html</loc>
@@ -58,6 +64,9 @@
     <loc>https://merck.github.io/psm3mkv/reference/calc_likes_stm_cr.html</loc>
   </url>
   <url>
+    <loc>https://merck.github.io/psm3mkv/reference/calc_ltsurv.html</loc>
+  </url>
+  <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_pdist.html</loc>
   </url>
   <url>
@@ -80,6 +89,12 @@
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/convert_fit2spec.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/convert_wks2yrs.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/convert_yrs2wks.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/create_dummydata.html</loc>
@@ -197,5 +212,8 @@
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/rmd_pf_stm.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/vlookup.html</loc>
   </url>
 </urlset>
