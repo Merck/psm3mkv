@@ -7,6 +7,12 @@ news:
  - text: "usethis 1.0.0 (and 1.1.0)"
    href: https://www.tidyverse.org/articles/2017/11/usethis-1.0.0/
 
+# 15 Jan 2024 - Version 0.2
+
+This version provides additional functionality to the calculation of restricted mean durations in `calc_allrmds`. These estimates may now be constrained by a lifetable (see `calc_ltsurv`) and discounting may now be applied. A vignette describing how to use this functionality is provided ("background-mortality").
+
+There are also some changes to _pkgdown.yml to avoid the theming changes imposed in the 0.6.0 release of bslib 0.6.0, with thanks to @nanxstats.
+
 # 5 Jan 2024 - Version 0.1.1
 
 ## Added PSM analysis functions (experimental)
