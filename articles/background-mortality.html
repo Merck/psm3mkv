@@ -92,10 +92,19 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette walks through the process of making projections of
-restricted mean survival times using pre-fitted models, but where those
-projections are constrained for mortality to be at least as great as (a
-given multiple of the) background mortality.</p>
+<p>This is the second in a series of vignettes illustrating methods for
+evaluating the fit and efficiency of three state oncology
+cost-effectiveness model structures, as described in an accompanying
+journal article.[1] The package is heavily dependent on <a href="https://cran.r-project.org/package=flexsurv" class="external-link">flexsurv</a>).[2]</p>
+<p>After fitting models, as described in
+<code><a href="../articles/example.html">vignette("example")</a></code>, estimates of restricted mean durations
+in health states can be calculated after constraining for background
+mortality from a given life table. This background mortality is assumed
+to add to the mortality hazard observed in the dataset. In doing this,
+we must assume that the original dataset was NOT subject to this type of
+mortality. This is a common, pragmatic assumption in cost-effectiveness
+models. Further discussion of survival extrapolation incorporating
+general population mortality is provided by Sweeting et al.[3]</p>
 <p>First, we discussing some underpinning math(s). Then we provide a
 demonstration of the calculations and modeling using some illustrative
 data.</p>
@@ -299,14 +308,15 @@ time zero as required.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>      4  <span style="text-decoration: underline;">7</span>425.</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>      5  <span style="text-decoration: underline;">6</span>769.</span></span></code></pre></div>
 <p>Next we get some patient-level data and fit the PSM and STMs. So far,
-we are closely following the <em>example</em> vignette. Time is assumed
-to be recorded in the patient-level data in weeks, with approximately
-52.18 weeks per year.</p>
+we are closely following <code><a href="../articles/example.html">vignette("example")</a></code>. Time is
+assumed to be recorded in the patient-level data in weeks, with
+approximately 52.18 weeks per year.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get some data</span></span>
 <span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># We'll make the durations a lot longer so that they will be definitely constrained by the lifetable</span></span>
+<span><span class="co"># We'll make the durations a lot longer</span></span>
+<span><span class="co"># so that they will be definitely constrained by the lifetable</span></span>
 <span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="va">bosonc</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    pfs.durn <span class="op">=</span> <span class="fl">20</span> <span class="op">*</span> <span class="va">pfs.durn</span>,</span>
@@ -340,11 +350,16 @@ to be recorded in the patient-level data in weeks, with approximately
 <p>We are skipping over any internal or external validation for the
 purposes of this vignette, and jump instead straight to making the
 survival projections.</p>
-<p>First we derive a projection without lifetable constraints over a 20
+<p>First we derive a projection without lifetable constraints over a 10
 year time horizon.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">thoz</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="co"># Time horizon</span></span>
+<code class="sourceCode R"><span><span class="co"># Set time horizon</span></span>
+<span><span class="va">thoz</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
+<span></span>
+<span><span class="co"># Run the calculations</span></span>
 <span><span class="va">proj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Present the results</span></span>
 <span><span class="va">res1</span> <span class="op">&lt;-</span> <span class="va">proj1</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lxadj<span class="op">=</span><span class="st">"no"</span>, disc<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">res1</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -357,7 +372,10 @@ year time horizon.</p>
 <p>Then we derive a projection with lifetable constraints over the same
 time horizon.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">proj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, lifetable<span class="op">=</span><span class="va">ltable</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Run the calculation</span></span>
+<span><span class="va">proj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, lifetable<span class="op">=</span><span class="va">ltable</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Present the results</span></span>
 <span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="va">proj2</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lxadj<span class="op">=</span><span class="st">"yes"</span>, disc<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">res2</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -378,7 +396,10 @@ weeks.</p>
 effect of discounting. First we run a model with discounting at 3.5% per
 year, but no lifetable constraint.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">proj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, discrate<span class="op">=</span><span class="fl">0.035</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Run the calculations</span></span>
+<span><span class="va">proj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, discrate<span class="op">=</span><span class="fl">0.035</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Present the results</span></span>
 <span><span class="va">res3</span> <span class="op">&lt;-</span> <span class="va">proj3</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lxadj<span class="op">=</span><span class="st">"no"</span>, disc<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span></span>
 <span><span class="va">res3</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -394,7 +415,10 @@ year, but no lifetable constraint.</p>
 <p>Applying a lifetable constraint and discounting at 3.5% per year
 produces our final model for this vignette.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">proj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, lifetable<span class="op">=</span><span class="va">ltable</span>, discrate<span class="op">=</span><span class="fl">0.035</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Run the calculations</span></span>
+<span><span class="va">proj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, lifetable<span class="op">=</span><span class="va">ltable</span>, discrate<span class="op">=</span><span class="fl">0.035</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Present the results</span></span>
 <span><span class="va">res4</span> <span class="op">&lt;-</span> <span class="va">proj4</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lxadj<span class="op">=</span><span class="st">"yes"</span>, disc<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span></span>
 <span><span class="va">res4</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -410,9 +434,9 @@ constraint and discounting at 3.5% per year is 200.3 weeks.</p>
 table below.</p>
 <table class="table">
 <colgroup>
-<col width="13%">
-<col width="21%">
-<col width="65%">
+<col width="33%">
+<col width="33%">
+<col width="33%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Model</th>
@@ -450,10 +474,14 @@ table below.</p>
 <ol style="list-style-type: decimal">
 <li><p>Muston D. Informing structural assumptions for three state
 oncology cost-effectiveness models through model efficiency and fit. In
-review. Applied Health Economics and Health Policy.</p></li>
+review.</p></li>
 <li><p>Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M,
 Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State
 Models. Available at: <a href="https://cran.r-project.org/package=flexsurv" class="external-link uri">https://cran.r-project.org/package=flexsurv</a>.</p></li>
+<li><p>Sweeting et al. Survival Extrapolation Incorporating General
+Population Mortality Using Excess Hazard and Cure Models: A Tutorial.
+Med Decis Making 2023 Aug;43(6):737-748. <a href="https://doi.org/10.1177/0272989X231184247" class="external-link">DOI:
+10.1177/0272989X231184247</a></p></li>
 </ol>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
