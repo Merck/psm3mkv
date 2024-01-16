@@ -5,6 +5,7 @@ url: https://merck.github.io/psm3mkv/
 template:
   bootstrap: 5
   bslib:
+    preset: "bootstrap"
     primary: "#00857c"
     navbar-light-brand-color: "#fff"
     navbar-light-brand-hover-color: "#fff"
@@ -19,5 +20,5 @@ footer:
     left: [developed_by, built_with, legal]
     right: [blank]
   components:
-    legal: "<br>Copyright &copy; 2023 Merck & Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved."
+    legal: "<br>Copyright &copy; 2024 Merck & Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved."
     blank: "<span></span>"
