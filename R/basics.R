@@ -19,7 +19,6 @@
 # ==================================================================
 # Basic helper functions
 # All these functions heavily rely on the flexsurv or stats packages
-# None are externally visible
 # basics.R
 # ==================================================================
 
@@ -251,6 +250,7 @@ calc_rmd_par <- function(Tw, dist, pars) {
 #' ** gamma - Parameters describing the baseline spline function, as described in [flexsurv::flexsurvspline]. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
 #' ** knots - Locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
 #' ** scale - "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
+#' @param discrate Discounting rate (%) per year
 #' @inherit calc_haz_par seealso
 #' @inherit calc_haz_par return
 #' @export
@@ -263,10 +263,11 @@ calc_rmd_par <- function(Tw, dist, pars) {
 #'     type="par",
 #'     spec=list(dist="lnorm", pars=c(3,1))
 #'     )
-calc_rmd <- function(Tw, type, spec){
+calc_rmd <- function(Tw, type, spec, discrate=0){
+  vn <- (1+discrate)^(-convert_wks2yrs(Tw))
   type <- tolower(substr(type, 1, 3))
   if (type=="spl") {
-    flexsurv::rmst_survspline(t = Tw,
+    vn * flexsurv::rmst_survspline(t = Tw,
                                  gamma = spec$gamma,
                                  beta = 0,
                                  X = 0,
@@ -276,7 +277,7 @@ calc_rmd <- function(Tw, type, spec){
                                  offset = 0
                                  )
   } else if (type=="par") {
-    calc_rmd_par(Tw=Tw, dist=spec$dist, pars=spec$pars)
+    vn * calc_rmd_par(Tw=Tw, dist=spec$dist, pars=spec$pars)
   } else {
     NA
   }
@@ -322,4 +323,24 @@ give_noparams <- function(type, spec) {
   else {
     NA
   }
+}
+
+#' Convert weeks to years
+#' @description Convert weeks to years. Function allows hard-coding to be minimized elsewhere in the package.
+#' @param weeks Number of weeks
+#' @return Number of years = weeks x 7 / 365.25
+#' @seealso [psm3mkv::convert_yrs2wks]
+#' @export
+convert_wks2yrs <- function(weeks) {
+  weeks*7/365.25
+}
+
+#' Convert years to weeks
+#' @description Convert weeks to years. Function allows hard-coding to be minimized elsewhere in the package.
+#' @param years Number of years
+#' @return Number of weeks = years / 7 * 365.25
+#' @seealso [psm3mkv::convert_wks2yrs]
+#' @export
+convert_yrs2wks <- function(years) {
+  years*365.25/7
 }

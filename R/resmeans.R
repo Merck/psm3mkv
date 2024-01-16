@@ -36,7 +36,10 @@
 #' @param dpam List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).
 #' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param starting Vector of membership probabilities at time zero.
+#' @param lifetable Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
+#' @param discrate Discount rate (%) per year
 #' @return Numeric value in same time unit as patient-level data (weeks).
+#' @include basics.R
 #' @seealso Used safely as [prmd_pf_stm] by [calc_allrmds]
 #' @export
 #' @examples
@@ -53,27 +56,27 @@
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pf_stm(dpam=params)
-rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare local variables
-  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- NULL
-  # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- ttp.ts <- ppd.ts <- NULL
+  # Time horizon in weeks
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP
+  # Pull out type and spec for TTP and PPD
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
   # RMD PFS is the integral of S_PFS; S_PFS = S_TTP x S_PPD
+  # subject to a maximum of the lifetable survival
   integrand <- function(x) {
-    sttp <- calc_surv(x, ttp.type, ttp.spec)
-    sppd <- calc_surv(x, ppd.type, ppd.spec)
-    sttp*sppd
+    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    sttp <- calc_surv(x, ttp.ts$type, ttp.ts$spec)
+    sppd <- calc_surv(x, ppd.ts$type, ppd.ts$spec)
+    if (!is.data.frame(lifetable)) {
+      vn*sttp*sppd
+    } else {
+      vn*sttp*pmin(sppd, calc_ltsurv(convert_wks2yrs(x), lifetable))
+    }
   }
   int <- stats::integrate(integrand, 0, Tw)
   return(starting[1]*int$value)
@@ -82,6 +85,7 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
 #' Safely calculate restricted mean duration in progression-free for markov models
 #' @description Calculates the mean duration in the progression-free state for both the markov clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pf_stm]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pf_stm]
+#' @include basics.R
 #' @return Numeric value in same time unit as patient-level data (weeks).
 prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 
@@ -90,6 +94,7 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso [rmd_pd_stm_cr]
+#' @include basics.R
 #' @export
 #' @seealso Used safely as [prmd_pd_stm_cr] by [calc_allrmds]
 #' @examples
@@ -106,42 +111,44 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pd_stm_cr(dpam=params)
-rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
+  # Declare error if starting[2]>0 and lifetable!=NA
+  if ((is.data.frame(lifetable))*starting[2]!=0) stop("Cannot apply lifetable constraint when PD state not initially empty")
   # Declare local variables
-  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- NULL
-  pps.ts <- pps.type <- pps.spec <- NULL
+  Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
   # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP
+  # Pull out type and spec for TTP, PPD and PPS_CR
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
-  # Pull out type and spec for PPS_CR
   pps.ts <- convert_fit2spec(dpam$pps_cr)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
   # Integrand from PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS(x2-x1)
+  # subject to a maximum of the lifetable survival
   integrand_pf <- function(x) {
-    sttp <- calc_surv(x[1], ttp.type, ttp.spec)
-    sppd <- calc_surv(x[1], ppd.type, ppd.spec)
-    http <- calc_haz(x[1], ttp.type, ttp.spec)
-    spps <- calc_surv(x[2]-x[1], pps.type, pps.spec)
-    sttp*sppd*http*spps
+    vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
+    sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
+    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
+    http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
+    spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
+    if (is.data.frame(lifetable)) {
+      osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
+      osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
+      osadj_ppd <- pmin(osmax1, sppd)/sppd
+      osadj_pps <- pmin(osmax2/osmax1, spps) / spps
+    } else {osadj_ppd <- osadj_pps <- 1}
+    vn*sttp*sppd*http*spps*osadj_ppd*osadj_pps
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
   # Integrand from PD = S_PPS(x2-x1)
   integrand_pd <- function(x) {
-    calc_surv(x, pps.type, pps.spec)
-  }
+    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    spps <- calc_surv(x, pps.ts$type, pps.ts$spec)
+    vn*spps
+    }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
   # Mean sojourn given starting vector
   soj <- starting[1] * int_pf$integral + starting[2] * int_pd$value
@@ -152,12 +159,14 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
 #' @description Calculates the mean duration in the progressed disease state for the clock reset markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pd_stm_cr]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pd_stm_cr]
 #' @return Numeric value in same time unit as patient-level data (weeks).
+#' @include basics.R
 prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 
 #' Restricted mean duration in progressed disease state for clock forward markov model
 #' @description Calculates the mean duration in the progressed disease state for the clock forward markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
+#' @include basics.R
 #' @seealso Used safely as [prmd_pd_stm_cf] by [calc_allrmds]
 #' @export
 #' @examples
@@ -175,42 +184,42 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pd_stm_cf(dpam=params)
-rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
+  # Declare error if starting[2]>0 and lifetable!=NA
+  if ((is.data.frame(lifetable))*starting[2]!=0) stop("Cannot apply life-table constraint when PD state not initially empty")
   # Declare local variables
-  Tw <- ttp.ts <- ttp.type <- ttp.spec <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- NULL
-  pps.ts <- pps.type <- pps.spec <- NULL
+  Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
   # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for PPD
+  # Pull out type and spec for TTP, PPD and PPS_CF
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
-  # Pull out type and spec for PPS_CF
   pps.ts <- convert_fit2spec(dpam$pps_cf)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
   # Integrand PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_OS(x2)/S_OS(x1)
+  # subject to lifetable maximum
   integrand_pf <- function(x) {
-    sttp <- calc_surv(x[1], ttp.type, ttp.spec)
-    sppd <- calc_surv(x[1], ppd.type, ppd.spec)
-    http <- calc_haz(x[1], ttp.type, ttp.spec)
-    sos1 <- calc_surv(x[1], pps.type, pps.spec)
-    sos2 <- calc_surv(x[2], pps.type, pps.spec)
-    ifelse(sos1==0, 0, sttp*sppd*http*sos2/sos1)
+    vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
+    sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
+    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
+    http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
+    sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
+    sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
+    if (is.data.frame(lifetable)) {
+      osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
+      osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
+      osadj_ppd <- pmin(osmax1, sppd)/sppd
+      osadj_pps <- pmin(osmax2/osmax1, sos2/sos1) / (sos2/sos1)
+      } else {osadj_ppd <- osadj_pps <- 1}
+    if (sos1==0) 0 else {vn*sttp*sppd*http*sos2/sos1*osadj_ppd*osadj_pps}
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
   # Integrand PD = S_OS(x2)/S_OS(x1)
   integrand_pd <- function(x) {
-    calc_surv(x, pps.type, pps.spec)
+    calc_surv(x, pps.ts$type, pps.ts$spec)
   }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
   # Mean sojourn given starting vector
@@ -222,6 +231,7 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
 #' @description Calculates the mean duration in the progressed disease state for the clock forward markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pd_stm_cf]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pd_stm_cf]
 #' @return Numeric value in same time unit as patient-level data (weeks).
+#' @include basics.R
 prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 
 #' Restricted mean duration in progression free state for the partitioned survival model
@@ -229,6 +239,7 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pf_psm] by [calc_allrmds]
+#' @include basics.R
 #' @export
 #' @examples
 #' # Create dataset and fit survival models (splines)
@@ -245,32 +256,46 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pf_psm(dpam=params)
-rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare local variables
-  Tw <- NULL
-  pfs.ts <- pfs.type <- pfs.spec <- NULL
+  Tw <- pfs.ts <- rmd <- NULL
   # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
-  pfs.type <- pfs.ts$type
-  pfs.spec <- pfs.ts$spec
-  # Call calc_rmd
-  starting[1] * calc_rmd(Tw, pfs.type, pfs.spec)
+  ttp.ts <- convert_fit2spec(dpam$ttp)
+  # Create an integrand for PF survival
+  integrand_pf <- function(x) {
+    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    pf_psm <- calc_surv(x, pfs.ts$type, pfs.ts$spec)
+    if (is.data.frame(lifetable)) {
+      ttp.ts <- convert_fit2spec(dpam$ttp)
+      ttp <- calc_surv(Tw, ttp.ts$type, ttp.ts$spec)
+      osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
+      vn * pmin(pf_psm, ttp*osmax)                     
+    } else {
+      vn * pf_psm
+    }
+  }
+  int_pf <- stats::integrate(integrand_pf, 0, Tw)          
+  # Finally multiply by starting population in PF
+  starting[1] * int_pf$value
 }
 
 #' Safely calculate restricted mean duration in progression free state for the partitioned survival model
 #' @description Calculates the mean duration in the progression free state for the partitioned survival model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pf_psm]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pf_psm]
 #' @return Numeric value in same time unit as patient-level data (weeks).
+#' @include basics.R
 prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 
 #' Restricted mean duration for overall survival in the partitioned survival model
 #' @description Calculates the mean duration alive (i.e. in either progression free or progressed disease states) for the partitioned survival model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
+#' @include basics.R
 #' @seealso Used safely as [prmd_os_psm] by [calc_allrmds]
 #' @export
 #' @examples
@@ -287,25 +312,36 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_os_psm(params)
-rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0)) {
+rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
   # Declare local variables
-  Tw <- os.ts <- os.type <- os.spec <- NULL
+  Tw <- os.ts  <- NULL
   # Bound to aid integration in weeks
-  Tw <- Ty*365.25/7
+  Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
   # Pull out type and spec for OS
   os.ts <- convert_fit2spec(dpam$os)
-  os.type <- os.ts$type
-  os.spec <- os.ts$spec
-  # Call calc_rmd
-  (starting[1] + starting[2]) * calc_rmd(Tw, os.type, os.spec)
+  # Create an integrand for overall survival
+  integrand_os <- function(x) {
+    vn <- (1+discrate)^(-convert_wks2yrs(x))
+    os_psm <- calc_surv(x, os.ts$type, os.ts$spec)
+    if (is.data.frame(lifetable)) {
+      osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
+      vn * pmin(os_psm, osmax)                     
+    } else {
+      vn * os_psm
+    }
+  }
+  int_os <- stats::integrate(integrand_os, 0, Tw)
+  # Finally multiply by starting population in OS
+  (starting[1] + starting[2]) * int_os$value
 }
 
 #' Safely calculate restricted mean duration for overall survival in the partitioned survival model
 #' @description Calculates the mean duration alive (i.e. in either progression free or progressed disease states) for the partitioned survival model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_os_psm]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_os_psm]
 #' @return Numeric value in same time unit as patient-level data (weeks).
+#' @include basics.R
 prmd_os_psm <- purrr::possibly(rmd_os_psm, otherwise=NA_real_)
 
 #' Calculate restricted mean durations for each health state and all three models
@@ -322,9 +358,12 @@ prmd_os_psm <- purrr::possibly(rmd_os_psm, otherwise=NA_real_)
 #' @param cuttime Time cutoff - this is nonzero for two-piece models.
 #' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param dpam List of statistical fits to each endpoint required in PSM, STM-CF and STM-CR models.
+#' @param lifetable Optional, a life table. Columns must include `lttime` (time in years, or 52.18 times shorter than the time index elsewhere, starting from zero) and `lx`
+#' @param discrate Discount rate (% per year)
 #' @return List of detailed numeric results
 #' - cutadj indicates the survival function and area under the curves for PFS and OS up to the cutpoint
 #' - results provides results of the restricted means calculations, by model and state.
+#' @include basics.R
 #' @seealso Restricted means are provided by [rmd_pf_psm()], [rmd_os_psm()], [rmd_pf_stm()], [rmd_pd_stm_cf()] and [rmd_pd_stm_cr()]. The function [calc_allrmds_boot] provides a version for bootstrapping.
 #' @export
 #' @examples
@@ -346,7 +385,9 @@ calc_allrmds <- function(simdat,
                          inclset = 0,
                          dpam,
                          cuttime = 0,
-                         Ty = 10) {
+                         Ty = 10,
+                         lifetable = NA,
+                         discrate = 0) {
   # Declare local variables
   ds <- ts.ppd <- fit.ppd <- ts.ttp <- fit.ttp <- NULL
   ts.pfs <- fit.pfs <- ts.os <- fit.os <- NULL
@@ -462,11 +503,11 @@ calc_allrmds <- function(simdat,
   if (chvalid) {
     # Call functions to calculate mean durations
     adjTy <- Ty - cuttime*7/365.25
-    pf_psm_post <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting)
-    os_psm_post <- prmd_os_psm(dpam, Ty=adjTy, starting=starting)
-    pf_stm_post <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting)
-    pd_stmcf_post <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting)
-    pd_stmcr_post <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting)
+    pf_psm_post <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    os_psm_post <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pf_stm_post <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pd_stmcf_post <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pd_stmcr_post <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
     # Calculate rest through differences
     pd_psm_post <- os_psm_post - pf_psm_post
     os_stmcf_post <- pf_stm_post + pd_stmcf_post
@@ -499,6 +540,7 @@ calc_allrmds <- function(simdat,
 #' @description Wrapper function to [calc_allrmds] to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward markov model, clock reset markov model).
 #' @inheritParams calc_allrmds
 #' @return Numeric vector of restricted mean durations - PF for each model (PSM, STM-CF, STM-CR), then PD, then OS.
+#' @include basics.R
 #' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
@@ -517,12 +559,16 @@ calc_allrmds_boot <- function(simdat,
                               inclset = 0,
                               dpam,
                               cuttime = 0,
-                              Ty = 10) {
+                              Ty = 10,
+                              lifetable = NA,
+                              discrate = 0) {
   if (inclset[1]==0) {inclset <- 1:length(simdat$ptid)}
   mb <- calc_allrmds(simdat = simdat,
                      inclset = inclset,
                      dpam = dpam,
                      cuttime = cuttime,
-                     Ty = Ty)
+                     Ty = Ty,
+                     lifetable = lifetable,
+                     discrate = discrate)
   c(mb$results$pf, mb$results$pd, mb$results$os)
 }

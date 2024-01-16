@@ -170,7 +170,7 @@ fit_ends_mods_par <- function(ds,
                 pps_cr.dist = c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz"),
                 expvar = NA) {
   # Declare local variables
-  dspps <- NULL
+  dspps <- pps.durn <- NULL
   fits.ppd <- fits.ttp <- fits.pfs <- fits.os <- fits.pps_cf <- fits.pps_cr <- NULL
   # Derive additional fields, as with regular function
   ds <- create_extrafields(ds, cuttime)
