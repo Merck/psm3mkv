@@ -52,8 +52,11 @@ Given this, the package enables:
 
 - Deriving and presenting restricted mean durations by health state and
   for each of the 3 model structures (given a time horizon), to evaluate
-  plausibility and structural sensitivity.
+  plausibility and structural sensitivity. Additional functionality:
 
+  - Constraining the estimates to ensure that mortality hazards are at
+    least as great as background morality.
+  - Applying discounting to obtained discounted restricted means.
   - Bootstrap standard errors can be derived.
 
 - Graphically illustrate observed and fitted membership probabilities,
@@ -74,15 +77,17 @@ transformation) as a predictor for PPS.
 The accompanying `vignette("example")` illustrates how the package can
 be used for the one-piece parametric and spline modeling.
 
-A second vignette is in development to illustrate the use of this
-package for the modeling of PPS in relation to explanatory variables
-such as TTP.
+A second vignette, `vignette("background-mortality")` illustrates how,
+after fitting models, estimates of restricted mean durations in health
+states can be calculated after constraining for background mortality
+from a given life table. This mortality is assumed to add to the
+mortality hazard observed in the dataset.
 
 ## Installation
 
-The package requires version 4.1 of R. This is due to use of the [native
-pipe](https://www.r-bloggers.com/2021/05/the-new-r-pipe/) brought in
-with this version in April 2021. Please ensure R is updated first.
+The package requires version 4.1 of R (due to use of the [native
+pipe](https://www.r-bloggers.com/2021/05/the-new-r-pipe/)). Please
+ensure R is updated first.
 
 The development version of *psm3mkv* may be downloaded as follows:
 
