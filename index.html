@@ -114,8 +114,10 @@
 <li><p>Deriving and presenting likelihoods for the 3 structures so as to evaluate fit.</p></li>
 <li><p>Presenting the total number of parameters used for each structure, to additionally evaluate efficiency.</p></li>
 <li>
-<p>Deriving and presenting restricted mean durations by health state and for each of the 3 model structures (given a time horizon), to evaluate plausibility and structural sensitivity.</p>
+<p>Deriving and presenting restricted mean durations by health state and for each of the 3 model structures (given a time horizon), to evaluate plausibility and structural sensitivity. Additional functionality:</p>
 <ul>
+<li>Constraining the estimates to ensure that mortality hazards are at least as great as background morality.</li>
+<li>Applying discounting to obtained discounted restricted means.</li>
 <li>Bootstrap standard errors can be derived.</li>
 </ul>
 </li>
@@ -127,12 +129,12 @@
 <h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
 </h2>
 <p>The accompanying <code><a href="articles/example.html">vignette("example")</a></code> illustrates how the package can be used for the one-piece parametric and spline modeling.</p>
-<p>A second vignette is in development to illustrate the use of this package for the modeling of PPS in relation to explanatory variables such as TTP.</p>
+<p>A second vignette, <code><a href="articles/background-mortality.html">vignette("background-mortality")</a></code> illustrates how, after fitting models, estimates of restricted mean durations in health states can be calculated after constraining for background mortality from a given life table. This mortality is assumed to add to the mortality hazard observed in the dataset.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The package requires version 4.1 of R. This is due to use of the <a href="https://www.r-bloggers.com/2021/05/the-new-r-pipe/" class="external-link">native pipe</a> brought in with this version in April 2021. Please ensure R is updated first.</p>
+<p>The package requires version 4.1 of R (due to use of the <a href="https://www.r-bloggers.com/2021/05/the-new-r-pipe/" class="external-link">native pipe</a>). Please ensure R is updated first.</p>
 <p>The development version of <em>psm3mkv</em> may be downloaded as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install from Github as follows (with the vignette)</span></span>
