@@ -33,7 +33,7 @@ defined in terms of survival and hazard functions of $t$ [1].
 
 ### Background mortality survival and hazard functions
 
-Our lifetable gives us decreasing $l_x$ values at points between $t=0, ..., t_max$, with $l_t_max=0$. Let us define the background mortality survival function as follows.
+Our lifetable gives us decreasing $l_x$ values at points between $t=0, ..., t_{max}$, with $l_{t_{max}}=0$. Let us define the background mortality survival function as follows.
 
 $$
 S_{gen}(t) = 1 - R \left(1 - \frac{l_{x_0 + t}}{l_{x_0}} \right)
@@ -65,6 +65,7 @@ Time in the PD state is then the difference.
 $$
 E[PD, PSM] = E[OS, PSM] - E[PF, PSM]
 $$
+
 ### State Transition Models
 
 The mean time in PF is as follows.
@@ -77,11 +78,12 @@ The mean time in PD is rather more complicated. Note that the PPS survival diffe
 $$
 E[PD, STM] = \int_0^T \int_0^t \min \left[ S_{PPD}(u), S_{gen}(u) \right] \cdot S_{TTP}(u) \cdot h_{TTP}(u) \cdot \min \left[ S_{PPS}(u, t), \frac{S_{gen}(t)}{S_{gen}(u)} \right] du dt
 $$
-The time alive is then the sum of these quantities.
+The observant statistician would note $S_{TTP}(u) \cdot h_{TTP}(u) = f_{TTP}(u)$, the density function. The time alive is then the sum of these quantities.
 
 $$
 E[OS, STM] = E[PF, STM] + E[PD, STM]
 $$
+
 ### Discounting
 
 Health economic models such as cost-effectiveness models usually evaluate quantities of interest in (net) present value terms, after applying discounting. This can be readily included in formulae above by including a discounting factor in the integrals.
@@ -90,7 +92,7 @@ Suppose a discount rate $i$\% applies over unit time. Then the discounting facto
 
 ### Programming implications
 
-The calculation of restricted mean durations in *psm3mkv* default to assume no life table constraints or discounting. However, when a lifetable is specified, then $S_{gen}(t)$ is specified and constrains the estimates of restricted mean durations as indicated above. When a discount rate is specified, then the mean estimates reflect this also.
+The calculation of restricted mean durations in *psm3mkv* default to assume no life table constraints or discounting. However, when a lifetable is specified, then $S_{gen}(t)$ and $h_{gen}(t)$ are specified and constrains the estimates of restricted mean durations as indicated above. When a discount rate is specified, then the mean estimates reflect this also.
 
 ## Demonstration
 
@@ -226,7 +228,7 @@ res2 |> dplyr::mutate(
   dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
 ```
 
-The State Transition Model Clock Reset (STM-CR) estimate of mean time in PF has reduced by `r round(res1$pf[3]-res2$pf[3],1)` weeks for example, from `r round(res1$pf[3],1)` to `r round(res2$pf[3],1)` weeks.
+The State Transition Model Clock Reset (STM-CR) estimate of mean time alive has reduced by `r round(res1$os[3]-res2$os[3],1)` weeks for example, from `r round(res1$os[3],1)` to `r round(res2$os[3],1)` weeks.
 
 ### Discounting
 
@@ -243,7 +245,7 @@ res3 |> dplyr::mutate(
     dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
 ```
 
-Discounting alone reduces the STM-CR estimate of mean time in PF by `r round(res1$pf[3]-res3$pf[3],1)` weeks for example, from `r round(res1$pf[3],1)` to `r round(res3$pf[3],1)` weeks.
+Discounting alone reduces the STM-CR estimate of mean time alive by `r round(res1$os[3]-res3$os[3],1)` weeks for example, from `r round(res1$os[3],1)` to `r round(res3$os[3],1)` weeks.
 
 Applying a lifetable constraint and discounting at 3.5\% per year produces our final model for this vignette.
 
@@ -257,16 +259,16 @@ res4 |> dplyr::mutate(
     dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
 ```
 
-The final STM-CR estimate of mean time in PF, with both a lifetable constraint and discounting at 3.5\% per year is `r round(res4$pf[3],1)` weeks.
+The final STM-CR estimate of mean time alive, with both a lifetable constraint and discounting at 3.5\% per year is `r round(res4$os[3],1)` weeks.
 
 A summary of the STM-CR estimates of mean time in PF is given in the table below.
 
-|Model | Estimate of mean time in PF (weeks) | Change from starting estimate (weeks)
-|:---------------|:---------------|:---------------|
-| No lifetable constraint, no discounting | `r round(res1$pf[3],1)` | - |
-| With lifetable constraint, no discounting | `r round(res2$pf[3],1)` | `r round(res2$pf[3]-res1$pf[3],1)` |
-| No lifetable constraint, discounting at 3.5\% pa | `r round(res3$pf[3],1)` | `r round(res3$pf[3]-res1$pf[3],1)` |
-| With lifetable constraint, discounting at 3.5\% pa | `r round(res4$pf[3],1)` | `r round(res4$pf[3]-res1$pf[3],1)` |
+|Model | Mean time in PF (weeks) | Change (weeks) | Mean time alive (weeks) | Change (weeks) |
+|:---------------|:----------|:----------|:----------|:----------|
+| No lifetable constraint, no discounting | `r round(res1$pf[3],1)` | - | `r round(res1$os[3],1)` | - |
+| With lifetable constraint, no discounting | `r round(res2$pf[3],1)` | `r round(res2$pf[3]-res1$pf[3],1)` | `r round(res2$os[3],1)` | `r round(res2$os[3]-res1$os[3],1)` |
+| No lifetable constraint, discounting at 3.5\% pa | `r round(res3$pf[3],1)` | `r round(res3$pf[3]-res1$pf[3],1)` | `r round(res3$os[3],1)` | `r round(res3$os[3]-res1$os[3],1)` |
+| With lifetable constraint, discounting at 3.5\% pa | `r round(res4$pf[3],1)` | `r round(res4$pf[3]-res1$pf[3],1)` | `r round(res4$os[3],1)` | `r round(res4$os[3]-res1$os[3],1)` |
 
 ## References
 
