@@ -34,8 +34,8 @@
 #' - `geom`: Geometric mean, where interpolation is required between measured values
 #' @seealso [psm3mkv::vlookup]
 vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
-  if (oneindexval<min(indexval)) stop("Lookup value is below range of lookup table")
-  if (oneindexval>max(indexval)) stop("Lookup value is above range of lookup table")
+  if (oneindexval<min(indexvec)) stop("Lookup value is below range of lookup table")
+  if (oneindexval>max(indexvec)) stop("Lookup value is above range of lookup table")
   # stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
   loc <- indexrange <- valrange <- NULL
   # Location of index values

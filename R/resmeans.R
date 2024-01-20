@@ -272,7 +272,7 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     vn <- (1+discrate)^(-convert_wks2yrs(x))
     pf_psm <- calc_surv(x, pfs.ts$type, pfs.ts$spec)
     if (is.data.frame(lifetable)) {
-      ttp <- calc_surv(Tw, ttp.ts$type, ttp.ts$spec)
+      ttp <- calc_surv(x, ttp.ts$type, ttp.ts$spec)
       osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
       pf_psm <- pmin(pf_psm, ttp*osmax)
     }

@@ -175,15 +175,15 @@ bosonc <- bosonc |>
   )
 
 # Fit Royston Parmar splines models to each endpoint
-allfits <- fit_ends_mods_spl(bosonc)
+allfits <- fit_ends_mods_par(bosonc)
 
 # Pick out best distributions according to min AIC
-fit.ppd <- find_bestfit_spl(allfits$ppd, "aic")
-fit.ttp <- find_bestfit_spl(allfits$ttp, "aic")
-fit.pfs <- find_bestfit_spl(allfits$pfs, "aic")
-fit.os <- find_bestfit_spl(allfits$os, "aic")
-fit.pps_cf <- find_bestfit_spl(allfits$pps_cf, "aic")
-fit.pps_cr <- find_bestfit_spl(allfits$pps_cr, "aic")
+fit.ppd <- find_bestfit_par(allfits$ppd, "aic")
+fit.ttp <- find_bestfit_par(allfits$ttp, "aic")
+fit.pfs <- find_bestfit_par(allfits$pfs, "aic")
+fit.os <- find_bestfit_par(allfits$os, "aic")
+fit.pps_cf <- find_bestfit_par(allfits$pps_cf, "aic")
+fit.pps_cr <- find_bestfit_par(allfits$pps_cr, "aic")
 
 # Bring together our preferred fits for each endpoint in a list
 params <- list(ppd = fit.ppd$fit,
