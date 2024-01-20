@@ -82,11 +82,15 @@ The time alive is then the sum of these quantities.
 $$
 E[OS, STM] = E[PF, STM] + E[PD, STM]
 $$
+### Discounting
+
+Health economic models such as cost-effectiveness models usually evaluate quantities of interest in (net) present value terms, after applying discounting. This can be readily included in formulae above by including a discounting factor in the integrals.
+
+Suppose a discount rate $i$\% applies over unit time. Then the discounting factor at time $t$ is $v(t;i)=(1+i)^{-t}$. Note that $v(t;i=0)=1$.
+
 ### Programming implications
 
-The *psm3mkv* package relies heavily on functions *calc_haz()* and *calc_surv()* to derive hazard and survival functions respectively. These functions in turn depend heavily on the *flexsurv* package[2] (essentially a rather elementary wrapper).
-
-When these functions are called in *psm3mkv*, both in fitting survival models to endpoints and in making projections of membership probabilities, they are adjusted according to the tables above for any lifetable handed to them. The default is for there to be no lifetable and no adjustment for background general mortality.
+The calculation of restricted mean durations in *psm3mkv* default to assume no life table constraints or discounting. However, when a lifetable is specified, then $S_{gen}(t)$ is specified and constrains the estimates of restricted mean durations as indicated above. When a discount rate is specified, then the mean estimates reflect this also.
 
 ## Demonstration
 
