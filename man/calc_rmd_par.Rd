@@ -9,15 +9,23 @@ calc_rmd_par(Tw, dist, pars)
 \arguments{
 \item{Tw}{is the time period over which the restricted mean is calculated}
 
-\item{dist}{is the name (from flexsurv) of a particular statistical distribution, e.g. "llogis" is the log-logistic distribution.}
+\item{dist}{is the statistical distribution (named per \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}).}
 
-\item{pars}{is a vector whose components are the parameters for the statistical distribution (see note).}
+\item{pars}{is a vector of the parameters for that distribution.
+\itemize{
+\item Exponential distribution (\code{exp}) requires the rate parameter.
+\item Weibull distribution (both \code{weibullPH} and \code{weibull} formulations) requires the shape and scale parameters.
+\item Log-logistic distribution (\code{llogis}) requires the shape and scale parameters.
+\item Log-normal distribution (\code{lnorm}) requires the meanlog and sdlog parameters.
+\item Gamma and Gompertz distributions (\code{gamma} and \code{gompertz}) require the shape and rate parameters.
+\item Generalized Gamma requires the mu, sigma and Q parameters if using the standard parameterization (\code{gengamma}) or shape, scale and k parameters if using the original parameterization (\code{gengamma.orig}).
+}}
 }
 \value{
 the restricted mean duration, a numeric value.
 }
 \description{
-Calculates the restricted mean duration, given a statistical distribution (named per flexsurv) and its parameters.
+Calculates the restricted mean duration, given a parametric statistical distribution.
 }
 \examples{
 calc_rmd_par(20, "exp", 0.2)

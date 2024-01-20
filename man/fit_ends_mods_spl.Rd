@@ -25,9 +25,9 @@ fit_ends_mods_spl(
 
 Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
 
-\item{knot_set}{A vector of the number of knots to fit spline models to. For example, knot_set=1:3 will result in spline models fitted to 1, 2 and 3 (internal) knot splines.}
+\item{knot_set}{is a vector of the numbers of knots to consider, following \code{\link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline()}}).}
 
-\item{scale_set}{A vector of the scales of knots to fit spline models to. For example, scale_set=c("hazard", "odds", "normal") will result in spline models fitted on hazard, odds and normal scales.}
+\item{scale_set}{is a vector of the spline scales to consider, following \code{\link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline()}}).}
 
 \item{expvar}{Explanatory variable for modeling of PPS}
 }

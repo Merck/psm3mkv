@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitting-spl.R
 \name{fit_mods_spl}
 \alias{fit_mods_spl}
-\title{Fit survival regressions with multiple parametric distributions}
+\title{Fit survival regressions with multiple spline regressions}
 \usage{
 fit_mods_spl(
   durn1,
@@ -20,9 +20,9 @@ fit_mods_spl(
 
 \item{evflag}{Event flag, corresponds with event in \link[survival:Surv]{survival::Surv}. The status indicator is normally 0=alive, 1=dead.}
 
-\item{knot_set}{is a vector of the numbers of knots to consider \code{\link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline()}}).}
+\item{knot_set}{is a vector of the numbers of knots to consider, following \code{\link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline()}}).}
 
-\item{scale_set}{is a vector of the spline scales to consider \code{\link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline()}}).}
+\item{scale_set}{is a vector of the spline scales to consider, following \code{\link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline()}}).}
 
 \item{expvar}{Explanatory variable for modeling of PPS}
 }
@@ -34,7 +34,7 @@ A list by distribution, each containing two components:
 }
 }
 \description{
-Fits survival regressions with \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} to multiple specifications in one function call.
+Fits survival regressions with \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} to multiple Royston-Parmar splines specifications in one function call.
 }
 \seealso{
 \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \code{\link[survival:Surv]{survival::Surv()}}

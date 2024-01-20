@@ -23,7 +23,16 @@
 
 #' Calculate Integrated Brier Scores for Overall Survival
 #' @description Calculate integrated Brier score for overall survival for each decision model. This function is essentially a wrapper to [SurvMetrics::IBS] for use with this package.
-#' @param ptdata Patient-level dataset
+#' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
+#' - ptid: patient identifier
+#' - pfs.durn: duration of PFS from baseline
+#' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - os.durn: duration of OS from baseline
+#' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#'
+#' Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.
 #' @param dpam List of survival regressions for model endpoints. Should include all six endpoints.
 #' @return List containing
 #' - osibs: Vector of integrated Brier scores for PSM, STM-CF and STM-CR decision models

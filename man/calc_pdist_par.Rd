@@ -2,7 +2,7 @@
 % Please edit documentation in R/basics.R
 \name{calc_pdist_par}
 \alias{calc_pdist_par}
-\title{Calculate the value of the distribution function for parametric functions}
+\title{Calculate the distribution function for parametric functions}
 \usage{
 calc_pdist_par(time, dist, pars)
 }
@@ -25,7 +25,7 @@ calc_pdist_par(time, dist, pars)
 The value of the distribution function, a numeric value.
 }
 \description{
-Calculate the value of the distribution function, given the statistical distribution and its parameters.
+Calculate the value of the distribution function for a parametric distribution, given the statistical distribution and its parameters.
 }
 \examples{
 calc_pdist_par(10, "exp", 0.01)

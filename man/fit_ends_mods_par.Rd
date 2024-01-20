@@ -51,7 +51,6 @@ A list by endpoint, then distribution, each containing two components:
 \itemize{
 \item result: A list of class \emph{flexsurvreg} containing information about the fitted model.
 \item error: Any error message returned on fitting the regression (NULL indicates no error).
-Also, the given cuttime.
 }
 }
 \description{

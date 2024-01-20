@@ -154,7 +154,6 @@ create_extrafields <- function(ds, cuttime=0){
 #' @return A list by endpoint, then distribution, each containing two components:
 #' - result: A list of class *flexsurvreg* containing information about the fitted model.
 #' - error: Any error message returned on fitting the regression (NULL indicates no error).
-#' Also, the given cuttime.
 #' @export
 #' @seealso Spline modeling is handled by [fit_ends_mods_spl()]
 #' @examples
