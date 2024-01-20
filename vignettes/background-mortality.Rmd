@@ -1,8 +1,8 @@
 ---
-title: "Constraining projections for background mortality"
+title: "Background mortality"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{background-mortality}
+  %\VignetteIndexEntry{Background mortality}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
