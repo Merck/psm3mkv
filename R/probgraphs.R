@@ -303,7 +303,7 @@ prob_pd_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
   ttp.ts <- convert_fit2spec(dpam$ttp)
   ppd.ts <- convert_fit2spec(dpam$ppd)
   pps.ts <- convert_fit2spec(dpam$pps_cf)
-  sppst <- calc_surv(time, pps.type, pps.spec)
+  sppst <- calc_surv(time, pps.ts$type, pps.ts$spec)
   # Probability of PD, starting from PD
   integrand <- function(u) {
     sttp <- calc_surv(u, ttp.ts$type, ttp.ts$spec)
