@@ -92,7 +92,6 @@ First we load the packages we need - all of which are suggested for or imported 
 ```{r packages, message=FALSE}
 library(psm3mkv) # Load psm3mkv itself
 library(dplyr) # for data wrangling
-library(ggsci) # for nice graphics
 library(flexsurv) # for the datasets attached
 library(HMDHFDplus) # to create lifetables from the Human Mortality Database
 ```
@@ -124,10 +123,10 @@ You will see that the above code cannot run without a login for the Human Mortal
 
 ```{r ltable2}
 mort <- tibble::tibble(
-  Timey=0:30,
-  Age=50+Timey,
-  lx=10000 * exp(-0.03 * Timey^1.1),
-  dx=lx-dplyr::lead(lx)
+  Timey = 0:30,
+  lx = 10000 * exp(-0.03 * Timey^1.1),
+  dx = lx - dplyr::lead(lx),
+  qx = dx/lx
   )
 ```
 
@@ -140,7 +139,7 @@ SMR <- 2
 # Recalculate the lifetable with the SMR applied
 mort$adjlx <- mort$lx
 for (i in 2:length(mort$lx)) {
-  mort$adjlx[i] <- mort$adjlx[i-1] - SMR * mort$dx[i-1]
+  mort$adjlx[i] <- mort$adjlx[i-1] * (1 - SMR * mort$qx[i-1])
 }
 
 # Ensure lx>=0
