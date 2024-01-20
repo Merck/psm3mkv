@@ -29,54 +29,59 @@ First, we discussing some underpinning math(s). Then we provide a demonstration 
 
 Following the notation in the journal article supporting this
 package, where membership probabilities at time $t$ from baseline are
-defined in terms of survival and hazard functions of $t$ [1], let us define
-the background mortality survival function as follows
+defined in terms of survival and hazard functions of $t$ [1].
+
+### Background mortality survival and hazard functions
+
+Our lifetable gives us decreasing $l_x$ values at points between $t=0, ..., t_max$, with $l_t_max=0$. Let us define the background mortality survival function as follows.
 
 $$
 S_{gen}(t) = 1 - R \left(1 - \frac{l_{x_0 + t}}{l_{x_0}} \right)
 $$
 
 where $x_0$ is the mean age of the study population at baseline, and
-$l_x$ is an appropriate lifetable. We assume a Standardized Mortality
-Ratio (SMR) of $R=1$ for now. In that case, the hazard function between
-time $t$ and $t+1$ is
+$l_x$ is an appropriate lifetable.
+
+We can also derive the average background mortality hazard for $t$ in the range $[t_1, t_2)$.
 
 $$
-h_{gen}(t) = H_{gen}(t+1) - H_{gen}(t)
+h_{gen}(t) = \frac{\log[S_{gen}(t_2)] - \log[S_{gen}(t_1)]}{t_2 - t_1}
 $$
 
-$$
-= -\log \left( \frac{l_{x_{0} +t+1}}{l_{x_{0}}} \right) + \log \left( \frac{l_{x_{0} +t}}{l_{x_{0}}} \right)
-$$
+### Partitioned Survival Model (PSM)
+
+The restricted mean time in the PF state and time alive are integrals over the time horizon, $T$, of the survival functions of PFS and OS. In both cases, the survival functions must be constrained to be no greater than background survival. The accompanying article discusses possibilities for calculating $S_{TTP}(t)$, which is not strictly defined for PSMs but required for calculating likelihoods and often implicitly calculated in economic models to evaluate certain payoffs.
+
+The mean time in PF and alive are as follows.
 
 $$
-= \log(l_{x_0 +t}) - \log(l_{x_0 +t+1})
+E[PF, PSM] = \int_0^T \min \left[ S_{PFS}(u), S_{TTP}(u) \cdot S_{gen}(u) \right] du
 $$
+$$
+E[OS, PSM] = \int_0^T \min \left[ S_{OS}(u), S_{gen}(u) \right] du
+$$
+Time in the PD state is then the difference.
 
-where $H(t) = -\log[S(t)]$ is the cumulative hazard function.
+$$
+E[PD, PSM] = E[OS, PSM] - E[PF, PSM]
+$$
+### State Transition Models
 
-State membership probabilities are projected, according to the
-accompanying article, following equations 3-4. With constraints for
-background mortality, we make the following replacements in survival functions.
+The mean time in PF is as follows.
 
-|Unadjusted function|Adjusted function|
-|:------------------|:-----------------------------------------|
-| $S_{TTP}(t)$ | No change |
-| $S_{PPD}(t)$ | $\min[ S_{PPD}(t), S_{gen}(t)]$ |
-| $S_{PFS}(t)$ | $\min[ S_{PFS}(t), S_{TTP}(t) \cdot S_{gen}(t)]$ |
-| $S_{OS}(t)$ | $\min [S_{OS}(t), S_{gen}(t)]$ |
-| $S_{PPS}(u,t)$ | $\min \left[ S_{PPS}(u,t), \frac{S_{gen}(t)}{S_{gen}(u)} \right]$ |
+$$
+E[PF, STM_{CF}] = \int_0^T S_{TTP}(u) \cdot \min \left[ S_{PPD}(u), S_{gen}(u) \right] du
+$$
+The mean time in PD is rather more complicated. Note that the PPS survival differs between the clock forward and clock reset model structures.
 
-And the following replacements in hazard functions.
+$$
+E[PD, STM] = \int_0^T \int_0^t \min \left[ S_{PPD}(u), S_{gen}(u) \right] \cdot S_{TTP}(u) \cdot h_{TTP}(u) \cdot \min \left[ S_{PPS}(u, t), \frac{S_{gen}(t)}{S_{gen}(u)} \right] du dt
+$$
+The time alive is then the sum of these quantities.
 
-|Unadjusted function|Adjusted function|
-|:-------------------------|:-----------------------------------------|
-| $h_{TTP}(t)$ | No change |
-| $h_{PPD}(t)$ | $\max [ h_{PPD}(t), h_{gen}(t) ]$ |
-| $h_{PFS}(t)$ | $\max [ h_{PFS}(t), h_{TTP}(t) + h_{gen}(t)]$ |
-| $h_{OS}(t)$ | $\max [h_{OS}(t), h_{gen}(t)]$ |
-| $h_{PPS}(u,t)$ | $\max \left[ h_{PPS}(u,t), \frac{\log(l_{x_0 +t}) - \log(l_{x_0 +u})}{t-u} \right]$ |
-
+$$
+E[OS, STM] = E[PF, STM] + E[PD, STM]
+$$
 ### Programming implications
 
 The *psm3mkv* package relies heavily on functions *calc_haz()* and *calc_surv()* to derive hazard and survival functions respectively. These functions in turn depend heavily on the *flexsurv* package[2] (essentially a rather elementary wrapper).
