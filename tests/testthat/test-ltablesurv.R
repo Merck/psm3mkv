@@ -125,3 +125,37 @@ test_that("Multi value survivals return error when any index is out of range", {
   expect_error(calc_ltsurv(c(-5,55,5), ltable))
 })
 
+# Finally check the density
+
+# Derive density
+ltable <- ltable |>
+  dplyr::mutate(
+    dx = lx - dplyr::lead(lx),
+    qx = dx/lx,
+    hx = -log(1-qx),
+    surv = lx/lx[1],
+    dens = hx * surv
+  )
+
+test_that("Density function correctly derived with regular lifetable", {
+  expect_equal(calc_ltdens(ltable$lttime, ltable), ltable$dens)
+  expect_equal(calc_ltdens(0:19+0.2, ltable), ltable$dens[0:20])
+})
+
+# Try again with some times missing
+ltable <- ltable[c(1,3,5,7,8,10,14,15,17,19),] |>
+  dplyr::select(lttime, lx) |>
+  dplyr:: mutate(
+    dx = lx - dplyr::lead(lx),
+    tx = dplyr::lead(lttime) - lttime,
+    qx = dx/lx,
+    hx = -log(1-qx)/tx,
+    surv = lx/lx[1],
+    dens = hx * surv
+  )
+
+test_that("Density function works with times missing", {
+  expect_equal(calc_ltdens(ltable$lttime, ltable), ltable$dens)
+  expect_equal(calc_ltdens(ltable$lttime[1:9]+0.2, ltable), ltable$dens[1:9])
+})
+

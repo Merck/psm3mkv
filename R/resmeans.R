@@ -132,6 +132,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
     http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
+    fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
     spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
     if (is.data.frame(lifetable)) {
       osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
@@ -139,7 +140,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
       osadj_ppd <- pmin(osmax1, sppd)/sppd
       osadj_pps <- pmin(osmax2/osmax1, spps) / spps
     } else {osadj_ppd <- osadj_pps <- 1}
-    vn*sttp*sppd*http*spps*osadj_ppd*osadj_pps
+    vn*sppd*fttp*spps*osadj_ppd*osadj_pps
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
