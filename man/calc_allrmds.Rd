@@ -46,7 +46,7 @@ List of detailed numeric results
 }
 }
 \description{
-Calculate restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward markov model, clock reset markov model).
+Calculate restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
 }
 \examples{
 # Create dataset and fit survival models (splines)

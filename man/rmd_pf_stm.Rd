@@ -2,7 +2,7 @@
 % Please edit documentation in R/resmeans.R
 \name{rmd_pf_stm}
 \alias{rmd_pf_stm}
-\title{Restricted mean duration in progression-free for markov models}
+\title{Restricted mean duration in progression-free for state transition models}
 \usage{
 rmd_pf_stm(dpam, Ty = 10, starting = c(1, 0, 0), lifetable = NA, discrate = 0)
 }
@@ -21,7 +21,7 @@ rmd_pf_stm(dpam, Ty = 10, starting = c(1, 0, 0), lifetable = NA, discrate = 0)
 Numeric value in same time unit as patient-level data (weeks).
 }
 \description{
-Calculates the mean duration in the progression-free state for both the markov clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over.
+Calculates the mean duration in the progression-free state for both the state transition clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over.
 }
 \examples{
 # Create dataset and fit survival models (splines)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lhoods.R
 \name{calc_likes_stm_cr}
 \alias{calc_likes_stm_cr}
-\title{Calculate likelihood for a three-state clock reset markov model}
+\title{Calculate likelihood for a three-state clock reset state transition model}
 \usage{
 calc_likes_stm_cr(ptdata, dpam, cuttime = 0)
 }
@@ -16,7 +16,9 @@ calc_likes_stm_cr(ptdata, dpam, cuttime = 0)
 \item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
 \item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
 \item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
-}}
+}
+
+Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
 
 \item{dpam}{List of survival regressions for each endpoint:
 \itemize{

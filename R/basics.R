@@ -287,7 +287,7 @@ calc_rmd <- function(Tw, type, spec, discrate=0){
 
 #' Number of parameters used by parametric statistical distributions
 #' @description Returns the number of parameters used by one or many statistical distributions, named as per flexsurv.
-#' @param `dist` is the statistical distribution (named per [flexsurv::flexsurvreg])
+#' @param dist is the statistical distribution (named per [flexsurv::flexsurvreg])
 #' @return a numeric value
 #' @inherit calc_pdist seealso
 #' @export

@@ -2,7 +2,7 @@
 % Please edit documentation in R/resmeans.R
 \name{rmd_pd_stm_cr}
 \alias{rmd_pd_stm_cr}
-\title{Restricted mean duration in progressed disease state for clock reset markov model}
+\title{Restricted mean duration in progressed disease state for clock reset state transition model}
 \usage{
 rmd_pd_stm_cr(
   dpam,
@@ -27,7 +27,7 @@ rmd_pd_stm_cr(
 Numeric value in same time unit as patient-level data (weeks).
 }
 \description{
-Calculates the mean duration in the progressed disease state for the clock reset markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
+Calculates the mean duration in the progressed disease state for the clock reset state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 }
 \examples{
 # Create dataset and fit survival models (splines)

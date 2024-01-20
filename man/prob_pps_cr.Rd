@@ -2,20 +2,20 @@
 % Please edit documentation in R/probgraphs.R
 \name{prob_pps_cr}
 \alias{prob_pps_cr}
-\title{Calculate probability of post progression survival under the markov clock reset model}
+\title{Calculate probability of post progression survival under the state transition clock reset model}
 \usage{
 prob_pps_cr(time, dpam)
 }
 \arguments{
 \item{time}{Time (numeric and vectorized) from baseline - not time from progression.}
 
-\item{dpam}{List of survival regressions for model endpoints. This must include post progression survival calculated under the clock reset markov model.}
+\item{dpam}{List of survival regressions for model endpoints. This must include post progression survival calculated under the clock reset state transition model.}
 }
 \value{
 Numeric value
 }
 \description{
-Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the markov clock reset model, according to the given statistical distributions and parameters.
+Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the state transition clock reset model, according to the given statistical distributions and parameters.
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/probgraphs.R
 \name{prob_pps_cf}
 \alias{prob_pps_cf}
-\title{Calculate probability of post progression survival under the markov clock forward model}
+\title{Calculate probability of post progression survival under the state transition clock forward model}
 \usage{
 prob_pps_cf(ttptimes, ppstimes, dpam)
 }
@@ -11,13 +11,13 @@ prob_pps_cf(ttptimes, ppstimes, dpam)
 
 \item{ppstimes}{Time (numeric and vectorized) of progression}
 
-\item{dpam}{List of survival regressions for model endpoints. This must include post progression survival calculated under the clock forward markov model.}
+\item{dpam}{List of survival regressions for model endpoints. This must include post progression survival calculated under the clock forward state transition model.}
 }
 \value{
 Vector of the mean probabilities of post-progression survival at each PPS time, averaged over TTP times.
 }
 \description{
-Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the markov clock forward model, according to the given statistical distributions and parameters.
+Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the state transition clock forward model, according to the given statistical distributions and parameters.
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")

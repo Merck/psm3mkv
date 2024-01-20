@@ -28,6 +28,7 @@
 #' - `spec` contains distribution (`dist`) and coefficients (`coefs`) if `type=="par"`
 #' - `spec` contains gamma values (`gamma`), knot locations (log scale, `knots`) and scale (`scale`) for Royston-Parmar splines model, if `type=="spl"`
 #' @export
+#' @seealso [flexsurv::flexsurvspline()]
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -65,6 +66,8 @@ convert_fit2spec <- function(fitsurv) {
 #' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
 #' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
 #' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#'
+#' Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.
 #' @param dpam List of survival regressions for each endpoint:
 #' - pre-progression death (PPD)
 #' - time to progression (TTP)
@@ -283,8 +286,8 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
   return(retlist)
 }
 
-#' Calculate likelihood for a three-state clock forward markov model
-#' @description Calculate likelihood values and other summary output for a three-state clock forward model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes].
+#' Calculate likelihood for a three-state clock forward state transition model
+#' @description Calculate likelihood values and other summary output for a three-state clock forward state transition model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes].
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
@@ -376,7 +379,7 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
   return(retlist)
 }
 
-#' Calculate likelihood for a three-state clock reset markov model
+#' Calculate likelihood for a three-state clock reset state transition model
 #' @description Calculate likelihood values and other summary output for a three-state clock reset model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes].
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
@@ -470,8 +473,8 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
   return(retlist)
 }
 
-#' Calculate likelihoods for three three-state models
-#' @description Calculate likelihood values and other summary output for the following three state models: partitioned survival, clock forward markov, and clock reset markov. The function requires appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used).
+#' Calculate likelihoods for three three-state model structures
+#' @description Calculate likelihood values and other summary output for the following three state models structures: partitioned survival, clock forward state transition, and clock reset state transition. The function requires appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used).
 #' @inheritParams calc_likes_psm_simple
 #' @return Two outputs are returned:
 #' 

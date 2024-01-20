@@ -31,8 +31,8 @@
 #   calc_allrmds: presents means in all states by all models
 #   calc_allrmds_boot: version of calc_means presenting limited output for bootstrapping analyses
 
-#' Restricted mean duration in progression-free for markov models
-#' @description Calculates the mean duration in the progression-free state for both the markov clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over.
+#' Restricted mean duration in progression-free for state transition models
+#' @description Calculates the mean duration in the progression-free state for both the state transition clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over.
 #' @param dpam List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).
 #' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param starting Vector of membership probabilities at time zero.
@@ -82,15 +82,15 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   return(starting[1]*int$value)
 }
 
-#' Safely calculate restricted mean duration in progression-free for markov models
-#' @description Calculates the mean duration in the progression-free state for both the markov clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pf_stm]. This function is called by [calc_allrmds].
+#' Safely calculate restricted mean duration in progression-free for state transition models
+#' @description Calculates the mean duration in the progression-free state for both the state transition clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pf_stm]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pf_stm]
 #' @include basics.R
 #' @return Numeric value in same time unit as patient-level data (weeks).
 prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 
-#' Restricted mean duration in progressed disease state for clock reset markov model
-#' @description Calculates the mean duration in the progressed disease state for the clock reset markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
+#' Restricted mean duration in progressed disease state for clock reset state transition model
+#' @description Calculates the mean duration in the progressed disease state for the clock reset state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso [rmd_pd_stm_cr]
@@ -155,15 +155,15 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   return(soj)
 }
 
-#' Safely calculate restricted mean duration in progressed disease state for clock reset markov model
-#' @description Calculates the mean duration in the progressed disease state for the clock reset markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pd_stm_cr]. This function is called by [calc_allrmds].
+#' Safely calculate restricted mean duration in progressed disease state for clock reset state transition model
+#' @description Calculates the mean duration in the progressed disease state for the clock reset state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pd_stm_cr]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pd_stm_cr]
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @include basics.R
 prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 
-#' Restricted mean duration in progressed disease state for clock forward markov model
-#' @description Calculates the mean duration in the progressed disease state for the clock forward markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
+#' Restricted mean duration in progressed disease state for clock forward state transition model
+#' @description Calculates the mean duration in the progressed disease state for the clock forward state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @include basics.R
@@ -227,8 +227,8 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   return(soj)
 }
 
-#' Safely calculate restricted mean duration in progressed disease state for clock forward markov model
-#' @description Calculates the mean duration in the progressed disease state for the clock forward markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pd_stm_cf]. This function is called by [calc_allrmds].
+#' Safely calculate restricted mean duration in progressed disease state for clock forward state transition model
+#' @description Calculates the mean duration in the progressed disease state for the clock forward state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pd_stm_cf]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pd_stm_cf]
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @include basics.R
@@ -345,7 +345,7 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
 prmd_os_psm <- purrr::possibly(rmd_os_psm, otherwise=NA_real_)
 
 #' Calculate restricted mean durations for each health state and all three models
-#' @description Calculate restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward markov model, clock reset markov model).
+#' @description Calculate restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
 #' @param simdat Dataset of patient level data. Must be a tibble with columns named:
 #' - ptid: patient identifier
 #' - pfs.durn: duration of PFS from baseline
@@ -537,7 +537,7 @@ calc_allrmds <- function(simdat,
 }
 
 #' Wrapper to enable bootstrap sampling of restricted mean durations for each health state and all three models.
-#' @description Wrapper function to [calc_allrmds] to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward markov model, clock reset markov model).
+#' @description Wrapper function to [calc_allrmds] to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
 #' @inheritParams calc_allrmds
 #' @return Numeric vector of restricted mean durations - PF for each model (PSM, STM-CF, STM-CR), then PD, then OS.
 #' @include basics.R

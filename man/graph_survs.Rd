@@ -7,9 +7,28 @@
 graph_survs(ptdata, dpam, cuttime = 0, tpoints = 100)
 }
 \arguments{
-\item{ptdata}{is the patient-level dataset of TTP, PFS and OS.}
+\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
+\itemize{
+\item ptid: patient identifier
+\item pfs.durn: duration of PFS from baseline
+\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+\item os.durn: duration of OS from baseline
+\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+}
 
-\item{dpam}{is the list of survival regressions for model endpoints. All endpoints are required.}
+Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
+
+\item{dpam}{List of survival regressions for each endpoint:
+\itemize{
+\item pre-progression death (PPD)
+\item time to progression (TTP)
+\item progression-free survival (PFS)
+\item overall survival (OS)
+\item post-progression survival clock forward (PPS-CF) and
+\item post-progression survival clock reset (PPS-CR).
+}}
 
 \item{cuttime}{is the cut-off time for a two-piece model (default 0, indicating a one-piece model)}
 

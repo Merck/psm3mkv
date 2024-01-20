@@ -2,7 +2,7 @@
 % Please edit documentation in R/probgraphs.R
 \name{prob_pf_stm}
 \alias{prob_pf_stm}
-\title{Calculate probability of being progression free in either markov model (clock forward or clock reset)}
+\title{Calculate probability of being progression free in either state transition model (clock forward or clock reset)}
 \usage{
 prob_pf_stm(time, dpam, starting = c(1, 0, 0))
 }
@@ -17,7 +17,7 @@ prob_pf_stm(time, dpam, starting = c(1, 0, 0))
 Numeric value
 }
 \description{
-Calculates membership probability for the progression free state, at a particular time (vectorized), given either markov model (clock forward or clock reset) with given statistical distributions and parameters.
+Calculates membership probability for the progression free state, at a particular time (vectorized), given either state transition model (clock forward or clock reset) with given statistical distributions and parameters.
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")
