@@ -595,4 +595,3 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   )
   return(list(data=datalist, graph=graphlist))
 }
-
