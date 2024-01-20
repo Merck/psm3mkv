@@ -126,17 +126,17 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   ppd.ts <- convert_fit2spec(dpam$ppd)
   pps.ts <- convert_fit2spec(dpam$pps_cr)
   # Integrand from PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS(x2-x1)
+  # = S_PPD x f_TTP x S_PPS
   # subject to a maximum of the lifetable survival
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
-    http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
     fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
     spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
     if (is.data.frame(lifetable)) {
-      fttp <- pmax(fttp, calc_ltdens(convert_wks2yrs(x[1]), lifetable))
       gens1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
       gens2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
+      sppd <- pmin(sppd, gens1)
       spps <- pmin(spps, gens2/gens1)
     }
     vn*sppd*fttp*spps
@@ -209,9 +209,9 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
     spps <- sos2/sos1
     if (is.data.frame(lifetable)) {
-      fttp <- pmax(fttp, calc_ltdens(convert_wks2yrs(x[1]), lifetable))
       gens1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
       gens2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
+      sppd <- pmin(sppd, gens1)
       spps <- pmin(spps, gens2/gens1)
       }
     if (sos1==0) 0 else {vn*sppd*fttp*spps}
