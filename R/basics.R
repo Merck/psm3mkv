@@ -22,8 +22,8 @@
 # basics.R
 # ==================================================================
 
-#' Calculate the value of the distribution function for parametric functions
-#' @description Calculate the value of the distribution function, given the statistical distribution and its parameters.
+#' Calculate the distribution function for parametric functions
+#' @description Calculate the value of the distribution function for a parametric distribution, given the statistical distribution and its parameters.
 #' @param time is the time at which the distribution function should be calculated.
 #' @param dist is the statistical distribution (named per [flexsurv::flexsurvreg]).
 #' @param pars is a vector of the parameters for that distribution.
@@ -63,24 +63,22 @@ calc_pdist_par <- function(time, dist, pars) {
   }
 }
 
-#' Calculate the value of the distribution function
+#' Calculate the distribution function
 #' @description Calculate the value of the distribution function, given a regular parametric or Royston-Parmar formulation
 #' @param time is the time at which the distribution function should be calculated.
 #' @param type is either "par" for regular parametric form (exponential, weibull etc) or "spl" for Royston-Parmar splines.
 #' @param spec is a list comprising:
-#' * If type=="par":
-#' ** dist - is the statistical distribution (named per [flexsurv::flexsurvreg]).
-#' ** pars - is a vector of the parameters for that distribution.
+#' If type=="par": `dist` is the statistical distribution (named per [flexsurv::flexsurvreg]) and `pars` is a vector of the parameters for that distribution.
 #' - Exponential distribution (`exp`) requires the rate parameter.
 #' - Weibull distribution (both `weibullPH` and `weibull` formulations) requires the shape and scale parameters.
 #' - Log-logistic distribution (`llogis`) requires the shape and scale parameters.
 #' - Log-normal distribution (`lnorm`) requires the meanlog and sdlog parameters.
 #' - Gamma and Gompertz distributions (`gamma` and `gompertz`) require the shape and rate parameters.
 #' - Generalized Gamma requires the mu, sigma and Q parameters if using the standard parameterization (`gengamma`) or shape, scale and k parameters if using the original parameterization (`gengamma.orig`).
-#' * If type=="spl":
-#' ** gamma - Parameters describing the baseline spline function, as described in [flexsurv::flexsurvspline]. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
-#' ** knots - Locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
-#' ** scale - "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
+#' If type=="spl":
+#' - `gamma` - Vector of parameters describing the baseline spline function, as described in [flexsurv::flexsurvspline]. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
+#' - `knots` - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
+#' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
 #' @seealso [flexsurv::flexsurvspline] and [flexsurv::flexsurvreg]
 #' @return The value of the distribution function, a numeric value.
 #' @export
@@ -198,9 +196,15 @@ calc_haz <- function(time, type, spec){
 }
 
 #' Calculate restricted mean durations (parametric form)
-#' @description Calculates the restricted mean duration, given a statistical distribution (named per flexsurv) and its parameters.
-#' @param dist is the name (from flexsurv) of a particular statistical distribution, e.g. "llogis" is the log-logistic distribution.
-#' @param pars is a vector whose components are the parameters for the statistical distribution (see note).
+#' @description Calculates the restricted mean duration, given a parametric statistical distribution.
+#' @param dist is the statistical distribution (named per [flexsurv::flexsurvreg]).
+#' @param pars is a vector of the parameters for that distribution.
+#' - Exponential distribution (`exp`) requires the rate parameter.
+#' - Weibull distribution (both `weibullPH` and `weibull` formulations) requires the shape and scale parameters.
+#' - Log-logistic distribution (`llogis`) requires the shape and scale parameters.
+#' - Log-normal distribution (`lnorm`) requires the meanlog and sdlog parameters.
+#' - Gamma and Gompertz distributions (`gamma` and `gompertz`) require the shape and rate parameters.
+#' - Generalized Gamma requires the mu, sigma and Q parameters if using the standard parameterization (`gengamma`) or shape, scale and k parameters if using the original parameterization (`gengamma.orig`).
 #' @param Tw is the time period over which the restricted mean is calculated
 #' @inherit calc_pdist seealso
 #' @return the restricted mean duration, a numeric value.
@@ -237,19 +241,17 @@ calc_rmd_par <- function(Tw, dist, pars) {
 #' @param Tw is the time horizon (weeks) over which the mean should be calculated.
 #' @param type is either "par" for regular parametric form (exponential, weibull etc) or "spl" for Royston-Parmar splines.
 #' @param spec is a list comprising:
-#' * If type=="par":
-#' ** dist - is the statistical distribution (named per [flexsurv::flexsurvreg]).
-#' ** pars - is a vector of the parameters for that distribution.
+#' If type=="par": `dist` is the statistical distribution (named per [flexsurv::flexsurvreg]) and `pars` is a vector of the parameters for that distribution.
 #' - Exponential distribution (`exp`) requires the rate parameter.
 #' - Weibull distribution (both `weibullPH` and `weibull` formulations) requires the shape and scale parameters.
 #' - Log-logistic distribution (`llogis`) requires the shape and scale parameters.
 #' - Log-normal distribution (`lnorm`) requires the meanlog and sdlog parameters.
 #' - Gamma and Gompertz distributions (`gamma` and `gompertz`) require the shape and rate parameters.
 #' - Generalized Gamma requires the mu, sigma and Q parameters if using the standard parameterization (`gengamma`) or shape, scale and k parameters if using the original parameterization (`gengamma.orig`).
-#' * If type=="spl":
-#' ** gamma - Parameters describing the baseline spline function, as described in [flexsurv::flexsurvspline]. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
-#' ** knots - Locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
-#' ** scale - "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
+#' If type=="spl":
+#' - `gamma` - Vector of parameters describing the baseline spline function, as described in [flexsurv::flexsurvspline]. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
+#' - `knots` - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
+#' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
 #' @param discrate Discounting rate (%) per year
 #' @inherit calc_haz_par seealso
 #' @inherit calc_haz_par return
@@ -285,8 +287,7 @@ calc_rmd <- function(Tw, type, spec, discrate=0){
 
 #' Number of parameters used by parametric statistical distributions
 #' @description Returns the number of parameters used by one or many statistical distributions, named as per flexsurv.
-#' @param dist is the name (from flexsurv) of a particular statistical distribution,
-#' e.g. "llogis" is the log-logistic distribution.
+#' @param `dist` is the statistical distribution (named per [flexsurv::flexsurvreg])
 #' @return a numeric value
 #' @inherit calc_pdist seealso
 #' @export

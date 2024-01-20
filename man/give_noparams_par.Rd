@@ -7,8 +7,7 @@
 give_noparams_par(dist)
 }
 \arguments{
-\item{dist}{is the name (from flexsurv) of a particular statistical distribution,
-e.g. "llogis" is the log-logistic distribution.}
+\item{`dist`}{is the statistical distribution (named per \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg})}
 }
 \value{
 a numeric value

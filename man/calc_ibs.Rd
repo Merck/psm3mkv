@@ -7,7 +7,18 @@
 calc_ibs(ptdata, dpam)
 }
 \arguments{
-\item{ptdata}{Patient-level dataset}
+\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
+\itemize{
+\item ptid: patient identifier
+\item pfs.durn: duration of PFS from baseline
+\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+\item os.durn: duration of OS from baseline
+\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+}
+
+Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
 
 \item{dpam}{List of survival regressions for model endpoints. Should include all six endpoints.}
 }

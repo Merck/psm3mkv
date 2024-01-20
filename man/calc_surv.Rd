@@ -12,11 +12,7 @@ calc_surv(time, type, spec)
 \item{type}{is either "par" for regular parametric form (exponential, weibull etc) or "spl" for Royston-Parmar splines.}
 
 \item{spec}{is a list comprising:
-\itemize{
-\item If type=="par":
-** dist - is the statistical distribution (named per \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}).
-** pars - is a vector of the parameters for that distribution.
-}
+If type=="par": \code{dist} is the statistical distribution (named per \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}) and \code{pars} is a vector of the parameters for that distribution.
 \itemize{
 \item Exponential distribution (\code{exp}) requires the rate parameter.
 \item Weibull distribution (both \code{weibullPH} and \code{weibull} formulations) requires the shape and scale parameters.
@@ -24,12 +20,10 @@ calc_surv(time, type, spec)
 \item Log-normal distribution (\code{lnorm}) requires the meanlog and sdlog parameters.
 \item Gamma and Gompertz distributions (\code{gamma} and \code{gompertz}) require the shape and rate parameters.
 \item Generalized Gamma requires the mu, sigma and Q parameters if using the standard parameterization (\code{gengamma}) or shape, scale and k parameters if using the original parameterization (\code{gengamma.orig}).
-}
-\itemize{
-\item If type=="spl":
-** gamma - Parameters describing the baseline spline function, as described in \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline}. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
-** knots - Locations of knots on the axis of log time, supplied in increasing order. Unlike in \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline}, these include the two boundary knots.
-** scale - "hazard", "odds", or "normal", as described in \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline}. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
+If type=="spl":
+\item \code{gamma} - Vector of parameters describing the baseline spline function, as described in \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline}. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
+\item \code{knots} - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline}, these include the two boundary knots.
+\item \code{scale} - Either "hazard", "odds", or "normal", as described in \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline}. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
 }}
 }
 \value{

@@ -21,13 +21,13 @@
 # fitting-spl.R
 # ===========================================
 
-#' Fit survival regressions with multiple parametric distributions
-#' @description Fits survival regressions with [flexsurv::flexsurvspline] to multiple specifications in one function call.
+#' Fit survival regressions with multiple spline regressions
+#' @description Fits survival regressions with [flexsurv::flexsurvspline] to multiple Royston-Parmar splines specifications in one function call.
 #' @param durn1 First time point, corresponds with time in [survival::Surv()]. For right censored data, this is the follow up time. For interval data, the first argument is the starting time for the interval.
 #' @param durn2 Second time point, corresponds with time2 in [survival::Surv()]. The ending time of the interval for interval censored or counting process data only.
 #' @param evflag Event flag, corresponds with event in [survival::Surv]. The status indicator is normally 0=alive, 1=dead.
-#' @param knot_set is a vector of the numbers of knots to consider [flexsurv::flexsurvspline()]).
-#' @param scale_set is a vector of the spline scales to consider [flexsurv::flexsurvspline()]).
+#' @param knot_set is a vector of the numbers of knots to consider, following [flexsurv::flexsurvspline()]).
+#' @param scale_set is a vector of the spline scales to consider, following [flexsurv::flexsurvspline()]).
 #' @param expvar Explanatory variable for modeling of PPS
 #' @return A list by distribution, each containing two components:
 #' - result: A list of class [flexsurv::flexsurvspline] containing information about the fitted model.
@@ -85,8 +85,8 @@ fit_mods_spl <- function(durn1, durn2=NA, evflag,
 #' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
 #'
 #' Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.
-#' @param knot_set A vector of the number of knots to fit spline models to. For example, knot_set=1:3 will result in spline models fitted to 1, 2 and 3 (internal) knot splines.
-#' @param scale_set A vector of the scales of knots to fit spline models to. For example, scale_set=c("hazard", "odds", "normal") will result in spline models fitted on hazard, odds and normal scales.
+#' @param knot_set is a vector of the numbers of knots to consider, following [flexsurv::flexsurvspline()]).
+#' @param scale_set is a vector of the spline scales to consider, following [flexsurv::flexsurvspline()]).
 #' @param expvar Explanatory variable for modeling of PPS
 #' @return A list by endpoint, then distribution, each containing two components:
 #' - result: A list of class [flexsurv::flexsurvspline] containing information about the fitted model.
