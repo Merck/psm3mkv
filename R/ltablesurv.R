@@ -98,6 +98,32 @@ calc_ltsurv <- function(looktime, lifetable=NA){
   vlookup(looktime, lifetable$lttime, lifetable$lx) / lifetable$lx[1]
 }
 
+#' Calculate mortality density from a lifetable
+#' @description Calculate mortality density a given time, according to a provided lifetable
+#' @param looktime The time(s) to which survival is to be estimated (from time zero).
+#' @param lifetable The lifetable must be a dataframe with columns named `lttime` (years) and `lx`. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
+#' @return Numeric survival probability
+#' @export
+#' @examples
+#' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
+#' calc_ltsurv(c(2, 2.5, 9.3), ltable)
+calc_ltdens <- function(looktime, lifetable=NA){
+  if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
+  if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
+  # Floor time from lifetable
+  tlo <- vlookup(looktime, lifetable$lttime, lifetable$lttime, meth="floor")
+  pos <- match(tlo, lifetable$lttime)
+  # Pick out useful lx values
+  lx0 <- lifetable$lx[1]
+  lxlo <- lifetable$lx[pos]
+  lxhi <- lifetable$lx[pos+1]
+  tdiff <- lifetable$lttime[pos+1]-lifetable$lttime[pos]
+  # Average hazard
+  hx <- -log(lxhi/lxlo)/tdiff
+  # Density at looktime, f = h x S
+  hx * lxlo / lx0
+}
+
 #' Calculate restricted life expectancy from a lifetable
 #' @param Ty Time duration over which to calculate (default is 10 years). Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param lifetable The lifetable must be a dataframe with columns named `lttime` (years) and `lx`. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
