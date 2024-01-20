@@ -2,7 +2,7 @@
 % Please edit documentation in R/lhoods.R
 \name{calc_likes_stm_cf}
 \alias{calc_likes_stm_cf}
-\title{Calculate likelihood for a three-state clock forward markov model}
+\title{Calculate likelihood for a three-state clock forward state transition model}
 \usage{
 calc_likes_stm_cf(ptdata, dpam, cuttime = 0)
 }
@@ -16,7 +16,9 @@ calc_likes_stm_cf(ptdata, dpam, cuttime = 0)
 \item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
 \item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
 \item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
-}}
+}
+
+Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
 
 \item{dpam}{List of survival regressions for each endpoint:
 \itemize{
@@ -44,7 +46,7 @@ List of values and data relating to the likelihood for this model:
 }
 }
 \description{
-Calculate likelihood values and other summary output for a three-state clock forward model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by \link{calc_likes}.
+Calculate likelihood values and other summary output for a three-state clock forward state transition model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by \link{calc_likes}.
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")

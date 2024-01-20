@@ -2,7 +2,7 @@
 % Please edit documentation in R/resmeans.R
 \name{prmd_pd_stm_cf}
 \alias{prmd_pd_stm_cf}
-\title{Safely calculate restricted mean duration in progressed disease state for clock forward markov model}
+\title{Safely calculate restricted mean duration in progressed disease state for clock forward state transition model}
 \usage{
 prmd_pd_stm_cf(...)
 }
@@ -13,5 +13,5 @@ prmd_pd_stm_cf(...)
 Numeric value in same time unit as patient-level data (weeks).
 }
 \description{
-Calculates the mean duration in the progressed disease state for the clock forward markov model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of \link{rmd_pd_stm_cf}. This function is called by \link{calc_allrmds}.
+Calculates the mean duration in the progressed disease state for the clock forward state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of \link{rmd_pd_stm_cf}. This function is called by \link{calc_allrmds}.
 }

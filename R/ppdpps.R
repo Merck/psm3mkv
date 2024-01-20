@@ -24,8 +24,23 @@
 #' Derive pre and post-progression hazards of death under PSM
 #' @description Derive the hazards of death pre- and post-progression under either simple or complex PSM formulations.
 #' @param timevar Vector of times at which to calculate the hazards
-#' @param ptdata Patient-level dataset
-#' @param dpam List of fitted survival models for each endpoint
+#' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
+#' - ptid: patient identifier
+#' - pfs.durn: duration of PFS from baseline
+#' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - os.durn: duration of OS from baseline
+#' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#'
+#' Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.
+#' @param dpam List of survival regressions for each endpoint:
+#' - pre-progression death (PPD)
+#' - time to progression (TTP)
+#' - progression-free survival (PFS)
+#' - overall survival (OS)
+#' - post-progression survival clock forward (PPS-CF) and
+#' - post-progression survival clock reset (PPS-CR).
 #' @param type Either "simple" or "complex" PSM formulation
 #' @return List of pre, the pre-progression hazard, and post, the post-progression hazard
 #' @export
@@ -106,7 +121,7 @@ calc_haz_psm <- function(timevar, ptdata, dpam, type) {
 }
 
 #' Derive PPS survival function under a PSM
-#' @description Derive the PPS survival function under the simple or complex PSM formulation.
+#' @description Derive the post-progression survival (PPS) function under the simple or complex PSM formulation.
 #' @param totime Vector of times to which the survival function is calculated
 #' @param fromtime Vector of times from which the survival function is calculated
 #' @param ptdata Patient-level dataset
@@ -158,11 +173,8 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
 #' @param endpoint Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)
 #' @inheritParams calc_haz_psm
 #' @param psmtype Type of PSM - simple or complex
-#' @return List of data and graph
-#' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
-#' Graph is a line graphic of the hazards plotted against the time-range
 #' @importFrom rlang .data
-#' @return adj is the hazard adjusted for constraints, unadj is the unadjusted hazard
+#' @return `adj` is the hazard adjusted for constraints, `unadj` is the unadjusted hazard
 pickout_psmhaz <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Run calculation of all hazards
   allhaz <- calc_haz_psm(timevar, ptdata, dpam, psmtype)
@@ -191,9 +203,7 @@ pickout_psmhaz <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 #' Graph the PSM hazard functions
 #' @description EXPERIMENTAL. Graph the PSM hazard functions
 #' @inheritParams pickout_psmhaz
-#' @return List of data and graph
-#' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
-#' Graph is a line graphic of the hazards plotted against the time-range
+#' @inherit pickout_psmhaz return
 #' @importFrom rlang .data
 #' @export
 #' @examples
@@ -238,9 +248,7 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 #' Graph the PSM survival functions
 #' @description EXPERIMENTAL. Graph the PSM survival functions
 #' @inheritParams graph_psm_hazards
-#' @return List of data and graph
-#' Data is a dataset of the time-range, method (adjusted or unadjusted hazard), and hazard value
-#' Graph is a line graphic of the hazards plotted against the time-range
+#' @inherit graph_psm_hazards return
 #' @importFrom rlang .data
 #' @export
 #' @examples

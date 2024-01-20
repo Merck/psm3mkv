@@ -2,7 +2,7 @@
 % Please edit documentation in R/probgraphs.R
 \name{prob_os_stm_cf}
 \alias{prob_os_stm_cf}
-\title{Calculate probability of being alive under the markov clock forward model}
+\title{Calculate probability of being alive under the state transition clock forward model}
 \usage{
 prob_os_stm_cf(time, dpam, starting = c(1, 0, 0))
 }
@@ -17,7 +17,7 @@ prob_os_stm_cf(time, dpam, starting = c(1, 0, 0))
 Numeric value
 }
 \description{
-Calculates membership probability of being alive at a given time (vectorized). This probability is from the markov clock forward model, according to the given statistical distributions and parameters.
+Calculates membership probability of being alive at a given time (vectorized). This probability is from the state transition clock forward model, according to the given statistical distributions and parameters.
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")

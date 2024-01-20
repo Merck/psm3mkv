@@ -21,7 +21,7 @@ calc_surv_psmpps(totime, fromtime = 0, ptdata, dpam, type = "simple")
 Vector of PPS survival function values
 }
 \description{
-Derive the PPS survival function under the simple or complex PSM formulation.
+Derive the post-progression survival (PPS) function under the simple or complex PSM formulation.
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")

@@ -66,8 +66,8 @@ prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
   starting[1] * survprob
 }
 
-#' Calculate probability of being progression free in either markov model (clock forward or clock reset)
-#' @description Calculates membership probability for the progression free state, at a particular time (vectorized), given either markov model (clock forward or clock reset) with given statistical distributions and parameters.
+#' Calculate probability of being progression free in either state transition model (clock forward or clock reset)
+#' @description Calculates membership probability for the progression free state, at a particular time (vectorized), given either state transition model (clock forward or clock reset) with given statistical distributions and parameters.
 #' @param time Time (numeric and vectorized)
 #' @param dpam List of survival regressions for model endpoints. This must include pre-progression death (PPD) and time to progression (TTP).
 #' @param starting Vector of membership probabilities (PF, PD, death) at time zero.
@@ -105,7 +105,7 @@ prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
 }
 
 #' Calculate probability of being alive in a partitioned survival model
-#' @description Calculates membership probability of being alive at a particular time (vectorized), given either markov model (clock forward or clock reset) with given statistical distributions and parameters. This is the sum of membership probabilities in the progression free and progressed disease states.
+#' @description Calculates membership probability of being alive at a particular time (vectorized), given either state transition model (clock forward or clock reset) with given statistical distributions and parameters. This is the sum of membership probabilities in the progression free and progressed disease states.
 #' @param time Time (numeric and vectorized)
 #' @param dpam List of survival regressions for model endpoints. This must include overall survival (OS).
 #' @param starting Vector of membership probabilities (PF, PD, death) at time zero.
@@ -136,10 +136,10 @@ prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
   (starting[1] + starting[2]) * survprob
 }
 
-#' Calculate probability of post progression survival under the markov clock reset model
-#' @description Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the markov clock reset model, according to the given statistical distributions and parameters.
+#' Calculate probability of post progression survival under the state transition clock reset model
+#' @description Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the state transition clock reset model, according to the given statistical distributions and parameters.
 #' @param time Time (numeric and vectorized) from baseline - not time from progression.
-#' @param dpam List of survival regressions for model endpoints. This must include post progression survival calculated under the clock reset markov model.
+#' @param dpam List of survival regressions for model endpoints. This must include post progression survival calculated under the clock reset state transition model.
 #' @return Numeric value
 #' @export
 #' @examples
@@ -165,11 +165,11 @@ prob_pps_cr <- function(time, dpam) {
   time |> purrr::map_dbl(~calc_surv(.x, pps.type, pps.spec))
 }
 
-#' Calculate probability of post progression survival under the markov clock forward model
-#' @description Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the markov clock forward model, according to the given statistical distributions and parameters.
+#' Calculate probability of post progression survival under the state transition clock forward model
+#' @description Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the state transition clock forward model, according to the given statistical distributions and parameters.
 #' @param ttptimes Time (numeric and vectorized) from progression - not time from baseline.
 #' @param ppstimes Time (numeric and vectorized) of progression
-#' @param dpam List of survival regressions for model endpoints. This must include post progression survival calculated under the clock forward markov model.
+#' @param dpam List of survival regressions for model endpoints. This must include post progression survival calculated under the clock forward state transition model.
 #' @return Vector of the mean probabilities of post-progression survival at each PPS time, averaged over TTP times.
 #' @export
 #' @examples
@@ -239,8 +239,8 @@ prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
   os-pf
 }
 
-#' Calculate probability of having progressed disease under the markov clock reset model
-#' @description Calculates membership probability of the progressed disease state at a given time (vectorized). This probability is from the markov clock reset model, according to the given statistical distributions and parameters.
+#' Calculate probability of having progressed disease under the state transition clock reset model
+#' @description Calculates membership probability of the progressed disease state at a given time (vectorized). This probability is from the state transition clock reset model, according to the given statistical distributions and parameters.
 #' @param time Time (numeric and vectorized) from baseline.
 #' @param dpam List of survival regressions for model endpoints. This must include pre-progression death (PPD), time to progression (TTP) and post progression survival calculated under the clock reset model (PPS-CR).
 #' @param starting Vector of membership probabilities (PF, PD, death) at time zero.
@@ -296,8 +296,8 @@ prob_pd_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
 }
 prob_pd_stm_cr <- Vectorize(prob_pd_stm_cr, "time")
 
-#' Calculate probability of having progressed disease under the markov clock forward model
-#' @description Calculates membership probability of the progressed disease state at a given time (vectorized). This probability is from the markov clock forward model, according to the given statistical distributions and parameters.
+#' Calculate probability of having progressed disease under the state transition clock forward model
+#' @description Calculates membership probability of the progressed disease state at a given time (vectorized). This probability is from the state transition clock forward model, according to the given statistical distributions and parameters.
 #' @param time Time (numeric and vectorized) from baseline.
 #' @param dpam List of survival regressions for model endpoints. This must include pre-progression death (PPD), time to progression (TTP) and post progression survival calculated under the clock forward model (PPS-CF).
 #' @param starting Vector of membership probabilities (PF, PD, death) at time zero.
@@ -354,8 +354,8 @@ prob_pd_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 }
 prob_pd_stm_cf <- Vectorize(prob_pd_stm_cf, "time")
 
-#' Calculate probability of being alive under the markov clock reset model
-#' @description Calculates membership probability of being alive at a given time (vectorized). This probability is from the markov clock reset model, according to the given statistical distributions and parameters.
+#' Calculate probability of being alive under the state transition clock reset model
+#' @description Calculates membership probability of being alive at a given time (vectorized). This probability is from the state transition clock reset model, according to the given statistical distributions and parameters.
 #' @param time Time (numeric and vectorized) from baseline.
 #' @param dpam List of survival regressions for model endpoints. This must include pre-progression death (PPD), time to progression (TTP) and post progression survival calculated under the clock reset model (PPS-CR).
 #' @param starting Vector of membership probabilities (PF, PD, death) at time zero.
@@ -383,8 +383,8 @@ prob_os_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
   pf+pd
 }
 
-#' Calculate probability of being alive under the markov clock forward model
-#' @description Calculates membership probability of being alive at a given time (vectorized). This probability is from the markov clock forward model, according to the given statistical distributions and parameters.
+#' Calculate probability of being alive under the state transition clock forward model
+#' @description Calculates membership probability of being alive at a given time (vectorized). This probability is from the state transition clock forward model, according to the given statistical distributions and parameters.
 #' @param time Time (numeric and vectorized) from baseline.
 #' @param dpam List of survival regressions for model endpoints. This must include pre-progression death (PPD), time to progression (TTP) and post progression survival calculated under the clock forward model (PPS-CF).
 #' @param starting Vector of membership probabilities (PF, PD, death) at time zero.
@@ -414,8 +414,23 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 
 #' Graph the observed and fitted state membership probabilities
 #' @description Graph the observed and fitted state membership probabilities for PF, PD, OS and PPS.
-#' @param ptdata is the patient-level dataset of TTP, PFS and OS.
-#' @param dpam is the list of survival regressions for model endpoints. All endpoints are required.
+#' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
+#' - ptid: patient identifier
+#' - pfs.durn: duration of PFS from baseline
+#' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - os.durn: duration of OS from baseline
+#' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#'
+#' Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.
+#' @param dpam List of survival regressions for each endpoint:
+#' - pre-progression death (PPD)
+#' - time to progression (TTP)
+#' - progression-free survival (PFS)
+#' - overall survival (OS)
+#' - post-progression survival clock forward (PPS-CF) and
+#' - post-progression survival clock reset (PPS-CR).
 #' @param cuttime is the cut-off time for a two-piece model (default 0, indicating a one-piece model)
 #' @param tpoints indicates how many timepoints should be included in the graphics (default 100)
 #' @return Four datasets and graphics as a list

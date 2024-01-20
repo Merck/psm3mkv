@@ -2,7 +2,7 @@
 % Please edit documentation in R/probgraphs.R
 \name{prob_pd_stm_cr}
 \alias{prob_pd_stm_cr}
-\title{Calculate probability of having progressed disease under the markov clock reset model}
+\title{Calculate probability of having progressed disease under the state transition clock reset model}
 \usage{
 prob_pd_stm_cr(time, dpam, starting = c(1, 0, 0))
 }
@@ -17,7 +17,7 @@ prob_pd_stm_cr(time, dpam, starting = c(1, 0, 0))
 Numeric value
 }
 \description{
-Calculates membership probability of the progressed disease state at a given time (vectorized). This probability is from the markov clock reset model, according to the given statistical distributions and parameters.
+Calculates membership probability of the progressed disease state at a given time (vectorized). This probability is from the state transition clock reset model, according to the given statistical distributions and parameters.
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lhoods.R
 \name{calc_likes}
 \alias{calc_likes}
-\title{Calculate likelihoods for three three-state models}
+\title{Calculate likelihoods for three three-state model structures}
 \usage{
 calc_likes(ptdata, dpam, cuttime = 0)
 }
@@ -16,7 +16,9 @@ calc_likes(ptdata, dpam, cuttime = 0)
 \item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
 \item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
 \item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
-}}
+}
+
+Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
 
 \item{dpam}{List of survival regressions for each endpoint:
 \itemize{
@@ -57,7 +59,7 @@ The number of patients for each outcome are given for each model structure. You 
 The contribution of each patient group to the calculation of log-likelihood for each model is given in fields beginning \code{ll_}. This is helpful for understanding differences in likelihoods between model structures, according to patient outcomes.
 }
 \description{
-Calculate likelihood values and other summary output for the following three state models: partitioned survival, clock forward markov, and clock reset markov. The function requires appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used).
+Calculate likelihood values and other summary output for the following three state models structures: partitioned survival, clock forward state transition, and clock reset state transition. The function requires appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used).
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")

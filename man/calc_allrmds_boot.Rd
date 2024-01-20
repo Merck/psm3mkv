@@ -42,7 +42,7 @@ calc_allrmds_boot(
 Numeric vector of restricted mean durations - PF for each model (PSM, STM-CF, STM-CR), then PD, then OS.
 }
 \description{
-Wrapper function to \link{calc_allrmds} to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward markov model, clock reset markov model).
+Wrapper function to \link{calc_allrmds} to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")

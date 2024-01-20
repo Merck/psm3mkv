@@ -7,7 +7,7 @@
 give_noparams_par(dist)
 }
 \arguments{
-\item{`dist`}{is the statistical distribution (named per \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg})}
+\item{dist}{is the statistical distribution (named per \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg})}
 }
 \value{
 a numeric value

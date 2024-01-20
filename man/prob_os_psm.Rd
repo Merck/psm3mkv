@@ -17,7 +17,7 @@ prob_os_psm(time, dpam, starting = c(1, 0, 0))
 Numeric value
 }
 \description{
-Calculates membership probability of being alive at a particular time (vectorized), given either markov model (clock forward or clock reset) with given statistical distributions and parameters. This is the sum of membership probabilities in the progression free and progressed disease states.
+Calculates membership probability of being alive at a particular time (vectorized), given either state transition model (clock forward or clock reset) with given statistical distributions and parameters. This is the sum of membership probabilities in the progression free and progressed disease states.
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")
