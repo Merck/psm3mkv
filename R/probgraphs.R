@@ -56,13 +56,11 @@
 #' prob_pf_psm(0:100, params)
 prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
-  pfs.ts <- pfs.type <- pfs.spec <- survprob <- NULL
+  pfs.ts <- survprob <- NULL
   # Pull out type and spec for PFS
   pfs.ts <- convert_fit2spec(dpam$pfs)
-  pfs.type <- pfs.ts$type
-  pfs.spec <- pfs.ts$spec
   # Calculate survival for each time
-  survprob <- time |> purrr::map_dbl(~calc_surv(.x, pfs.type, pfs.spec))
+  survprob <- time |> purrr::map_dbl(~calc_surv(.x, pfs.ts$type, pfs.ts$spec))
   starting[1] * survprob
 }
 
@@ -88,19 +86,14 @@ prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' prob_pf_stm(0:100, params)
 prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
-  ppd.ts <- ppd.type <- ppd.spec <- s1 <- NULL
-  ttp.ts <- ttp.type <- ttp.spec <- s2 <- NULL
-  # Pull out type and spec for PPD
+  ppd.ts <- s1 <- NULL
+  ttp.ts <- s2 <- NULL
+  # Pull out type and spec for PPD and TTP
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
-  # Pull out type and spec for TTP
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
   # Calculate S_PPD and S_TTP
-  s1 <- time |> purrr::map_dbl(~calc_surv(.x, ppd.type, ppd.spec))
-  s2 <- time |> purrr::map_dbl(~calc_surv(.x, ttp.type, ttp.spec))
+  s1 <- time |> purrr::map_dbl(~calc_surv(.x, ppd.ts$type, ppd.ts$spec))
+  s2 <- time |> purrr::map_dbl(~calc_surv(.x, ttp.ts$type, ttp.ts$spec))
   starting[1] * s1 * s2
 }
 
@@ -126,13 +119,11 @@ prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' prob_os_psm(0:100, params)
 prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
   # Declare local variables
-  os.ts <- os.type <- os.spec <- survprob <- NULL
+  os.ts <- survprob <- NULL
   # Pull out type and spec for OS
   os.ts <- convert_fit2spec(dpam$os)
-  os.type <- os.ts$type
-  os.spec <- os.ts$spec
   # Calculate S_OS
-  survprob <- time |> purrr::map_dbl(~calc_surv(.x, os.type, os.spec))
+  survprob <- time |> purrr::map_dbl(~calc_surv(.x, os.ts$type, os.ts$spec))
   (starting[1] + starting[2]) * survprob
 }
 
@@ -157,12 +148,10 @@ prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
 #' prob_pps_cr(0:100, params)
 prob_pps_cr <- function(time, dpam) {
   # Declare local variables
-  pps.ts <- pps.type <- pps.spec <- NULL
+  pps.ts <- NULL
   # Calculations
   pps.ts <- convert_fit2spec(dpam$pps_cr)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
-  time |> purrr::map_dbl(~calc_surv(.x, pps.type, pps.spec))
+  time |> purrr::map_dbl(~calc_surv(.x, pps.ts$type, pps.ts$spec))
 }
 
 #' Calculate probability of post progression survival under the state transition clock forward model
@@ -191,10 +180,8 @@ prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
   s1 <- rel <- s2 <- meanrel <- durn <- NULL
   # Pull out type and spec for PPS_CF
   pps.ts <- convert_fit2spec(dpam$pps_cf)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
   s1 <- ttptimes |>
-    purrr::map_dbl(~calc_surv(.x, pps.type, pps.spec))
+    purrr::map_dbl(~calc_surv(.x, pps.ts$type, pps.ts$spec))
   # Calculate expected survival for each patient, then average across patients
   rel <- s2 <-
     matrix(0, nrow=length(ppstimes), ncol=length(ttptimes))
@@ -202,7 +189,7 @@ prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
   for (i in seq_len(length(ppstimes))) {
     for(j in seq_len(length(ttptimes))) {
       durn <- ttptimes[j] + ppstimes[i]
-      s2[i,j] <- calc_surv(durn, pps.type, pps.spec)
+      s2[i,j] <- calc_surv(durn, pps.ts$type, pps.ts$spec)
       rel[i,j] <- s2[i,j]/s1[j]
     }
     meanrel[i] <- mean(rel[i,1:length(ttptimes)])
@@ -261,36 +248,26 @@ prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' prob_pd_stm_cr(0:100, params)
 prob_pd_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
-  ttp.ts <- ttp.type <- ttp.spec <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- NULL
-  pps.ts <- pps.type <- pps.spec <- NULL
+  ttp.ts <- ppd.ts <- pps.ts <- NULL
   int_pf <- int_pd <- NULL
   # Avoid integration if time==0
   if (time==0) {return(starting[2])}
-  # Pull out type and spec for TTP
+  # Pull out type and spec for TTP, PPD and PPS_CR
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
-  # Pull out type and spec for PPS_CR
   pps.ts <- convert_fit2spec(dpam$pps_cr)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
   # Probability of PD, starting from PF
   integrand_pf <- function(u) {
-    sttp <- calc_surv(u, ttp.type, ttp.spec)
-    sppd <- calc_surv(u, ppd.type, ppd.spec)
-    http <- calc_haz(u, ttp.type, ttp.spec)
-    spps <- calc_surv(time-u, pps.type, pps.spec)
+    sttp <- calc_surv(u, ttp.ts$type, ttp.ts$spec)
+    sppd <- calc_surv(u, ppd.ts$type, ppd.ts$spec)
+    http <- calc_haz(u, ttp.ts$type, ttp.ts$spec)
+    spps <- calc_surv(time-u, pps.ts$type, pps.ts$spec)
     sttp*sppd*http*spps
   }
   integrand_pf <- Vectorize(integrand_pf, "u")
   int_pf <- stats::integrate(integrand_pf, lower=0, upper=time)
   # Probability of PD, starting from PD
-  int_pd <- calc_surv(time, pps.type, pps.spec)
+  int_pd <- calc_surv(time, pps.ts$type, pps.ts$spec)
   # Combined probability, given starting points
   starting[1] * int_pf$value + starting[2] * int_pd
 }
@@ -318,31 +295,21 @@ prob_pd_stm_cr <- Vectorize(prob_pd_stm_cr, "time")
 #' prob_pd_stm_cf(0:100, params)
 prob_pd_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
-  ttp.ts <- ttp.type <- ttp.spec <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- NULL
-  pps.ts <- pps.type <- pps.spec <- NULL
+  ttp.ts <- ppd.ts <- pps.ts <- NULL
   sppst <- int_pf <- int_pd <- NULL
   # Avoid integration if time==0
   if (time==0) {return(starting[2])}
-  # Pull out type and spec for TTP
+  # Pull out type and spec for TTP, PPD, PPS_CF
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  # Pull out type and spec for PPD
   ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
-  # Pull out type and spec for PPS_CF
   pps.ts <- convert_fit2spec(dpam$pps_cf)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
   sppst <- calc_surv(time, pps.type, pps.spec)
   # Probability of PD, starting from PD
   integrand <- function(u) {
-    sttp <- calc_surv(u, ttp.type, ttp.spec)
-    sppd <- calc_surv(u, ppd.type, ppd.spec)
-    http <- calc_haz(u, ttp.type, ttp.spec)
-    sppsu <- calc_surv(u, pps.type, pps.spec)
+    sttp <- calc_surv(u, ttp.ts$type, ttp.ts$spec)
+    sppd <- calc_surv(u, ppd.ts$type, ppd.ts$spec)
+    http <- calc_haz(u, ttp.ts$type, ttp.ts$spec)
+    sppsu <- calc_surv(u, pps.ts$type, pps.ts$spec)
     ifelse(sppsu==0, 0, sttp*sppd*http*sppst/sppsu)
   }
   integrand <- Vectorize(integrand, "u")
