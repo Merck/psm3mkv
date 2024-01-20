@@ -21,6 +21,36 @@
 # ltablesurv.R
 # ==================================================================
 
+#' VoneLOOKUP function
+#' @description Function to lookup a single (one) value according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel.
+#' @param indexval The single index value to be looked-up
+#' @param indexvec The vector of indices to look-up in
+#' @param valvec The vector of values corresponding to the vector of indices
+#' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default).
+#' @return Numeric value or vector, depending on the lookup/interpolation method chosen:
+#' - `floor`: Floor value, where interpolation is required between measured values
+#' - `ceiling`: Ceiling value, where interpolation is required between measured values
+#' - `arith`: Arithmetic mean, where interpolation is required between measured values
+#' - `geom`: Geometric mean, where interpolation is required between measured values
+#' @seealso [psm3mkv::vlookup]
+vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
+  if (oneindexval<min(indexval)) stop("Lookup value is below range of lookup table")
+  if (oneindexval>max(indexval)) stop("Lookup value is above range of lookup table")
+  # stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
+  loc <- indexrange <- valrange <- NULL
+  # Location of index values
+  loc <- match(1, (oneindexval>=indexvec)*(oneindexval<=dplyr::lead(indexvec)))
+  indexrange <- indexvec[loc:(loc+1)]
+  valrange <- valvec[loc:(loc+1)]
+  dplyr::case_when(
+    method == "floor" ~ dplyr::if_else(oneindexval==indexrange[2], valrange[2], valrange[1]),
+    method == "ceiling" ~ dplyr::if_else(oneindexval==indexrange[1], valrange[1], valrange[2]),
+    method == "arith" ~ (valrange[1]*(indexrange[2]-oneindexval) + valrange[2]*(oneindexval-indexrange[1])) / (indexrange[2]-indexrange[1]),
+    method == "geom" ~ ((valrange[1]^(indexrange[2]-oneindexval)) * (valrange[2]^(oneindexval-indexrange[1]))) ^ (1/(indexrange[2]-indexrange[1])),
+    .default = ret$geom
+  )
+}
+
 #' VLOOKUP function
 #' @description Function to lookup values according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel.
 #' @param indexval The index value to be looked-up (may be a vector of multiple values)
@@ -55,32 +85,7 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
   if (!all(indexvec==unique(indexvec))) stop("Index vector components must be unique")
   ret <- NULL
   # Function for looking up value for one index value (oneindexval)
-  onelookup <- function(oneindexval) {
-    if (oneindexval<min(indexval)) stop("Lookup value is below range of lookup table")
-    if (oneindexval>max(indexval)) stop("Lookup value is above range of lookup table")
-    # stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
-    loc <- indexrange <- valrange <- NULL
-    # Location of index values
-    loc <- match(1, (oneindexval>=indexvec)*(oneindexval<=dplyr::lead(indexvec)))
-    indexrange <- indexvec[loc:(loc+1)]
-    valrange <- valvec[loc:(loc+1)]
-    list(
-      floor = dplyr::if_else(oneindexval==indexrange[2], valrange[2], valrange[1]),
-      ceiling = dplyr::if_else(oneindexval==indexrange[1], valrange[1], valrange[2]),
-      arith = (valrange[1]*(indexrange[2]-oneindexval) + valrange[2]*(oneindexval-indexrange[1])) / (indexrange[2]-indexrange[1]),
-      geom = ((valrange[1]^(indexrange[2]-oneindexval)) * (valrange[2]^(oneindexval-indexrange[1]))) ^ (1/(indexrange[2]-indexrange[1]))
-    )
-  }
-  ret <- matrix(unlist(sapply(indexval, onelookup)), ncol=length(indexval))
-  ret <- tibble::tibble(floor=ret[1,], ceiling=ret[2,], arith=ret[3,], geom=ret[4,])
-  # Return depending on method
-  dplyr::case_when(
-    method == "floor" ~ ret$floor,
-    method == "ceiling" ~ ret$ceiling,
-    method == "arith" ~ ret$arith,
-    method == "geom" ~ ret$geom,
-    .default = ret$geom
-  )
+  sapply(indexval, vonelookup, indexvec=indexvec, valvec=valvec, method=method)
 }
 
 #' Calculate survival from a lifetable
