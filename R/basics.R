@@ -206,22 +206,22 @@ calc_haz <- function(time, type, spec){
 #' calc_dens_par(5, "lnorm", c(3, 1))
 calc_dens_par <- function(time, dist, pars) {
   if (dist=="exp") {
-    flexsurv::dexp(time, rate=pars[1])
+    stats::dexp(time, rate=pars[1])
   } else if (dist=="weibullPH") {
     flexsurv::dweibullPH(time, shape=pars[1], scale=pars[2])
   } else if (dist=="weibull" | dist=="weibull.quiet") {
-    flexsurv::dweibull(time, shape=pars[1], scale=pars[2])
+    stats::dweibull(time, shape=pars[1], scale=pars[2])
   } else if (dist=="llogis") {
     flexsurv::dllogis(time, shape=pars[1], scale=pars[2])
   } else if (dist=="lnorm") {
-    flexsurv::dlnorm(time, meanlog=pars[1], sdlog=pars[2])
-  } else if(dist=="gamma") {
-    flexsurv::dgamma(time, shape=pars[1], rate=pars[2])
-  } else if(dist=="gompertz") {
+    stats::dlnorm(time, meanlog=pars[1], sdlog=pars[2])
+  } else if (dist=="gamma") {
+    stats::dgamma(time, shape=pars[1], rate=pars[2])
+  } else if (dist=="gompertz") {
     flexsurv::dgompertz(time, shape=pars[1], rate=pars[2])
-  } else if(dist=="gengamma") {
+  } else if (dist=="gengamma") {
     flexsurv::dgengamma(time, mu=pars[1], sigma=pars[2], Q=pars[3])
-  } else if(dist=="gengamma.orig") {
+  } else if (dist=="gengamma.orig") {
     flexsurv::dgengamma.orig(time, shape=pars[1], scale=pars[2], k=pars[3])
   } else {
     NA
