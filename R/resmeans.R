@@ -129,18 +129,17 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   # subject to a maximum of the lifetable survival
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
     http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
     fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
     spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
     if (is.data.frame(lifetable)) {
-      osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
-      osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
-      osadj_ppd <- pmin(osmax1, sppd)/sppd
-      osadj_pps <- pmin(osmax2/osmax1, spps) / spps
-    } else {osadj_ppd <- osadj_pps <- 1}
-    vn*sppd*fttp*spps*osadj_ppd*osadj_pps
+      fttp <- pmax(fttp, calc_ltdens(convert_wks2yrs(x[1]), lifetable))
+      gens1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
+      gens2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
+      spps <- pmin(spps, gens2/gens1)
+    }
+    vn*sppd*fttp*spps
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
@@ -199,22 +198,23 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   ttp.ts <- convert_fit2spec(dpam$ttp)
   ppd.ts <- convert_fit2spec(dpam$ppd)
   pps.ts <- convert_fit2spec(dpam$pps_cf)
-  # Integrand PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_OS(x2)/S_OS(x1)
+  # Integrand PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS_CF(x1, x2)
+  # where S_PPS_CF = S_OS(x2)/S_OS(x1)
   # subject to lifetable maximum
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    sttp <- calc_surv(x[1], ttp.ts$type, ttp.ts$spec)
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
-    http <- calc_haz(x[1], ttp.ts$type, ttp.ts$spec)
+    fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
     sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
     sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
+    spps <- sos2/sos1
     if (is.data.frame(lifetable)) {
-      osmax1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
-      osmax2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
-      osadj_ppd <- pmin(osmax1, sppd)/sppd
-      osadj_pps <- pmin(osmax2/osmax1, sos2/sos1) / (sos2/sos1)
-      } else {osadj_ppd <- osadj_pps <- 1}
-    if (sos1==0) 0 else {vn*sttp*sppd*http*sos2/sos1*osadj_ppd*osadj_pps}
+      fttp <- pmax(fttp, calc_ltdens(convert_wks2yrs(x[1]), lifetable))
+      gens1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
+      gens2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
+      spps <- pmin(spps, gens2/gens1)
+      }
+    if (sos1==0) 0 else {vn*sppd*fttp*spps}
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
@@ -272,13 +272,11 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     vn <- (1+discrate)^(-convert_wks2yrs(x))
     pf_psm <- calc_surv(x, pfs.ts$type, pfs.ts$spec)
     if (is.data.frame(lifetable)) {
-      ttp.ts <- convert_fit2spec(dpam$ttp)
       ttp <- calc_surv(Tw, ttp.ts$type, ttp.ts$spec)
       osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
-      vn * pmin(pf_psm, ttp*osmax)                     
-    } else {
-      vn * pf_psm
+      pf_psm <- pmin(pf_psm, ttp*osmax)
     }
+    vn * pf_psm
   }
   int_pf <- stats::integrate(integrand_pf, 0, Tw)          
   # Finally multiply by starting population in PF
@@ -328,10 +326,9 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
     os_psm <- calc_surv(x, os.ts$type, os.ts$spec)
     if (is.data.frame(lifetable)) {
       osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
-      vn * pmin(os_psm, osmax)                     
-    } else {
-      vn * os_psm
+      os_psm <- pmin(os_psm, osmax)                     
     }
+    vn*os_psm
   }
   int_os <- stats::integrate(integrand_os, 0, Tw)
   # Finally multiply by starting population in OS
@@ -509,17 +506,13 @@ calc_allrmds <- function(simdat,
     pf_stm_post <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
     pd_stmcf_post <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
     pd_stmcr_post <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    # Calculate rest through differences
-    pd_psm_post <- os_psm_post - pf_psm_post
-    os_stmcf_post <- pf_stm_post + pd_stmcf_post
-    os_stmcr_post <- pf_stm_post + pd_stmcr_post
   }
   # Calculating overall means
   pf_psm <- pfarea + pf_psm_post
   os_psm <- osarea + os_psm_post
   pf_stm <- pfarea + pf_stm_post
-  os_stm_cf <- osarea + os_stmcf_post
-  os_stm_cr <- osarea + os_stmcr_post
+  os_stm_cf <- osarea + pf_stm_post + pd_stmcf_post
+  os_stm_cr <- osarea + pf_stm_post + pd_stmcr_post
   pd_psm <- os_psm-pf_psm
   pd_stm_cf <- os_stm_cf-pf_stm
   pd_stm_cr <- os_stm_cr-pf_stm
