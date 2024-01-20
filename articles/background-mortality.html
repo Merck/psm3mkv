@@ -239,7 +239,6 @@ or imported to <em>psm3mkv</em>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://merck.github.io/psm3mkv/">psm3mkv</a></span><span class="op">)</span> <span class="co"># Load psm3mkv itself</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span> <span class="co"># for data wrangling</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://nanx.me/ggsci/" class="external-link">ggsci</a></span><span class="op">)</span> <span class="co"># for nice graphics</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/chjackson/flexsurv-dev" class="external-link">flexsurv</a></span><span class="op">)</span> <span class="co"># for the datasets attached</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/timriffe/TR1" class="external-link">HMDHFDplus</a></span><span class="op">)</span> <span class="co"># to create lifetables from the Human Mortality Database</span></span></code></pre></div>
 </div>
@@ -274,10 +273,10 @@ Human Mortality Database (www.mortality.org). Alternatively, we could
 just make up a mortality table.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>  Timey<span class="op">=</span><span class="fl">0</span><span class="op">:</span><span class="fl">30</span>,</span>
-<span>  Age<span class="op">=</span><span class="fl">50</span><span class="op">+</span><span class="va">Timey</span>,</span>
-<span>  lx<span class="op">=</span><span class="fl">10000</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.03</span> <span class="op">*</span> <span class="va">Timey</span><span class="op">^</span><span class="fl">1.1</span><span class="op">)</span>,</span>
-<span>  dx<span class="op">=</span><span class="va">lx</span><span class="op">-</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lead</a></span><span class="op">(</span><span class="va">lx</span><span class="op">)</span></span>
+<span>  Timey <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">30</span>,</span>
+<span>  lx <span class="op">=</span> <span class="fl">10000</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.03</span> <span class="op">*</span> <span class="va">Timey</span><span class="op">^</span><span class="fl">1.1</span><span class="op">)</span>,</span>
+<span>  dx <span class="op">=</span> <span class="va">lx</span> <span class="op">-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lead</a></span><span class="op">(</span><span class="va">lx</span><span class="op">)</span>,</span>
+<span>  qx <span class="op">=</span> <span class="va">dx</span><span class="op">/</span><span class="va">lx</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>However we do it, once we have the mortality data, we can apply the
 SMR (<span class="math inline">\(R\)</span>) and derive a lifetable from
@@ -289,7 +288,7 @@ time zero as required.</p>
 <span><span class="co"># Recalculate the lifetable with the SMR applied</span></span>
 <span><span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">$</span><span class="va">lx</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">mort</span><span class="op">$</span><span class="va">lx</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">SMR</span> <span class="op">*</span> <span class="va">mort</span><span class="op">$</span><span class="va">dx</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
+<span>  <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">SMR</span> <span class="op">*</span> <span class="va">mort</span><span class="op">$</span><span class="va">qx</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Ensure lx&gt;=0</span></span>
@@ -303,10 +302,10 @@ time zero as required.</p>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>      0 <span style="text-decoration: underline;">10</span>000 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>      1  <span style="text-decoration: underline;">9</span>409.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>      2  <span style="text-decoration: underline;">8</span>754.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      3  <span style="text-decoration: underline;">8</span>089.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>      4  <span style="text-decoration: underline;">7</span>425.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>      5  <span style="text-decoration: underline;">6</span>769.</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>      2  <span style="text-decoration: underline;">8</span>774.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      3  <span style="text-decoration: underline;">8</span>151.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>      4  <span style="text-decoration: underline;">7</span>553.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>      5  <span style="text-decoration: underline;">6</span>985.</span></span></code></pre></div>
 <p>Next we get some patient-level data and fit the PSM and STMs. So far,
 we are closely following <code><a href="../articles/example.html">vignette("example")</a></code>. Time is
 assumed to be recorded in the patient-level data in weeks, with
@@ -382,11 +381,11 @@ time horizon.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        127.3     227.8     355.0 yes       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     224.6     108.8     333.4 yes       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     224.6     108.0     332.7 yes       0</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        132.9     237.8     370.8 yes       0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     231.6     110.1     341.7 yes       0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     231.6     109.5     341.0 yes       0</span></span></code></pre></div>
 <p>The State Transition Model Clock Reset (STM-CR) estimate of mean time
-in PF has reduced by 46.8 weeks for example, from 271.4 to 224.6
+in PF has reduced by 39.9 weeks for example, from 271.4 to 231.6
 weeks.</p>
 </div>
 <div class="section level3">
@@ -425,11 +424,11 @@ produces our final model for this vignette.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        110.6     197.9     308.5 yes     3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     200.3      90.8     291.1 yes     3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     200.3      90.3     290.6 yes     3.5</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        114.9     205.7     320.6 yes     3.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     205.7      91.8     297.5 yes     3.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     205.7      91.4     297.1 yes     3.5</span></span></code></pre></div>
 <p>The final STM-CR estimate of mean time in PF, with both a lifetable
-constraint and discounting at 3.5% per year is 200.3 weeks.</p>
+constraint and discounting at 3.5% per year is 205.7 weeks.</p>
 <p>A summary of the STM-CR estimates of mean time in PF is given in the
 table below.</p>
 <table class="table">
@@ -451,8 +450,8 @@ table below.</p>
 </tr>
 <tr class="even">
 <td align="left">With lifetable constraint, no discounting</td>
-<td align="left">224.6</td>
-<td align="left">-46.8</td>
+<td align="left">231.6</td>
+<td align="left">-39.9</td>
 </tr>
 <tr class="odd">
 <td align="left">No lifetable constraint, discounting at 3.5% pa</td>
@@ -461,8 +460,8 @@ table below.</p>
 </tr>
 <tr class="even">
 <td align="left">With lifetable constraint, discounting at 3.5% pa</td>
-<td align="left">200.3</td>
-<td align="left">-71.1</td>
+<td align="left">205.7</td>
+<td align="left">-65.7</td>
 </tr>
 </tbody>
 </table>
