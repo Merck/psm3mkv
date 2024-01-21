@@ -23,7 +23,7 @@
 
 #' VoneLOOKUP function
 #' @description Function to lookup a single (one) value according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel.
-#' @param indexval The single index value to be looked-up
+#' @param oneindexval The single index value to be looked-up
 #' @param indexvec The vector of indices to look-up in
 #' @param valvec The vector of values corresponding to the vector of indices
 #' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default).
@@ -47,7 +47,7 @@ vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
     method == "ceiling" ~ dplyr::if_else(oneindexval==indexrange[1], valrange[1], valrange[2]),
     method == "arith" ~ (valrange[1]*(indexrange[2]-oneindexval) + valrange[2]*(oneindexval-indexrange[1])) / (indexrange[2]-indexrange[1]),
     method == "geom" ~ ((valrange[1]^(indexrange[2]-oneindexval)) * (valrange[2]^(oneindexval-indexrange[1]))) ^ (1/(indexrange[2]-indexrange[1])),
-    .default = ret$geom
+    .default = ((valrange[1]^(indexrange[2]-oneindexval)) * (valrange[2]^(oneindexval-indexrange[1]))) ^ (1/(indexrange[2]-indexrange[1]))
   )
 }
 
@@ -83,7 +83,6 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
   if (length(indexvec)!=length(valvec)) stop("Index and values vectors must be same length")
   if (!all(indexvec==sort(indexvec))) stop("Index vector must sorted into ascending order")
   if (!all(indexvec==unique(indexvec))) stop("Index vector components must be unique")
-  ret <- NULL
   # Function for looking up value for one index value (oneindexval)
   sapply(indexval, vonelookup, indexvec=indexvec, valvec=valvec, method=method)
 }
