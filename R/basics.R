@@ -195,6 +195,71 @@ calc_haz <- function(time, type, spec){
   }
 }
 
+#' Calculate the value of the density function (parametric form)
+#' @description Calculate the value of the density function, given the statistical distribution and its parameters.
+#' @inheritParams calc_pdist_par
+#' @inherit calc_pdist_par seealso
+#' @return The value of a density function, a numeric value.
+#' @export
+#' @examples
+#' calc_dens_par(10, "exp", 0.01)
+#' calc_dens_par(5, "lnorm", c(3, 1))
+calc_dens_par <- function(time, dist, pars) {
+  if (dist=="exp") {
+    stats::dexp(time, rate=pars[1])
+  } else if (dist=="weibullPH") {
+    flexsurv::dweibullPH(time, shape=pars[1], scale=pars[2])
+  } else if (dist=="weibull" | dist=="weibull.quiet") {
+    stats::dweibull(time, shape=pars[1], scale=pars[2])
+  } else if (dist=="llogis") {
+    flexsurv::dllogis(time, shape=pars[1], scale=pars[2])
+  } else if (dist=="lnorm") {
+    stats::dlnorm(time, meanlog=pars[1], sdlog=pars[2])
+  } else if (dist=="gamma") {
+    stats::dgamma(time, shape=pars[1], rate=pars[2])
+  } else if (dist=="gompertz") {
+    flexsurv::dgompertz(time, shape=pars[1], rate=pars[2])
+  } else if (dist=="gengamma") {
+    flexsurv::dgengamma(time, mu=pars[1], sigma=pars[2], Q=pars[3])
+  } else if (dist=="gengamma.orig") {
+    flexsurv::dgengamma.orig(time, shape=pars[1], scale=pars[2], k=pars[3])
+  } else {
+    NA
+  }
+}
+
+#' Calculate the value of the density function
+#' @description Calculate the value of the density function, given specification as either parametric or Royston-Parmar splines model
+#' @inheritParams calc_surv
+#' @inherit calc_haz_par return
+#' @export
+#' @examples
+#' calc_dens(time=1:5,
+#'     type="spl",
+#'     spec=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
+#'     )
+#' calc_dens(time=1:5,
+#'     type="par",
+#'     spec=list(dist="lnorm", pars=c(3,1))
+#'     )
+calc_dens <- function(time, type, spec){
+  type <- tolower(substr(type, 1, 3))
+  if (type=="spl") {
+    flexsurv::dsurvspline(x = time,
+                          gamma = spec$gamma,
+                          beta = 0,
+                          X = 0,
+                          knots = spec$knots,
+                          scale = spec$scale,
+                          timescale = "log",
+                          offset = 0)
+  } else if (type=="par") {
+    calc_dens_par(time, dist=spec$dist, pars=spec$pars)
+  } else {
+    NA
+  }
+}
+
 #' Calculate restricted mean durations (parametric form)
 #' @description Calculates the restricted mean duration, given a parametric statistical distribution.
 #' @param dist is the statistical distribution (named per [flexsurv::flexsurvreg]).

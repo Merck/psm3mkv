@@ -21,6 +21,36 @@
 # ltablesurv.R
 # ==================================================================
 
+#' VoneLOOKUP function
+#' @description Function to lookup a single (one) value according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel.
+#' @param oneindexval The single index value to be looked-up
+#' @param indexvec The vector of indices to look-up in
+#' @param valvec The vector of values corresponding to the vector of indices
+#' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default).
+#' @return Numeric value or vector, depending on the lookup/interpolation method chosen:
+#' - `floor`: Floor value, where interpolation is required between measured values
+#' - `ceiling`: Ceiling value, where interpolation is required between measured values
+#' - `arith`: Arithmetic mean, where interpolation is required between measured values
+#' - `geom`: Geometric mean, where interpolation is required between measured values
+#' @seealso [psm3mkv::vlookup]
+vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
+  if (oneindexval<min(indexvec)) stop("Lookup value is below range of lookup table")
+  if (oneindexval>max(indexvec)) stop("Lookup value is above range of lookup table")
+  # stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
+  loc <- indexrange <- valrange <- NULL
+  # Location of index values
+  loc <- match(1, (oneindexval>=indexvec)*(oneindexval<=dplyr::lead(indexvec)))
+  indexrange <- indexvec[loc:(loc+1)]
+  valrange <- valvec[loc:(loc+1)]
+  dplyr::case_when(
+    method == "floor" ~ dplyr::if_else(oneindexval==indexrange[2], valrange[2], valrange[1]),
+    method == "ceiling" ~ dplyr::if_else(oneindexval==indexrange[1], valrange[1], valrange[2]),
+    method == "arith" ~ (valrange[1]*(indexrange[2]-oneindexval) + valrange[2]*(oneindexval-indexrange[1])) / (indexrange[2]-indexrange[1]),
+    method == "geom" ~ ((valrange[1]^(indexrange[2]-oneindexval)) * (valrange[2]^(oneindexval-indexrange[1]))) ^ (1/(indexrange[2]-indexrange[1])),
+    .default = ((valrange[1]^(indexrange[2]-oneindexval)) * (valrange[2]^(oneindexval-indexrange[1]))) ^ (1/(indexrange[2]-indexrange[1]))
+  )
+}
+
 #' VLOOKUP function
 #' @description Function to lookup values according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel.
 #' @param indexval The index value to be looked-up (may be a vector of multiple values)
@@ -53,34 +83,8 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
   if (length(indexvec)!=length(valvec)) stop("Index and values vectors must be same length")
   if (!all(indexvec==sort(indexvec))) stop("Index vector must sorted into ascending order")
   if (!all(indexvec==unique(indexvec))) stop("Index vector components must be unique")
-  ret <- NULL
   # Function for looking up value for one index value (oneindexval)
-  onelookup <- function(oneindexval) {
-    if (oneindexval<min(indexval)) stop("Lookup value is below range of lookup table")
-    if (oneindexval>max(indexval)) stop("Lookup value is above range of lookup table")
-    # stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
-    loc <- indexrange <- valrange <- NULL
-    # Location of index values
-    loc <- match(1, (oneindexval>=indexvec)*(oneindexval<=dplyr::lead(indexvec)))
-    indexrange <- indexvec[loc:(loc+1)]
-    valrange <- valvec[loc:(loc+1)]
-    list(
-      floor = dplyr::if_else(oneindexval==indexrange[2], valrange[2], valrange[1]),
-      ceiling = dplyr::if_else(oneindexval==indexrange[1], valrange[1], valrange[2]),
-      arith = (valrange[1]*(indexrange[2]-oneindexval) + valrange[2]*(oneindexval-indexrange[1])) / (indexrange[2]-indexrange[1]),
-      geom = ((valrange[1]^(indexrange[2]-oneindexval)) * (valrange[2]^(oneindexval-indexrange[1]))) ^ (1/(indexrange[2]-indexrange[1]))
-    )
-  }
-  ret <- matrix(unlist(sapply(indexval, onelookup)), ncol=length(indexval))
-  ret <- tibble::tibble(floor=ret[1,], ceiling=ret[2,], arith=ret[3,], geom=ret[4,])
-  # Return depending on method
-  dplyr::case_when(
-    method == "floor" ~ ret$floor,
-    method == "ceiling" ~ ret$ceiling,
-    method == "arith" ~ ret$arith,
-    method == "geom" ~ ret$geom,
-    .default = ret$geom
-  )
+  sapply(indexval, vonelookup, indexvec=indexvec, valvec=valvec, method=method)
 }
 
 #' Calculate survival from a lifetable
@@ -96,6 +100,32 @@ calc_ltsurv <- function(looktime, lifetable=NA){
   if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
   if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
   vlookup(looktime, lifetable$lttime, lifetable$lx) / lifetable$lx[1]
+}
+
+#' Calculate mortality density from a lifetable
+#' @description Calculate mortality density a given time, according to a provided lifetable
+#' @param looktime The time(s) to which survival is to be estimated (from time zero).
+#' @param lifetable The lifetable must be a dataframe with columns named `lttime` (years) and `lx`. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
+#' @return Numeric survival probability
+#' @export
+#' @examples
+#' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
+#' calc_ltsurv(c(2, 2.5, 9.3), ltable)
+calc_ltdens <- function(looktime, lifetable=NA){
+  if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
+  if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
+  # Floor time from lifetable
+  tlo <- vlookup(looktime, lifetable$lttime, lifetable$lttime, meth="floor")
+  pos <- match(tlo, lifetable$lttime)
+  # Pick out useful lx values
+  lx0 <- lifetable$lx[1]
+  lxlo <- lifetable$lx[pos]
+  lxhi <- lifetable$lx[pos+1]
+  tdiff <- lifetable$lttime[pos+1]-lifetable$lttime[pos]
+  # Average hazard
+  hx <- -log(lxhi/lxlo)/tdiff
+  # Density at looktime, f = h x S
+  hx * lxlo / lx0
 }
 
 #' Calculate restricted life expectancy from a lifetable
