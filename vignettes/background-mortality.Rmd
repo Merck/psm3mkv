@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 This is the second in a series of vignettes illustrating methods for evaluating the fit and efficiency of three state oncology cost-effectiveness model structures, as described in an accompanying journal article.[1] The package is heavily dependent on [flexsurv](https://cran.r-project.org/package=flexsurv)).[2]
 
-After fitting models, as described in `vignette("example")`, estimates of restricted mean durations in health states can be calculated after constraining for background mortality from a given life table. This background mortality is assumed to add to the mortality hazard observed in the dataset. In doing this, we must assume that the original dataset was NOT subject to this type of mortality. This is a common, pragmatic assumption in cost-effectiveness models. Further discussion of survival extrapolation incorporating general population mortality is provided by Sweeting et al.[3]
+After fitting models, as described in `vignette("example")`, estimates of restricted mean durations in health states can be calculated after constraining for background mortality from a given life table. This background mortality is assumed to add to the mortality hazard observed in the dataset. In doing this, we must assume that the original dataset was NOT subject to this type of mortality. Although unlikely to be true, this is a common, pragmatic assumption in cost-effectiveness models as long as background mortality is relatively insignificant during trial follow-up. Further discussion of survival extrapolation incorporating general population mortality is provided by Sweeting et al.[3]
 
 First, we discussing some underpinning math(s). Then we provide a demonstration of the calculations and modeling using some illustrative data.
 
@@ -45,7 +45,7 @@ $l_x$ is an appropriate lifetable.
 We can also derive the average background mortality hazard for $t$ in the range $[t_1, t_2)$.
 
 $$
-h_{gen}(t) = \frac{\log[S_{gen}(t_2)] - \log[S_{gen}(t_1)]}{t_2 - t_1}
+h_{gen}(t) = \frac{\log[S_{gen}(t_1)] - \log[S_{gen}(t_2)]}{t_2 - t_1}
 $$
 
 ### Partitioned Survival Model (PSM)
@@ -92,7 +92,7 @@ Suppose a discount rate $i$\% applies over unit time. Then the discounting facto
 
 ### Programming implications
 
-The calculation of restricted mean durations in *psm3mkv* default to assume no life table constraints or discounting. However, when a lifetable is specified, then $S_{gen}(t)$ and $h_{gen}(t)$ are specified and constrains the estimates of restricted mean durations as indicated above. When a discount rate is specified, then the mean estimates reflect this also.
+The calculation of restricted mean durations in *psm3mkv* default to assume no life table constraints or discounting. However, when a lifetable is specified, then $S_{gen}(t)$ and $h_{gen}(t)$ are specified and constrain the estimated means as indicated. When a discount rate is specified, then the mean estimates reflect this also.
 
 ## Demonstration
 
