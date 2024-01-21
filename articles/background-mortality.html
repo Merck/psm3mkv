@@ -115,117 +115,83 @@ data.</p>
 <p>Following the notation in the journal article supporting this
 package, where membership probabilities at time <span class="math inline">\(t\)</span> from baseline are defined in terms of
 survival and hazard functions of <span class="math inline">\(t\)</span>
-[1], let us define the background mortality survival function as
-follows</p>
+[1].</p>
+<div class="section level3">
+<h3 id="background-mortality-survival-and-hazard-functions">Background mortality survival and hazard functions<a class="anchor" aria-label="anchor" href="#background-mortality-survival-and-hazard-functions"></a>
+</h3>
+<p>Our lifetable gives us decreasing <span class="math inline">\(l_x\)</span> values at points between <span class="math inline">\(t=0, ..., t_{max}\)</span>, with <span class="math inline">\(l_{t_{max}}=0\)</span>. Let us define the
+background mortality survival function as follows.</p>
 <p><span class="math display">\[
 S_{gen}(t) = 1 - R \left(1 - \frac{l_{x_0 + t}}{l_{x_0}} \right)
 \]</span></p>
 <p>where <span class="math inline">\(x_0\)</span> is the mean age of the
-study population at baseline, and <span class="math inline">\(l_x\)</span> is an appropriate lifetable. We
-assume a Standardized Mortality Ratio (SMR) of <span class="math inline">\(R=1\)</span> for now. In that case, the hazard
-function between time <span class="math inline">\(t\)</span> and <span class="math inline">\(t+1\)</span> is</p>
+study population at baseline, and <span class="math inline">\(l_x\)</span> is an appropriate lifetable.</p>
+<p>We can also derive the average background mortality hazard for <span class="math inline">\(t\)</span> in the range <span class="math inline">\([t_1, t_2)\)</span>.</p>
 <p><span class="math display">\[
-h_{gen}(t) = H_{gen}(t+1) - H_{gen}(t)
+h_{gen}(t) = \frac{\log[S_{gen}(t_2)] - \log[S_{gen}(t_1)]}{t_2 - t_1}
 \]</span></p>
+</div>
+<div class="section level3">
+<h3 id="partitioned-survival-model-psm">Partitioned Survival Model (PSM)<a class="anchor" aria-label="anchor" href="#partitioned-survival-model-psm"></a>
+</h3>
+<p>The restricted mean time in the PF state and time alive are integrals
+over the time horizon, <span class="math inline">\(T\)</span>, of the
+survival functions of PFS and OS. In both cases, the survival functions
+must be constrained to be no greater than background survival. The
+accompanying article discusses possibilities for calculating <span class="math inline">\(S_{TTP}(t)\)</span>, which is not strictly defined
+for PSMs but required for calculating likelihoods and often implicitly
+calculated in economic models to evaluate certain payoffs.</p>
+<p>The mean time in PF and alive are as follows.</p>
 <p><span class="math display">\[
-= -\log \left( \frac{l_{x_{0} +t+1}}{l_{x_{0}}} \right) + \log \left(
-\frac{l_{x_{0} +t}}{l_{x_{0}}} \right)
-\]</span></p>
+E[PF, PSM] = \int_0^T \min \left[ S_{PFS}(u), S_{TTP}(u) \cdot
+S_{gen}(u) \right] du
+\]</span> <span class="math display">\[
+E[OS, PSM] = \int_0^T \min \left[ S_{OS}(u), S_{gen}(u) \right] du
+\]</span> Time in the PD state is then the difference.</p>
 <p><span class="math display">\[
-= \log(l_{x_0 +t}) - \log(l_{x_0 +t+1})
+E[PD, PSM] = E[OS, PSM] - E[PF, PSM]
 \]</span></p>
-<p>where <span class="math inline">\(H(t) = -\log[S(t)]\)</span> is the
-cumulative hazard function.</p>
-<p>State membership probabilities are projected, according to the
-accompanying article, following equations 3-4. With constraints for
-background mortality, we make the following replacements in survival
-functions.</p>
-<table class="table">
-<colgroup>
-<col width="31%">
-<col width="68%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Unadjusted function</th>
-<th align="left">Adjusted function</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left"><span class="math inline">\(S_{TTP}(t)\)</span></td>
-<td align="left">No change</td>
-</tr>
-<tr class="even">
-<td align="left"><span class="math inline">\(S_{PPD}(t)\)</span></td>
-<td align="left"><span class="math inline">\(\min[ S_{PPD}(t),
-S_{gen}(t)]\)</span></td>
-</tr>
-<tr class="odd">
-<td align="left"><span class="math inline">\(S_{PFS}(t)\)</span></td>
-<td align="left"><span class="math inline">\(\min[ S_{PFS}(t),
-S_{TTP}(t) \cdot S_{gen}(t)]\)</span></td>
-</tr>
-<tr class="even">
-<td align="left"><span class="math inline">\(S_{OS}(t)\)</span></td>
-<td align="left"><span class="math inline">\(\min [S_{OS}(t),
-S_{gen}(t)]\)</span></td>
-</tr>
-<tr class="odd">
-<td align="left"><span class="math inline">\(S_{PPS}(u,t)\)</span></td>
-<td align="left"><span class="math inline">\(\min \left[ S_{PPS}(u,t),
-\frac{S_{gen}(t)}{S_{gen}(u)} \right]\)</span></td>
-</tr>
-</tbody>
-</table>
-<p>And the following replacements in hazard functions.</p>
-<table class="table">
-<colgroup>
-<col width="38%">
-<col width="61%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Unadjusted function</th>
-<th align="left">Adjusted function</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left"><span class="math inline">\(h_{TTP}(t)\)</span></td>
-<td align="left">No change</td>
-</tr>
-<tr class="even">
-<td align="left"><span class="math inline">\(h_{PPD}(t)\)</span></td>
-<td align="left"><span class="math inline">\(\max [ h_{PPD}(t),
-h_{gen}(t) ]\)</span></td>
-</tr>
-<tr class="odd">
-<td align="left"><span class="math inline">\(h_{PFS}(t)\)</span></td>
-<td align="left"><span class="math inline">\(\max [ h_{PFS}(t),
-h_{TTP}(t) + h_{gen}(t)]\)</span></td>
-</tr>
-<tr class="even">
-<td align="left"><span class="math inline">\(h_{OS}(t)\)</span></td>
-<td align="left"><span class="math inline">\(\max [h_{OS}(t),
-h_{gen}(t)]\)</span></td>
-</tr>
-<tr class="odd">
-<td align="left"><span class="math inline">\(h_{PPS}(u,t)\)</span></td>
-<td align="left"><span class="math inline">\(\max \left[ h_{PPS}(u,t),
-\frac{\log(l_{x_0 +t}) - \log(l_{x_0 +u})}{t-u} \right]\)</span></td>
-</tr>
-</tbody>
-</table>
+</div>
+<div class="section level3">
+<h3 id="state-transition-models">State Transition Models<a class="anchor" aria-label="anchor" href="#state-transition-models"></a>
+</h3>
+<p>The mean time in PF is as follows.</p>
+<p><span class="math display">\[
+E[PF, STM_{CF}] = \int_0^T S_{TTP}(u) \cdot \min \left[ S_{PPD}(u),
+S_{gen}(u) \right] du
+\]</span> The mean time in PD is rather more complicated. Note that the
+PPS survival differs between the clock forward and clock reset model
+structures.</p>
+<p><span class="math display">\[
+E[PD, STM] = \int_0^T \int_0^t \min \left[ S_{PPD}(u), S_{gen}(u)
+\right] \cdot S_{TTP}(u) \cdot h_{TTP}(u) \cdot \min \left[ S_{PPS}(u,
+t), \frac{S_{gen}(t)}{S_{gen}(u)} \right] du dt
+\]</span> The observant statistician would note <span class="math inline">\(S_{TTP}(u) \cdot h_{TTP}(u) = f_{TTP}(u)\)</span>,
+the density function. The time alive is then the sum of these
+quantities.</p>
+<p><span class="math display">\[
+E[OS, STM] = E[PF, STM] + E[PD, STM]
+\]</span></p>
+</div>
+<div class="section level3">
+<h3 id="discounting">Discounting<a class="anchor" aria-label="anchor" href="#discounting"></a>
+</h3>
+<p>Health economic models such as cost-effectiveness models usually
+evaluate quantities of interest in (net) present value terms, after
+applying discounting. This can be readily included in formulae above by
+including a discounting factor in the integrals.</p>
+<p>Suppose a discount rate <span class="math inline">\(i\)</span>%
+applies over unit time. Then the discounting factor at time <span class="math inline">\(t\)</span> is <span class="math inline">\(v(t;i)=(1+i)^{-t}\)</span>. Note that <span class="math inline">\(v(t;i=0)=1\)</span>.</p>
+</div>
 <div class="section level3">
 <h3 id="programming-implications">Programming implications<a class="anchor" aria-label="anchor" href="#programming-implications"></a>
 </h3>
-<p>The <em>psm3mkv</em> package relies heavily on functions
-<em>calc_haz()</em> and <em>calc_surv()</em> to derive hazard and
-survival functions respectively. These functions in turn depend heavily
-on the <em>flexsurv</em> package[2] (essentially a rather elementary
-wrapper).</p>
-<p>When these functions are called in <em>psm3mkv</em>, both in fitting
-survival models to endpoints and in making projections of membership
-probabilities, they are adjusted according to the tables above for any
-lifetable handed to them. The default is for there to be no lifetable
-and no adjustment for background general mortality.</p>
+<p>The calculation of restricted mean durations in <em>psm3mkv</em>
+default to assume no life table constraints or discounting. However,
+when a lifetable is specified, then <span class="math inline">\(S_{gen}(t)\)</span> and <span class="math inline">\(h_{gen}(t)\)</span> are specified and constrains
+the estimates of restricted mean durations as indicated above. When a
+discount rate is specified, then the mean estimates reflect this
+also.</p>
 </div>
 </div>
 <div class="section level2">
@@ -324,15 +290,15 @@ approximately 52.18 weeks per year.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fit Royston Parmar splines models to each endpoint</span></span>
-<span><span class="va">allfits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span>
+<span><span class="va">allfits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_ends_mods_par.html">fit_ends_mods_par</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Pick out best distributions according to min AIC</span></span>
-<span><span class="va">fit.ppd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.ttp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.pfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pfs</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.os</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">os</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.pps_cf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.pps_cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span></span>
+<span><span class="va">fit.ppd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span></span>
+<span><span class="va">fit.ttp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span></span>
+<span><span class="va">fit.pfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pfs</span>, <span class="st">"aic"</span><span class="op">)</span></span>
+<span><span class="va">fit.os</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">os</span>, <span class="st">"aic"</span><span class="op">)</span></span>
+<span><span class="va">fit.pps_cf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span></span>
+<span><span class="va">fit.pps_cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Bring together our preferred fits for each endpoint in a list</span></span>
 <span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ppd <span class="op">=</span> <span class="va">fit.ppd</span><span class="op">$</span><span class="va">fit</span>,</span>
@@ -365,9 +331,9 @@ year time horizon.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        270.0     123.7     393.8 no        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     271.4     122.5     393.9 no        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     271.4     122.2     393.6 no        0</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        274.4     118.3     392.7 no        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     270.2     119.7     389.9 no        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     270.2     123.8     393.9 no        0</span></span></code></pre></div>
 <p>Then we derive a projection with lifetable constraints over the same
 time horizon.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -381,15 +347,15 @@ time horizon.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        132.9     237.8     370.8 yes       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     231.6     110.1     341.7 yes       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     231.6     109.5     341.0 yes       0</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        230.2     140.5     370.7 yes       0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     230.2     107.6     337.8 yes       0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     230.2     111.1     341.4 yes       0</span></span></code></pre></div>
 <p>The State Transition Model Clock Reset (STM-CR) estimate of mean time
-in PF has reduced by 39.9 weeks for example, from 271.4 to 231.6
+alive has reduced by 52.6 weeks for example, from 393.9 to 341.4
 weeks.</p>
 </div>
 <div class="section level3">
-<h3 id="discounting">Discounting<a class="anchor" aria-label="anchor" href="#discounting"></a>
+<h3 id="discounting-1">Discounting<a class="anchor" aria-label="anchor" href="#discounting-1"></a>
 </h3>
 <p>Let us compare the effects of the lifetable constraint with the
 effect of discounting. First we run a model with discounting at 3.5% per
@@ -406,11 +372,11 @@ year, but no lifetable constraint.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        237.6     102.8     340.4 no      3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     238.7     101.8     340.5 no      3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     238.7     101.7     340.4 no      3.5</span></span></code></pre></div>
-<p>Discounting alone reduces the STM-CR estimate of mean time in PF by
-32.7 weeks for example, from 271.4 to 238.7 weeks.</p>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        241.6      98.0     339.6 no      3.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     237.6      99.6     337.2 no      3.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     237.6     103.2     340.7 no      3.5</span></span></code></pre></div>
+<p>Discounting alone reduces the STM-CR estimate of mean time alive by
+53.2 weeks for example, from 393.9 to 340.7 weeks.</p>
 <p>Applying a lifetable constraint and discounting at 3.5% per year
 produces our final model for this vignette.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -424,44 +390,56 @@ produces our final model for this vignette.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        114.9     205.7     320.6 yes     3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     205.7      91.8     297.5 yes     3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     205.7      91.4     297.1 yes     3.5</span></span></code></pre></div>
-<p>The final STM-CR estimate of mean time in PF, with both a lifetable
-constraint and discounting at 3.5% per year is 205.7 weeks.</p>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        204.5     116.1     320.6 yes     3.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     204.5      89.9     294.4 yes     3.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     204.5      93.0     297.5 yes     3.5</span></span></code></pre></div>
+<p>The final STM-CR estimate of mean time alive, with both a lifetable
+constraint and discounting at 3.5% per year is 297.5 weeks.</p>
 <p>A summary of the STM-CR estimates of mean time in PF is given in the
 table below.</p>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="26%">
+<col width="18%">
+<col width="18%">
+<col width="18%">
+<col width="18%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Model</th>
-<th align="left">Estimate of mean time in PF (weeks)</th>
-<th align="left">Change from starting estimate (weeks)</th>
+<th align="left">Mean time in PF (weeks)</th>
+<th align="left">Change (weeks)</th>
+<th align="left">Mean time alive (weeks)</th>
+<th align="left">Change (weeks)</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">No lifetable constraint, no discounting</td>
-<td align="left">271.4</td>
+<td align="left">270.2</td>
+<td align="left">-</td>
+<td align="left">393.9</td>
 <td align="left">-</td>
 </tr>
 <tr class="even">
 <td align="left">With lifetable constraint, no discounting</td>
-<td align="left">231.6</td>
+<td align="left">230.2</td>
 <td align="left">-39.9</td>
+<td align="left">341.4</td>
+<td align="left">-52.6</td>
 </tr>
 <tr class="odd">
 <td align="left">No lifetable constraint, discounting at 3.5% pa</td>
-<td align="left">238.7</td>
-<td align="left">-32.7</td>
+<td align="left">237.6</td>
+<td align="left">-32.6</td>
+<td align="left">340.7</td>
+<td align="left">-53.2</td>
 </tr>
 <tr class="even">
 <td align="left">With lifetable constraint, discounting at 3.5% pa</td>
-<td align="left">205.7</td>
+<td align="left">204.5</td>
 <td align="left">-65.7</td>
+<td align="left">297.5</td>
+<td align="left">-96.4</td>
 </tr>
 </tbody>
 </table>

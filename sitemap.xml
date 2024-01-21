@@ -34,6 +34,12 @@
     <loc>https://merck.github.io/psm3mkv/reference/calc_allrmds_boot.html</loc>
   </url>
   <url>
+    <loc>https://merck.github.io/psm3mkv/reference/calc_dens.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/calc_dens_par.html</loc>
+  </url>
+  <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_ex.html</loc>
   </url>
   <url>
@@ -62,6 +68,9 @@
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_likes_stm_cr.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/calc_ltdens.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_ltsurv.html</loc>
@@ -215,5 +224,8 @@
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/vlookup.html</loc>
+  </url>
+  <url>
+    <loc>https://merck.github.io/psm3mkv/reference/vonelookup.html</loc>
   </url>
 </urlset>
