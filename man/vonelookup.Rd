@@ -7,13 +7,13 @@
 vonelookup(oneindexval, indexvec, valvec, method = "geom")
 }
 \arguments{
+\item{oneindexval}{The single index value to be looked-up}
+
 \item{indexvec}{The vector of indices to look-up in}
 
 \item{valvec}{The vector of values corresponding to the vector of indices}
 
 \item{method}{Method may be \code{floor}, \code{ceiling}, \code{arith} or \code{geom} (default).}
-
-\item{indexval}{The single index value to be looked-up}
 }
 \value{
 Numeric value or vector, depending on the lookup/interpolation method chosen:
