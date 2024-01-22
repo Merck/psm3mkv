@@ -406,6 +406,7 @@ calc_allrmds <- function(simdat,
   if (inclset[1]!=0) {
     simdat <- simdat[inclset,]
     ds <- create_extrafields(simdat, cuttime)
+    dspps <- ds |> dplyr::filter(pps.durn>0, ttp.flag==1) 
     # Fit chosen distributions to each endpoint - PPD
     ts.ppd <- convert_fit2spec(dpam$ppd)
     fit.ppd <- fit_mods(durn1 = ds$tzero,
@@ -440,17 +441,17 @@ calc_allrmds <- function(simdat,
                       )[[1]]
     # PPS CF - requires two time values
     ts.pps_cf <- convert_fit2spec(dpam$pps_cf)
-    fit.pps_cf <- fit_mods(durn1 = ds$ttp.durn,
-                      durn2 = ds$os.durn,
-                      evflag = ds$pps.flag,
+    fit.pps_cf <- fit_mods(durn1 = dspps$ttp.durn,
+                      durn2 = dspps$os.durn,
+                      evflag = dspps$pps.flag,
                       type = ts.pps_cf$type,
                       spec = ts.pps_cf$spec
                       )[[1]]
     # PPS CR
     ts.pps_cr <- convert_fit2spec(dpam$pps_cr)
-    fit.pps_cr <- fit_mods(durn1 = ds$tzero,
-                       durn2 = ds$pps.durn,
-                       evflag = ds$pps.flag,
+    fit.pps_cr <- fit_mods(durn1 = dspps$tzero,
+                       durn2 = dspps$pps.durn,
+                       evflag = dspps$pps.flag,
                        type = ts.pps_cr$type,
                        spec = ts.pps_cr$spec
                        )[[1]]
