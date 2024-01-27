@@ -1,4 +1,4 @@
-# 15 Jan 2024 - Version 0.2
+# 26 Jan 2024 - Version 0.2
 
 This version provides additional functionality to the calculation of restricted mean durations in `calc_allrmds`. These estimates may now be constrained by a lifetable (see `calc_ltsurv`) and discounting may now be applied. A vignette describing how to use this functionality is provided: `vignette("background-mortality")`.
 
