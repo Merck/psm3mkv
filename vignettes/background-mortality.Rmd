@@ -21,11 +21,35 @@ knitr::opts_chunk$set(
 
 This is the second in a series of vignettes illustrating methods for evaluating the fit and efficiency of three state oncology cost-effectiveness model structures, as described in an accompanying journal article.[1] The package is heavily dependent on [flexsurv](https://cran.r-project.org/package=flexsurv)).[2]
 
-After fitting models, as described in `vignette("example")`, estimates of restricted mean durations in health states can be calculated after constraining for background mortality from a given life table. This background mortality is assumed to add to the mortality hazard observed in the dataset. In doing this, we must assume that the original dataset was NOT subject to this type of mortality. This is a common, pragmatic assumption in cost-effectiveness models. Further discussion of survival extrapolation incorporating general population mortality is provided by Sweeting et al.[3]
+After fitting models, as described in `vignette("example")`, estimates of restricted mean durations in health states can be calculated after constraining for background mortality from a given life table.
 
-First, we discussing some underpinning math(s). Then we provide a demonstration of the calculations and modeling using some illustrative data.
+## What does constraining for background mortality mean?
 
-## The math bit
+### Approach 1 - Constraining only the survival function
+
+This background mortality is assumed to limit the survival function as follows.
+
+$$
+S_{adjusted}(t) = \min \left[ S_{unadjusted}(t), S_{background}(t) \right]
+$$
+
+This is a simple approach, and has been used at least one NICE technology appraisal: "Patient longevity is always the lesser of values generated from the disease-specific survival curve (after adjustment for treatment and functional status) and the survival curve for the general population according to age and sex." [3] However, this approach does not ensure that the hazard is at least as great as the hazard of background mortality.
+
+### Approach 2 - Constraining the hazard function
+
+A more reasonable adjustment would be that the hazard of background mortality acts as a constraint to the unadjusted hazard.[4]
+
+$$
+h_{adjusted}(t) = \max \left[ h_{unadjusted}(t), h_{background}(t) \right]
+\implies S_{adjusted}(t) = \exp \left[ - \int_0^t h_{adjusted}(u) du \right]
+$$
+In either case, we must assume that the original dataset was NOT subject to background mortality. Although unlikely to be true, this is a common, pragmatic assumption in cost-effectiveness models as long as background mortality is relatively insignificant during trial follow-up.
+
+### Approach 3 - Modeling excess hazard in the original dataset
+
+The above approaches work by adjusting extrapolations made from models fitted to data assumed to be not subject to background mortality. If - as is likely - the population in the dataset were in fact subject to background mortality, then it would be better to model that dataset using excess hazard methods rather than to seek to make adjustments to extrapolations after the fact. Further discussion of survival extrapolation incorporating general population mortality is provided by Sweeting et al.[4]
+
+## Deriving restricted mean duration estimates under Approach 1
 
 Following the notation in the journal article supporting this
 package, where membership probabilities at time $t$ from baseline are
@@ -45,7 +69,7 @@ $l_x$ is an appropriate lifetable.
 We can also derive the average background mortality hazard for $t$ in the range $[t_1, t_2)$.
 
 $$
-h_{gen}(t) = \frac{\log[S_{gen}(t_2)] - \log[S_{gen}(t_1)]}{t_2 - t_1}
+h_{gen}(t) = \frac{\log[S_{gen}(t_1)] - \log[S_{gen}(t_2)]}{t_2 - t_1}
 $$
 
 ### Partitioned Survival Model (PSM)
@@ -92,7 +116,7 @@ Suppose a discount rate $i$\% applies over unit time. Then the discounting facto
 
 ### Programming implications
 
-The calculation of restricted mean durations in *psm3mkv* default to assume no life table constraints or discounting. However, when a lifetable is specified, then $S_{gen}(t)$ and $h_{gen}(t)$ are specified and constrains the estimates of restricted mean durations as indicated above. When a discount rate is specified, then the mean estimates reflect this also.
+The calculation of restricted mean durations in *psm3mkv* default to assume no life table constraints or discounting. However, when a lifetable is specified, then $S_{gen}(t)$ and $h_{gen}(t)$ are specified and constrain the estimated means as indicated. When a discount rate is specified, then the mean estimates reflect this also.
 
 ## Demonstration
 
@@ -216,7 +240,7 @@ res1 |> dplyr::mutate(
   dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
 ```
 
-Then we derive a projection with lifetable constraints over the same time horizon.
+Then we derive a projection with lifetable constraints (according to Approach 1) over the same time horizon.
 
 ```{r proj2}
 # Run the calculation
@@ -276,4 +300,6 @@ A summary of the STM-CR estimates of mean time in PF is given in the table below
 
 2. Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M, Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State Models. Available at: https://cran.r-project.org/package=flexsurv.
 
-3. Sweeting et al. Survival Extrapolation Incorporating General Population Mortality Using Excess Hazard and Cure Models: A Tutorial. Med Decis Making 2023 Aug;43(6):737-748. [DOI: 10.1177/0272989X231184247](https://doi.org/10.1177/0272989X231184247)
+3. National Institute for Health and Care Excellence. Avalglucosidase alfa for treating Pompe disease. Technology appraisal guidance [TA821]. August 24, 2022. Available from: [https://www.nice.org.uk/guidance/ta821/documents/committee-papers](https://www.nice.org.uk/guidance/ta821/documents/committee-papers)
+
+4. Sweeting et al. Survival Extrapolation Incorporating General Population Mortality Using Excess Hazard and Cure Models: A Tutorial. Med Decis Making 2023 Aug;43(6):737-748. [DOI: 10.1177/0272989X231184247](https://doi.org/10.1177/0272989X231184247)
