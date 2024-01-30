@@ -54,9 +54,11 @@ Given this, the package enables:
   for each of the 3 model structures (given a time horizon), to evaluate
   plausibility and structural sensitivity. Additional functionality:
 
-  - Constraining the estimates to ensure that mortality hazards are at
-    least as great as background morality.
+  - Constraining the estimates to ensure that survival is no greater
+    than survival in a background lifetable.
+
   - Applying discounting to obtained discounted restricted means.
+
   - Bootstrap standard errors can be derived.
 
 - Graphically illustrate observed and fitted membership probabilities,
@@ -80,8 +82,8 @@ be used for the one-piece parametric and spline modeling.
 A second vignette, `vignette("background-mortality")` illustrates how,
 after fitting models, estimates of restricted mean durations in health
 states can be calculated after constraining for background mortality
-from a given life table. This mortality is assumed to add to the
-mortality hazard observed in the dataset.
+from a given life table. Survival is assumed to be no greater than in a
+background lifetable.
 
 ## Installation
 
