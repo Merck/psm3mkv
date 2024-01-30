@@ -116,9 +116,9 @@
 <li>
 <p>Deriving and presenting restricted mean durations by health state and for each of the 3 model structures (given a time horizon), to evaluate plausibility and structural sensitivity. Additional functionality:</p>
 <ul>
-<li>Constraining the estimates to ensure that mortality hazards are at least as great as background morality.</li>
-<li>Applying discounting to obtained discounted restricted means.</li>
-<li>Bootstrap standard errors can be derived.</li>
+<li><p>Constraining the estimates to ensure that mortality survival is no greater than background mortality.</p></li>
+<li><p>Applying discounting to obtained discounted restricted means.</p></li>
+<li><p>Bootstrap standard errors can be derived.</p></li>
 </ul>
 </li>
 <li><p>Graphically illustrate observed and fitted membership probabilities, to allow visual inspection of fit of the 3 model structures.</p></li>
@@ -129,7 +129,7 @@
 <h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
 </h2>
 <p>The accompanying <code><a href="articles/example.html">vignette("example")</a></code> illustrates how the package can be used for the one-piece parametric and spline modeling.</p>
-<p>A second vignette, <code><a href="articles/background-mortality.html">vignette("background-mortality")</a></code> illustrates how, after fitting models, estimates of restricted mean durations in health states can be calculated after constraining for background mortality from a given life table. This mortality is assumed to add to the mortality hazard observed in the dataset.</p>
+<p>A second vignette, <code><a href="articles/background-mortality.html">vignette("background-mortality")</a></code> illustrates how, after fitting models, estimates of restricted mean durations in health states can be calculated after constraining for background mortality from a given life table. Projected survival in the modeled dataset is assumed to be no greater than background survival.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>

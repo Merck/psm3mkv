@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   background-mortality: background-mortality.html
   example: example.html
-last_built: 2024-01-27T04:26Z
+last_built: 2024-01-30T03:41Z
 urls:
   reference: https://merck.github.io/psm3mkv/reference
   article: https://merck.github.io/psm3mkv/articles
