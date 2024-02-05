@@ -22,6 +22,7 @@ First we need to install and load the packages of interest (with thanks to @vbal
 
 ```{r packages, message=FALSE}
 # Install psm3mkv version 0.2 from github
+require("remotes")
 remotes::install_github("Merck/psm3mkv",
                         ref="v0.2",
                         build_vignettes=TRUE)
