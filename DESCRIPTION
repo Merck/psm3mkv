@@ -22,6 +22,7 @@ Imports:
     flexsurv,
     ggplot2,
     purrr,
+    remotes,
     rlang,
     SimplicialCubature,
     stats,
