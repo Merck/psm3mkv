@@ -16,18 +16,29 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This vignette walks through evaluating the partitioned survival model (PSM) and state transition model structures (either clock reset, STM-CR, or clock forward types, STM-CF) to a dataset derived from the *bosms3* dataset that comes with the *flexsurv* package.[1] A review of PSMs and STMs in oncology cost-effectiveness models is provided by Woods et al.[2]
+This vignette walks through evaluating the partitioned survival model (PSM) and state transition model structures (either clock reset, STM-CR, or clock forward types, STM-CF) to a dataset derived from the *bosms3* dataset that comes with the [flexsurv::flexsurv-package()].[1] A review of PSMs and STMs in oncology cost-effectiveness models is provided by Woods et al.[2]
+
+First we need to install and load the packages of interest (with thanks to @vbaliga for [this helpful code](https://vbaliga.github.io/posts/2019-04-28-verify-that-r-packages-are-installed-and-loaded/)).
 
 ```{r packages, message=FALSE}
-# Load psm3mkv itself
-library(psm3mkv)
+# Install psm3mkv version 0.2 from github
+remotes::install_github("Merck/psm3mkv",
+                        ref="v0.2",
+                        build_vignettes=TRUE)
 
-# Other packages
-library(dplyr) # for data wrangling
-library(boot) # for bootstrapping
-library(ggsci) # for nice graphics
-library(flexsurv) # for data to work
-library(survival) # for data to work
+# First specify the packages of interest
+packages = c("psm3mkv", "dplyr", "boot", "ggsci", "flexsurv", "survival")
+
+# Now load or install & load all
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)
+    }
+  }
+)
 ```
 
 ## Obtaining a suitable dataset

@@ -122,13 +122,27 @@ The calculation of restricted mean durations in *psm3mkv* default to assume no l
 
 ### Initializing
 
-First we load the packages we need - all of which are suggested for or imported to *psm3mkv*.
+First we load the packages we need - all of which are suggested for or imported to *psm3mkv*. With thanks again to @vbaliga for [this helpful code](https://vbaliga.github.io/posts/2019-04-28-verify-that-r-packages-are-installed-and-loaded/)).
 
 ```{r packages, message=FALSE}
-library(psm3mkv) # Load psm3mkv itself
-library(dplyr) # for data wrangling
-library(flexsurv) # for the datasets attached
-library(HMDHFDplus) # to create lifetables from the Human Mortality Database
+# Install psm3mkv version 0.2 from github
+remotes::install_github("Merck/psm3mkv",
+                        ref="v0.2",
+                        build_vignettes=TRUE)
+
+# First specify the packages of interest
+packages = c("psm3mkv", "dplyr", "flexsurv", "HMDHFDplus")
+
+# Now load or install & load all
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)
+    }
+  }
+)
 ```
 
 ### Creating the life table
