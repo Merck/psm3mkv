@@ -94,8 +94,10 @@ ensure R is updated first.
 The development version of *psm3mkv* may be downloaded as follows:
 
 ``` r
-# Install from Github as follows (with the vignette)
-remotes::install_github("Merck/psm3mkv", build_vignettes=TRUE)
+# Install version 0.2 from Github as follows, with the vignette
+remotes::install_github("Merck/psm3mkv",
+    ref="v0.2",
+    build_vignettes=TRUE)
 ```
 
 ## Licensing
