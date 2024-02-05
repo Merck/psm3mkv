@@ -126,12 +126,13 @@ First we load the packages we need - all of which are suggested for or imported 
 
 ```{r packages, message=FALSE}
 # Install psm3mkv version 0.2 from github
+require("remotes")
 remotes::install_github("Merck/psm3mkv",
                         ref="v0.2",
                         build_vignettes=TRUE)
 
 # First specify the packages of interest
-packages = c("psm3mkv", "dplyr", "flexsurv", "HMDHFDplus")
+packages = c("psm3mkv", "dplyr", "flexsurv", "HMDHFDplus", "remotes")
 
 # Now load or install & load all
 package.check <- lapply(
