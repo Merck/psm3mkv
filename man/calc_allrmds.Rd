@@ -11,7 +11,9 @@ calc_allrmds(
   cuttime = 0,
   Ty = 10,
   lifetable = NA,
-  discrate = 0
+  discrate = 0,
+  rmdmethod = "int",
+  timestep = 1
 )
 }
 \arguments{
@@ -37,6 +39,10 @@ calc_allrmds(
 \item{lifetable}{Optional, a life table. Columns must include \code{lttime} (time in years, or 52.18 times shorter than the time index elsewhere, starting from zero) and \code{lx}}
 
 \item{discrate}{Discount rate (\% per year)}
+
+\item{rmdmethod}{can be "int" (default for full integral calculations) or "disc" for approximate discretized calculations}
+
+\item{timestep}{required if method=="int", default being 1}
 }
 \value{
 List of detailed numeric results
@@ -61,8 +67,9 @@ params <- list(
   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
-# Find mean(s)
+# Find mean(s) with integral (default) and discretized approximation (should be quicker), without lifetable or discounting adjustment
 calc_allrmds(bosonc, dpam=params)
+calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=5)
 }
 \seealso{
 Restricted means are provided by \code{\link[=rmd_pf_psm]{rmd_pf_psm()}}, \code{\link[=rmd_os_psm]{rmd_os_psm()}}, \code{\link[=rmd_pf_stm]{rmd_pf_stm()}}, \code{\link[=rmd_pd_stm_cf]{rmd_pd_stm_cf()}} and \code{\link[=rmd_pd_stm_cr]{rmd_pd_stm_cr()}}. The function \link{calc_allrmds_boot} provides a version for bootstrapping.

@@ -25,10 +25,3 @@ list containing:
 Calculate restricted mean duration in respect of the first part of a two-piece model
 Internal function to calculate the restricted mean duration up to the cut-off time, the first part of a two-piece model. Assumes the time horizon is beyond the cutoff time.
 }
-\examples{
-cuttime <- 20
-bosonc <- create_dummydata("flexbosms")
-ds <- create_extrafields(bosonc, cuttime=cuttime)
-dpam <- fit_ends_mods_par(bosonc, cuttime=cuttime)
-calc_rmd_first(ds=ds, cuttime=cuttime)
-}
