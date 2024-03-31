@@ -8,11 +8,11 @@ Recalculated constrained survival probabilities (by week) as the lower of the or
 constrain_survprob(survprob, lifetable, timevec = 0:(length(survprob) - 1))
 }
 \arguments{
-\item{survprob}{}
+\item{survprob}{(Unconstrained) survival probability value or vector}
 
-\item{lifetable}{}
+\item{lifetable}{Lifetable}
 
-\item{timevec}{}
+\item{timevec}{Vector of times corresponding with survival probabilities above}
 }
 \value{
 Vector of constrained survival probabilities

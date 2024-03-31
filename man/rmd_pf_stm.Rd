@@ -14,8 +14,6 @@ rmd_pf_stm(dpam, Ty = 10, starting = c(1, 0, 0), discrate = 0)
 \item{starting}{Vector of membership probabilities at time zero.}
 
 \item{discrate}{Discount rate (\%) per year}
-
-\item{lifetable}{Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.}
 }
 \value{
 Numeric value in same time unit as patient-level data (weeks).
