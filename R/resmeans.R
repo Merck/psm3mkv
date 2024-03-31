@@ -327,8 +327,16 @@ prmd_os_psm <- purrr::possibly(rmd_os_psm, otherwise=NA_real_)
 #' @seealso [convert_fit2spec()], [fit_ends_mods_par()], [fit_ends_mods_spl()]
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
-#' dpam <- fit_ends_mods_par(bosonc)
-#' fit_ends_mods_given(simdat=bosonc[1:50,], dpam=dpam, cuttime=0)
+#' # Pick out best distribution according to min AIC
+#' params <- list(
+#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#'   os = find_bestfit_spl(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#' )
+#' fit_ends_mods_given(simdat=bosonc[1:50,], dpam=params, cuttime=0)
 fit_ends_mods_given <- function(simdat, dpam, cuttime){
   # Declare variables
   ds <- dspps <- ts.ppd <- fit.ppd <- ts.ttp <- fit.ttp <- NULL
