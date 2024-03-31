@@ -174,7 +174,7 @@ fit_ends_mods_par <- function(simdat,
   # Derive additional fields, as with regular function
   ds <- create_extrafields(simdat, cuttime)
   # For PPS analysis, require there to be a known progression event, plus a positive PPS
-  dspps <- ds |> dplyr::filter(pps.durn>0, ttp.flag==1)
+  dspps <- ds |> dplyr::filter(.data$pps.durn>0, .data$ttp.flag==1)
   # Captures lists of fitted models to each endpoint
   fits.ppd <- fit_mods_par(durn1 = ds$tzero,
                        durn2 = ds$ppd.durn,

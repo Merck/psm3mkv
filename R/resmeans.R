@@ -362,7 +362,7 @@ fit_ends_mods_given <- function(simdat, dpam, cuttime){
   ts.pps_cf <- fit.pps_cf <- ts.pps_cr <- fit.pps_cr <- NULL
   # Extend datasets
   ds <- create_extrafields(simdat, cuttime)
-  dspps <- ds |> dplyr::filter(pps.durn>0, ttp.flag==1) 
+  dspps <- ds |> dplyr::filter(.data$pps.durn>0, .data$ttp.flag==1) 
   # Fit chosen distributions to each endpoint - PPD
   ts.ppd <- convert_fit2spec(dpam$ppd)
   fit.ppd <- fit_mods(durn1 = ds$tzero,
@@ -429,12 +429,6 @@ fit_ends_mods_given <- function(simdat, dpam, cuttime){
 #' - pfarea: area under the PF survival function up to the cut-off time
 #' - ossurv: the OS survival function at the cut-off time
 #' - osarea: area under the OS survival function up to the cut-off time
-#' @examples
-#' cuttime <- 20
-#' bosonc <- create_dummydata("flexbosms")
-#' ds <- create_extrafields(bosonc, cuttime=cuttime)
-#' dpam <- fit_ends_mods_par(bosonc, cuttime=cuttime)
-#' calc_rmd_first(ds=ds, cuttime=cuttime)
 calc_rmd_first <- function(ds, cuttime) {
   # Declare local variables
   pf_km <- os_km <- NULL
@@ -512,27 +506,15 @@ calc_allrmds <- function(simdat,
                          Ty = 10,
                          lifetable = NA,
                          discrate = 0) {
-  # Declare local variables
-  ds <- chvalid <- pf_km <- os_km <- NULL
-  pfarea <- pfsurv <- osarea <- ossurv <- NULL
-  adjTy <- pf_psm_post <- os_psm_post <- pf_stm_post <- pd_stmcf_post <- pd_stmcr_post <- NULL
-  pf_psm <- os_psm <- pf_stm <- os_stm_cf <- os_stm_cr <- NULL
-  pd_psm <- pd_stm_cf <- pd_stm_cr <- NULL
-  vec_pf <- vec_pd <- vec_os <- vec_model <- res <- cutadj <- NULL
-  # Return vector for two-piece adjustment
-  cutadj <- list(pf_area=pfarea, pf_surv=pfsurv, os_area=osarea, os_surv=ossurv)
-  # Calculate rest through differences
-  pd_psm_post <- os_psm_post-pf_psm_post
-  os_stmcf_post <- pf_stm_post+pd_stmcf_post
-  os_stmcr_post <- pf_stm_post+pd_stmcr_post
+  # Check calculations valid
+  chvalid <- is.na(dpam[1])==FALSE
+  if (chvalid==FALSE) stop("No validly fitted endpoints")
   # For a bootstrap sample, refit all distributions
   if (inclset[1]!=0) {
     dpam <- fit_ends_mods_given(simdat[inclset,], dpam, cuttime)
   } else {
     ds <- create_extrafields(simdat, cuttime)
   }
-  # Check calculations valid
-  chvalid <- is.na(dpam[1])==FALSE
   # Two piece adjustment if cutime>0
   if (cuttime>0) {
     # Calculate mean duration and survival probability up to cutoff time
@@ -542,36 +524,26 @@ calc_allrmds <- function(simdat,
     first <- list(pfarea=0, pfsurv=1, osarea=0, ossurv=1)
   }
   starting <- c(first$pfsurv, first$ossurv-first$pfsurv, 1-first$ossurv)
-  if (chvalid) {
-    # Call functions to calculate mean durations
-    adjTy <- Ty - convert_wks2yrs(cuttime)
-    pf_psm_post <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    os_psm_post <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    pf_stm_post <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    pd_stmcf_post <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    pd_stmcr_post <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-  }
-  # Calculating overall means
-  pf_psm <- first$pfarea + pf_psm_post
-  os_psm <- first$osarea + os_psm_post
-  pf_stm <- first$pfarea + pf_stm_post
-  os_stm_cf <- first$osarea + pf_stm_post + pd_stmcf_post
-  os_stm_cr <- first$osarea + pf_stm_post + pd_stmcr_post
-  pd_psm <- os_psm-pf_psm
-  pd_stm_cf <- os_stm_cf-pf_stm
-  pd_stm_cr <- os_stm_cr-pf_stm
-  # Warning if PD LYs are zero
-  if(pd_stm_cr<0.1 | is.na(pd_stm_cr)) {warning("Mean LY for PD state in STM_CR may not be calculable. Try a shorter time horizon.")}
-  if(pd_stm_cf<0.1 | is.na(pd_stm_cf)) {warning("Mean LY for PD state in STM_CF may not be calculable. Try a shorter time horizon.")}
-  # Return matrix of PF/PD/OS by method
-  vec_pf <- c(pf_psm, pf_stm, pf_stm)
-  vec_pd <- c(pd_psm, pd_stm_cf, pd_stm_cr)
-  vec_os <- c(os_psm, os_stm_cf, os_stm_cr)
-  vec_model <- c("PSM", "STM-CF", "STM-CR")
-  res <- tidyr::tibble(model=vec_model, pf=vec_pf, pd=vec_pd, os=vec_os)
-  # Return vector for two-piece adjustment
-  cutadj <- list(pf_area=pfarea, pf_surv=pfsurv, os_area=osarea, os_surv=ossurv)
-  return(list(cutadj=cutadj, results=res))
+  # Call functions to calculate mean durations
+  adjTy <- Ty - convert_wks2yrs(cuttime)
+  pf_psm <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+  os_psm <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+  pf_stm <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+  pd_stmcf <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+  pd_stmcr <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+  # Record in a dataframe: row = method, col = (PF, PD, OS)
+  # Firstly do not include one-piece area adjustment
+  rmdres <- tidyr::tibble(
+    pf = c(pf_psm, pf_stm, pf_stm),
+    pd = c(os_psm-pf_psm, pd_stmcf, pd_stmcr),
+    os = c(os_psm, pf_stm+pd_stmcf, pf_stm+pd_stmcr),
+    model = c("PSM", "STM-CF", "STM-CR")
+  )
+  # Now make one-piece area adjustment
+  rmdres$pf <- rmdres$pf + first$pfsurv
+  rmdres$pd <- rmdres$pd + first$ossurv - first$pfsurv
+  rmdres$os <- rmdres$os + first$ossurv
+  return(list(cutadj=first, results=rmdres))
 }
 
 #' Wrapper to enable bootstrap sampling of restricted mean durations for each health state and all three models.
