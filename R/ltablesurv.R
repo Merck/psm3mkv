@@ -115,7 +115,7 @@ calc_ltdens <- function(looktime, lifetable=NA){
   if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
   if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
   # Floor time from lifetable
-  tlo <- vlookup(looktime, lifetable$lttime, lifetable$lttime, meth="floor")
+  tlo <- vlookup(looktime, lifetable$lttime, lifetable$lttime, method="floor")
   pos <- match(tlo, lifetable$lttime)
   # Pick out useful lx values
   lx0 <- lifetable$lx[1]
