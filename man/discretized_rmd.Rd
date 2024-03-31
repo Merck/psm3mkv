@@ -13,6 +13,10 @@ discretized_rmd(dpam, Ty = 10, discrate = 0, state, model, timestep = 1)
 
 \item{discrate}{Discount rate (\%) per year}
 
+\item{state}{May be "PF", "PD" or "OS" being the progression-free or progressive disease states, or overall survival}
+
+\item{model}{May be "PSM", "STM-CF" or "STM-CR" model structures}
+
 \item{starting}{Vector of membership probabilities at time zero.}
 
 \item{lifetable}{Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.}

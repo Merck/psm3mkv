@@ -97,6 +97,8 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' @param starting Vector of membership probabilities at time zero.
 #' @param lifetable Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @param discrate Discount rate (%) per year
+#' @param state May be "PF", "PD" or "OS" being the progression-free or progressive disease states, or overall survival
+#' @param model May be "PSM", "STM-CF" or "STM-CR" model structures
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @include basics.R probgraphs.R
 #' @seealso Full integral calculation in [prmd_pf_stm()]

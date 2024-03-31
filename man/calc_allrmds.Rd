@@ -69,7 +69,7 @@ params <- list(
 )
 # Find mean(s) with integral (default) and discretized approximation (should be quicker), without lifetable or discounting adjustment
 calc_allrmds(bosonc, dpam=params)
-calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=5)
+calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
 }
 \seealso{
 Restricted means are provided by \code{\link[=rmd_pf_psm]{rmd_pf_psm()}}, \code{\link[=rmd_os_psm]{rmd_os_psm()}}, \code{\link[=rmd_pf_stm]{rmd_pf_stm()}}, \code{\link[=rmd_pd_stm_cf]{rmd_pd_stm_cf()}} and \code{\link[=rmd_pd_stm_cr]{rmd_pd_stm_cr()}}. The function \link{calc_allrmds_boot} provides a version for bootstrapping.
