@@ -35,9 +35,6 @@ params <- list(
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
 rmd_os_psm(params)
-# Now with lifetable
-ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-rmd_os_psm(params, lifetable=ltable, abs.tol=0.01, subdivisions=1000)
 }
 \seealso{
 Used safely as \link{prmd_os_psm} by \link{calc_allrmds}

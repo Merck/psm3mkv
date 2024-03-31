@@ -286,9 +286,6 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_os_psm(params)
-#' # Now with lifetable
-#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-#' rmd_os_psm(params, lifetable=ltable, abs.tol=0.01, subdivisions=1000)
 rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- os.ts  <- NULL
