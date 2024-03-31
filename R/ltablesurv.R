@@ -167,9 +167,9 @@ calc_ex <- function(Ty=10, lifetable, discrate=0) {
 
 #' Constrain survival probabilities according to hazards in a lifetable
 #' Recalculated constrained survival probabilities (by week) as the lower of the original unadjusted survival probability and the survival implied by the given lifetable (assumed indexed as years).
-#' @param survprob 
-#' @param lifetable 
-#' @param timevec 
+#' @param survprob (Unconstrained) survival probability value or vector
+#' @param lifetable Lifetable
+#' @param timevec Vector of times corresponding with survival probabilities above
 #' @return Vector of constrained survival probabilities
 #' @export
 #' @examples

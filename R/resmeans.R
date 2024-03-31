@@ -174,8 +174,6 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' # Find mean(s)
 #' rmd_pd_stm_cf(dpam=params)
 rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
-  # Declare error if starting[2]>0 and lifetable!=NA
-  if ((is.data.frame(lifetable))*starting[2]!=0) stop("Cannot apply life-table constraint when PD state not initially empty")
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
@@ -476,8 +474,9 @@ calc_rmd_first <- function(ds, cuttime) {
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
-#' # Find mean(s) with integral (default) and discretized approximation (should be quicker), without lifetable or discounting adjustment
+#' # RMD using default "int" method, no lifetable constraint
 #' calc_allrmds(bosonc, dpam=params)
+#' # RMD using discretized ("disc") method, no lifetable constraint
 #' calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
 calc_allrmds <- function(simdat,
                          inclset = 0,
