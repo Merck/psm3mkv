@@ -56,7 +56,7 @@
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pf_stm(dpam=params)
-rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
+rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- NULL
   # Time horizon in weeks
@@ -67,16 +67,12 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   ttp.ts <- convert_fit2spec(dpam$ttp)
   ppd.ts <- convert_fit2spec(dpam$ppd)
   # RMD PFS is the integral of S_PFS; S_PFS = S_TTP x S_PPD
-  # subject to a maximum of the lifetable survival
+  # SPPD is constrained by any lifetable
   integrand <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
     sttp <- calc_surv(x, ttp.ts$type, ttp.ts$spec)
     sppd <- calc_surv(x, ppd.ts$type, ppd.ts$spec)
-    if (!is.data.frame(lifetable)) {
-      vn*sttp*sppd
-    } else {
-      vn*sttp*pmin(sppd, calc_ltsurv(convert_wks2yrs(x), lifetable))
-    }
+    vn*sttp*sppd
   }
   int <- stats::integrate(integrand, 0, Tw)
   return(starting[1]*int$value)
@@ -88,66 +84,6 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
 #' @include basics.R
 #' @return Numeric value in same time unit as patient-level data (weeks).
 prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
-
-#' Restricted mean duration in progression-free for state transition models, discretized approximation
-#' @description Calculates a discretized approximation for the mean duration in the progression-free state for both the state transition clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over.
-#' This method is only valid for one-piece models, without lifetable adjustment.
-#' @param dpam List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).
-#' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
-#' @param starting Vector of membership probabilities at time zero.
-#' @param lifetable Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
-#' @param discrate Discount rate (%) per year
-#' @param state May be "PF", "PD" or "OS" being the progression-free or progressive disease states, or overall survival
-#' @param model May be "PSM", "STM-CF" or "STM-CR" model structures
-#' @return Numeric value in same time unit as patient-level data (weeks).
-#' @include basics.R probgraphs.R
-#' @seealso Full integral calculation in [prmd_pf_stm()]
-#' @export
-#' @examples
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' discretized_rmd(dpam=params, state="pd", model="stm_cr")
-#' rmd_pd_stm_cr(dpam=params)
-discretized_rmd <- function(dpam, Ty=10, discrate=0, state, model, timestep=1) {
-  # Declare local variables
-  Tw <- tvec <- probs <- vn <- NULL
-  # State and model should be lower case
-  state <- tolower(state)
-  model <- tolower(model)
-  # Time horizon in weeks (ceiling)
-  Tw <- convert_yrs2wks(Ty)
-  # Create time vector, with half-cycle addition
-  tvec <- timestep*(1:floor(Tw/timestep)) + timestep/2
-  # Vector of membership probabilities
-  if (state=="pf") { 
-    if (model=="psm") {probs <- prob_pf_psm(tvec, dpam)}
-    else if (model=="stm_cf" | model=="stm_cr") {probs <- prob_pf_stm(tvec, dpam)}
-  }
-  else if (state=="pd") { 
-    if (model=="psm") {probs <- prob_pd_psm(tvec, dpam)}
-    else if (model=="stm_cf") {probs <- prob_pd_stm_cf(tvec, dpam)}
-    else if (model=="stm_cr") {probs <- prob_pd_stm_cr(tvec, dpam)}
-  }
-  else if (state=="os") { 
-    if (model=="psm") {probs <- prob_os_psm(tvec, dpam)}
-    else if (model=="stm_cf") {probs <- prob_os_stm_cf(tvec, dpam)}
-    else if (model=="stm_cr") {probs <- prob_os_stm_cr(tvec, dpam)}
-  }
-  # Discount factor
-  vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
-  # Return value with starting adjustment
-  sum(probs*vn) * timestep
-}
 
 #' Restricted mean duration in progressed disease state for clock reset state transition model
 #' @description Calculates the mean duration in the progressed disease state for the clock reset state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
@@ -171,9 +107,7 @@ discretized_rmd <- function(dpam, Ty=10, discrate=0, state, model, timestep=1) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pd_stm_cr(dpam=params)
-rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
-  # Declare error if starting[2]>0 and lifetable!=NA
-  if ((is.data.frame(lifetable))*starting[2]!=0) stop("Cannot apply lifetable constraint when PD state not initially empty")
+rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
   S <- int_pf <- int_pd <- soj <- NULL
@@ -187,23 +121,18 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   pps.ts <- convert_fit2spec(dpam$pps_cr)
   # Integrand from PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS(x2-x1)
   # = S_PPD x f_TTP x S_PPS
-  # subject to a maximum of the lifetable survival
+  # S_PPD and S_PPS are constrained by any lifetable
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
     fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
     spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
-    if (is.data.frame(lifetable)) {
-      gens1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
-      gens2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
-      sppd <- pmin(sppd, gens1)
-      spps <- pmin(spps, gens2/gens1)
-    }
+    # Integrand
     vn*sppd*fttp*spps
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
-  # Integrand from PD = S_PPS(x2-x1)
+  # Integrand from PD = S_PPS(x2-x1) - constraint ignored (cannot be readily calculated) so issue warning
   integrand_pd <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
     spps <- calc_surv(x, pps.ts$type, pps.ts$spec)
@@ -244,7 +173,7 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pd_stm_cf(dpam=params)
-rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
+rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare error if starting[2]>0 and lifetable!=NA
   if ((is.data.frame(lifetable))*starting[2]!=0) stop("Cannot apply life-table constraint when PD state not initially empty")
   # Declare local variables
@@ -260,7 +189,7 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
   pps.ts <- convert_fit2spec(dpam$pps_cf)
   # Integrand PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS_CF(x1, x2)
   # where S_PPS_CF = S_OS(x2)/S_OS(x1)
-  # subject to lifetable maximum
+  # and each S_OS is subject to constrained lifetable mortality
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
     sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
@@ -268,17 +197,11 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discra
     sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
     sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
     spps <- sos2/sos1
-    if (is.data.frame(lifetable)) {
-      gens1 <- calc_ltsurv(convert_wks2yrs(x[1]), lifetable)
-      gens2 <- calc_ltsurv(convert_wks2yrs(x[2]), lifetable)
-      sppd <- pmin(sppd, gens1)
-      spps <- pmin(spps, gens2/gens1)
-      }
     if (sos1==0) 0 else {vn*sppd*fttp*spps}
   }
   S <- cbind(c(0,0),c(0, Tw),c(Tw, Tw))
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
-  # Integrand PD = S_OS(x2)/S_OS(x1)
+  # Integrand PD = S_OS(x2)/S_OS(x1) - warning lifetable constraint cannot be computed
   integrand_pd <- function(x) {
     calc_surv(x, pps.ts$type, pps.ts$spec)
   }
@@ -317,7 +240,7 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pf_psm(dpam=params)
-rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
+rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- pfs.ts <- rmd <- NULL
   # Bound to aid integration in weeks
@@ -330,13 +253,8 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Create an integrand for PF survival
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    pf_psm <- calc_surv(x, pfs.ts$type, pfs.ts$spec)
-    if (is.data.frame(lifetable)) {
-      ttp <- calc_surv(x, ttp.ts$type, ttp.ts$spec)
-      osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
-      pf_psm <- pmin(pf_psm, ttp*osmax)
-    }
-    vn * pf_psm
+    spfs <- calc_surv(x, pfs.ts$type, pfs.ts$spec)
+    vn * spfs
   }
   int_pf <- stats::integrate(integrand_pf, 0, Tw)          
   # Finally multiply by starting population in PF
@@ -371,7 +289,10 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_os_psm(params)
-rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=0) {
+#' # Now with lifetable
+#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+#' rmd_os_psm(params, lifetable=ltable, abs.tol=0.01, subdivisions=1000)
+rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0, ...) {
   # Declare local variables
   Tw <- os.ts  <- NULL
   # Bound to aid integration in weeks
@@ -383,14 +304,10 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
   # Create an integrand for overall survival
   integrand_os <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    os_psm <- calc_surv(x, os.ts$type, os.ts$spec)
-    if (is.data.frame(lifetable)) {
-      osmax <- calc_ltsurv(convert_wks2yrs(x), lifetable)
-      os_psm <- pmin(os_psm, osmax)                     
-    }
-    vn*os_psm
+    sos <- calc_surv(x, os.ts$type, os.ts$spec)
+    vn*sos
   }
-  int_os <- stats::integrate(integrand_os, 0, Tw)
+  int_os <- stats::integrate(integrand_os, 0, Tw, ...)
   # Finally multiply by starting population in OS
   (starting[1] + starting[2]) * int_os$value
 }
@@ -592,19 +509,22 @@ calc_allrmds <- function(simdat,
   # Call functions to calculate mean durations
   adjTy <- Ty - convert_wks2yrs(cuttime)
   if (rmdmethod=="int") {
-    pf_psm <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    os_psm <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    pf_stm <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    pd_stmcf <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-    pd_stmcr <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    if (is.na(lifetable)==FALSE) {warning("Cannot calculate discretized RMD with lifetable adjustment")}
+    pf_psm <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, discrate=discrate)
+    os_psm <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, discrate=discrate)
+    pf_stm <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, discrate=discrate)
+    pd_stmcf <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, discrate=discrate)
+    pd_stmcr <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, discrate=discrate)
   } else if (rmdmethod=="disc") {
     if (cuttime>0) {stop("Cannot calculate discretized RMD for two-piece models")}
-    if (is.na(lifetable)==FALSE) {stop("Cannot calculate discretized RMD with lifetable adjustment (yet)")}
-    pf_psm <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="pf", model="psm", timestep=timestep)
-    os_psm <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="os", model="psm", timestep=timestep)
-    pf_stm <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="pf", model="stm_cf", timestep=timestep)
-    pd_stmcf <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="pd", model="stm_cf", timestep=timestep)
-    pd_stmcr <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="pd", model="stm_cr", timestep=timestep)
+    psm_drmd <- drmd_psm(dpam, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
+    stmcf_drmd <- drmd_stm_cf(dpam, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
+    stmcr_drmd <- drmd_stm_cr(dpam, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
+    pf_psm <- psm_drmd$pf
+    os_psm <- psm_drmd$os
+    pf_stm <- stmcf_drmd$pf
+    pd_stmcf <- stmcf_drmd$pd
+    pd_stmcr <- stmcr_drmd$pd
   }
   # Record in a dataframe: row = method, col = (PF, PD, OS)
   # Firstly do not include one-piece area adjustment
