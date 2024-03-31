@@ -555,7 +555,7 @@ calc_allrmds <- function(simdat,
   pf_psm <- first$pfarea + pf_psm_post
   os_psm <- first$osarea + os_psm_post
   pf_stm <- first$pfarea + pf_stm_post
-  os_stm_cf <- first@osarea + pf_stm_post + pd_stmcf_post
+  os_stm_cf <- first$osarea + pf_stm_post + pd_stmcf_post
   os_stm_cr <- first$osarea + pf_stm_post + pd_stmcr_post
   pd_psm <- os_psm-pf_psm
   pd_stm_cf <- os_stm_cf-pf_stm
