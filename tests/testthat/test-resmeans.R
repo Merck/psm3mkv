@@ -227,3 +227,31 @@ test_that("Adding a lifetable reduces the mean", {
   expect_lte(rmd_pf_psm(params, Ty=10, lifetable=ltable), rmd_pf_psm(params, Ty=10))
   expect_lte(rmd_os_psm(params, Ty=10, lifetable=ltable), rmd_os_psm(params, Ty=10))
 })
+
+# Check that the discretized mean calculations are reasonable
+r_pf_stm_cf <- discretized_rmd(params, state="pf", model="stm_cf") / rmd_pf_stm(params)
+r_pf_stm_cr <- discretized_rmd(params, state="pf", model="stm_cr") / rmd_pf_stm(params)
+r_pd_stm_cf <- discretized_rmd(params, state="pd", model="stm_cf") / rmd_pd_stm_cf(params)
+r_pd_stm_cr <- discretized_rmd(params, state="pd", model="stm_cr") / rmd_pd_stm_cr(params)
+r_pf_psm <- discretized_rmd(params, state="pf", model="psm") / rmd_pf_psm(params)
+r_os_psm <- discretized_rmd(params, state="os", model="psm") / rmd_os_psm(params)
+
+thresh <- 0.1
+
+test_that("Discretized estimates are less than actual + error threshold", {
+  expect_lte(r_pf_stm_cf, 1+thresh)
+  expect_lte(r_pf_stm_cr, 1+thresh)
+  expect_lte(r_pd_stm_cf, 1+thresh)
+  expect_lte(r_pd_stm_cr, 1+thresh)
+  expect_lte(r_pf_psm, 1+thresh)
+  expect_lte(r_os_psm, 1+thresh)
+})
+
+test_that("Discretized estimates are greater than actual - error threshold", {
+  expect_gte(r_pf_stm_cf, 1-thresh)
+  expect_gte(r_pf_stm_cr, 1-thresh)
+  expect_gte(r_pd_stm_cf, 1-thresh)
+  expect_gte(r_pd_stm_cr, 1-thresh)
+  expect_gte(r_pf_psm, 1-thresh)
+  expect_gte(r_os_psm, 1-thresh)
+})

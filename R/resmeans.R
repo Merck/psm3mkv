@@ -89,6 +89,65 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
 #' @return Numeric value in same time unit as patient-level data (weeks).
 prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 
+#' Restricted mean duration in progression-free for state transition models, discretized approximation
+#' @description Calculates a discretized approximation for the mean duration in the progression-free state for both the state transition clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over.
+#' This method is only valid for one-piece models, without lifetable adjustment.
+#' @param dpam List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).
+#' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
+#' @param starting Vector of membership probabilities at time zero.
+#' @param lifetable Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
+#' @param discrate Discount rate (%) per year
+#' @return Numeric value in same time unit as patient-level data (weeks).
+#' @include basics.R probgraphs.R
+#' @seealso Full integral calculation in [prmd_pf_stm()]
+#' @export
+#' @examples
+#' # Create dataset and fit survival models (splines)
+#' bosonc <- create_dummydata("flexbosms")
+#' fits <- fit_ends_mods_spl(bosonc)
+#' # Pick out best distribution according to min AIC
+#' params <- list(
+#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#'   os = find_bestfit_spl(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#' )
+#' discretized_rmd(dpam=params, state="pd", model="stm_cr")
+#' rmd_pd_stm_cr(dpam=params)
+discretized_rmd <- function(dpam, Ty=10, discrate=0, state, model, timestep=1) {
+  # Declare local variables
+  Tw <- tvec <- probs <- vn <- NULL
+  # State and model should be lower case
+  state <- tolower(state)
+  model <- tolower(model)
+  # Time horizon in weeks (ceiling)
+  Tw <- convert_yrs2wks(Ty)
+  # Create time vector, with half-cycle addition
+  tvec <- timestep*(1:floor(Tw/timestep)) + timestep/2
+  # Vector of membership probabilities
+  if (state=="pf") { 
+    if (model=="psm") {probs <- prob_pf_psm(tvec, dpam)}
+    else if (model=="stm_cf" | model=="stm_cr") {probs <- prob_pf_stm(tvec, dpam)}
+  }
+  else if (state=="pd") { 
+    if (model=="psm") {probs <- prob_pd_psm(tvec, dpam)}
+    else if (model=="stm_cf") {probs <- prob_pd_stm_cf(tvec, dpam)}
+    else if (model=="stm_cr") {probs <- prob_pd_stm_cr(tvec, dpam)}
+  }
+  else if (state=="os") { 
+    if (model=="psm") {probs <- prob_os_psm(tvec, dpam)}
+    else if (model=="stm_cf") {probs <- prob_os_stm_cf(tvec, dpam)}
+    else if (model=="stm_cr") {probs <- prob_os_stm_cr(tvec, dpam)}
+  }
+  # Discount factor
+  vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
+  # Return value with starting adjustment
+  sum(probs*vn) * timestep
+}
+
+
 #' Restricted mean duration in progressed disease state for clock reset state transition model
 #' @description Calculates the mean duration in the progressed disease state for the clock reset state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 #' @inheritParams rmd_pf_stm
