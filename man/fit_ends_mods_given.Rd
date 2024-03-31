@@ -25,11 +25,6 @@ A list by endpoint, then distribution, each containing two components:
 Fit survival models to each endpoint, given type and spec
 Internal function to fit survival models to each endpoint, given type and spec in format of \code{\link[=convert_fit2spec]{convert_fit2spec()}}
 }
-\examples{
-bosonc <- create_dummydata("flexbosms")
-dpam <- fit_ends_mods_par(bosonc)
-fit_ends_mods_given(simdat=bosonc[1:50,], dpam=dpam, cuttime=0)
-}
 \seealso{
 \code{\link[=convert_fit2spec]{convert_fit2spec()}}, \code{\link[=fit_ends_mods_par]{fit_ends_mods_par()}}, \code{\link[=fit_ends_mods_spl]{fit_ends_mods_spl()}}
 }
