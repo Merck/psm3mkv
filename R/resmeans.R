@@ -147,7 +147,6 @@ discretized_rmd <- function(dpam, Ty=10, discrate=0, state, model, timestep=1) {
   sum(probs*vn) * timestep
 }
 
-
 #' Restricted mean duration in progressed disease state for clock reset state transition model
 #' @description Calculates the mean duration in the progressed disease state for the clock reset state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 #' @inheritParams rmd_pf_stm
@@ -537,6 +536,8 @@ calc_rmd_first <- function(ds, cuttime) {
 #' @param dpam List of statistical fits to each endpoint required in PSM, STM-CF and STM-CR models.
 #' @param lifetable Optional, a life table. Columns must include `lttime` (time in years, or 52.18 times shorter than the time index elsewhere, starting from zero) and `lx`
 #' @param discrate Discount rate (% per year)
+#' @param rmdmethod can be "int" (default for full integral calculations) or "disc" for approximate discretized calculations
+#' @param timestep required if method=="int", default being 1
 #' @return List of detailed numeric results
 #' - cutadj indicates the survival function and area under the curves for PFS and OS up to the cutpoint
 #' - results provides results of the restricted means calculations, by model and state.
@@ -556,15 +557,18 @@ calc_rmd_first <- function(ds, cuttime) {
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
-#' # Find mean(s)
+#' # Find mean(s) with integral (default) and discretized approximation (should be quicker), without lifetable or discounting adjustment
 #' calc_allrmds(bosonc, dpam=params)
+#' calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
 calc_allrmds <- function(simdat,
                          inclset = 0,
                          dpam,
                          cuttime = 0,
                          Ty = 10,
                          lifetable = NA,
-                         discrate = 0) {
+                         discrate = 0,
+                         rmdmethod = "int",
+                         timestep = 1) {
   # Check calculations valid
   chvalid <- is.na(dpam[1])==FALSE
   if (chvalid==FALSE) stop("No validly fitted endpoints")
@@ -585,11 +589,21 @@ calc_allrmds <- function(simdat,
   starting <- c(first$pfsurv, first$ossurv-first$pfsurv, 1-first$ossurv)
   # Call functions to calculate mean durations
   adjTy <- Ty - convert_wks2yrs(cuttime)
-  pf_psm <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-  os_psm <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-  pf_stm <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-  pd_stmcf <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
-  pd_stmcr <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+  if (rmdmethod=="int") {
+    pf_psm <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    os_psm <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pf_stm <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pd_stmcf <- prmd_pd_stm_cf(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+    pd_stmcr <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
+  } else if (rmdmethod=="disc") {
+    if (cuttime>0) {stop("Cannot calculate discretized RMD for two-piece models")}
+    if (is.na(lifetable)==FALSE) {stop("Cannot calculate discretized RMD with lifetable adjustment (yet)")}
+    pf_psm <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="pf", model="psm", timestep=timestep)
+    os_psm <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="os", model="psm", timestep=timestep)
+    pf_stm <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="pf", model="stm_cf", timestep=timestep)
+    pd_stmcf <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="pd", model="stm_cf", timestep=timestep)
+    pd_stmcr <- discretized_rmd(dpam, Ty=Ty, discrate=discrate, state="pd", model="stm_cr", timestep=timestep)
+  }
   # Record in a dataframe: row = method, col = (PF, PD, OS)
   # Firstly do not include one-piece area adjustment
   rmdres <- tidyr::tibble(
