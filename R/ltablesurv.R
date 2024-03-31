@@ -34,9 +34,9 @@
 #' - `geom`: Geometric mean, where interpolation is required between measured values
 #' @seealso [psm3mkv::vlookup]
 vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
+  if (is.na(oneindexval)) return(NA) # Return NA rather than error if index value lookup is NA
   if (oneindexval<min(indexvec)) stop("Lookup value is below range of lookup table")
   if (oneindexval>max(indexvec)) stop("Lookup value is above range of lookup table")
-  # stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
   loc <- indexrange <- valrange <- NULL
   # Location of index values
   loc <- match(1, (oneindexval>=indexvec)*(oneindexval<=dplyr::lead(indexvec)))
@@ -110,7 +110,7 @@ calc_ltsurv <- function(looktime, lifetable=NA){
 #' @export
 #' @examples
 #' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
-#' calc_ltsurv(c(2, 2.5, 9.3), ltable)
+#' calc_ltdens(c(2, 2.5, 9.3), ltable)
 calc_ltdens <- function(looktime, lifetable=NA){
   if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
   if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
@@ -163,4 +163,45 @@ calc_ex <- function(Ty=10, lifetable, discrate=0) {
     ex_y = ex,
     ex_w = convert_yrs2wks(ex),
     calcs = res1)
+}
+
+
+# Constrain survival probabilities by a lifetable
+# Probabilities are indexed by weeks, whereas lifetable is indexed by years
+
+#' Constrain survival probabilities according to hazards in a lifetable
+#' Recalculated constrained survival probabilities (by week) as the lower of the original unadjusted survival probability and the survival implied by the given lifetable (assumed indexed as years).
+#' @param survprob 
+#' @param lifetable 
+#' @param timevec 
+#' @return
+#' @export
+#' @examples
+#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+#' bosonc <- create_dummydata("flexbosms")
+#' fits <- fit_ends_mods_spl(bosonc)
+#' pfs.ts <- convert_fit2spec(find_bestfit_spl(fits$pfs, "aic")$fit)
+#' survprob <- time |> purrr::map_dbl(~calc_surv(.x, pfs.ts$type, pfs.ts$spec))
+#' constrain_survprob(survprob, ltable)
+constrain_survprob <- function(survprob, lifetable, timevec=(1:length(survprob))-1) {
+  # Check surv and time vectors have same lengths
+  tN <- length(timevec)
+  if (length(survprob)!=tN) {stop("Survival probability and time vector have mismatching lengths")}
+  # Create tibble to build on, starting with time vector and given (unadjusted) survival probabilities
+  survcalc <- tibble::tibble(time=timevec, unadjsurv=survprob) |>
+    dplyr::mutate(
+      tdiff = dplyr::lead(time)-time,
+      midtime = time+tdiff/2,
+      unadjhx = -log(dplyr::lead(unadjsurv) / unadjsurv) / tdiff,
+      lxhx = calc_ltdens(convert_wks2yrs(midtime), lifetable),
+      maxhx = pmax(unadjhx, lxhx),
+      maxtp = exp(-maxhx*tdiff)
+    )
+  # Vector of adjusted survival probabilities is NA except for first element
+  adjsurv <- c(survprob[1], rep(NA, tN-1))
+  # Iterate for remaining probabilities
+  for (t in 2:tN) {
+    adjsurv[t] <- adjsurv[t-1] * survcalc$maxtp[t-1]
+  }
+  return(adjsurv)
 }
