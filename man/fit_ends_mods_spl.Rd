@@ -5,14 +5,14 @@
 \title{Fit multiple spline regressions to the multiple required endpoints}
 \usage{
 fit_ends_mods_spl(
-  ds,
+  simdat,
   knot_set = 1:3,
   scale_set = c("hazard", "odds", "normal"),
   expvar = NA
 )
 }
 \arguments{
-\item{ds}{Dataset of patient level data. Must be a tibble with columns named:
+\item{simdat}{Dataset of patient level data. Must be a tibble with columns named:
 \itemize{
 \item ptid: patient identifier
 \item pfs.durn: duration of PFS from baseline

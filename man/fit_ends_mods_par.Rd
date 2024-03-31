@@ -5,7 +5,7 @@
 \title{Fit multiple parametric survival regressions to the multiple required endpoints}
 \usage{
 fit_ends_mods_par(
-  ds,
+  simdat,
   cuttime = 0,
   ppd.dist = c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz"),
   ttp.dist = c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz"),
@@ -17,7 +17,7 @@ fit_ends_mods_par(
 )
 }
 \arguments{
-\item{ds}{Dataset of patient level data. Must be a tibble with columns named:
+\item{simdat}{Dataset of patient level data. Must be a tibble with columns named:
 \itemize{
 \item ptid: patient identifier
 \item pfs.durn: duration of PFS from baseline

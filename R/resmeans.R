@@ -342,6 +342,132 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), lifetable=NA, discrate=
 #' @include basics.R
 prmd_os_psm <- purrr::possibly(rmd_os_psm, otherwise=NA_real_)
 
+#' Fit survival models to each endpoint, given type and spec
+#' Internal function to fit survival models to each endpoint, given type and spec in format of [convert_fit2spec()]
+#' @param simdat is the (sample of the) patient-level dataset
+#' @param dpam is the currently fitted set of survival models to each endpoint
+#' @param cuttime is the cut-off time for two-piece modeling
+#' @return A list by endpoint, then distribution, each containing two components:
+#' - result: A list of class *flexsurvreg* containing information about the fitted model.
+#' - error: Any error message returned on fitting the regression (NULL indicates no error).
+#' @seealso [convert_fit2spec()], [fit_ends_mods_par()], [fit_ends_mods_spl()]
+#' @examples
+#' bosonc <- create_dummydata("flexbosms")
+#' dpam <- fit_ends_mods_par(bosonc)
+#' fit_ends_mods_given(simdat=bosonc[1:50,], dpam=dpam, cuttime=0)
+fit_ends_mods_given <- function(simdat, dpam, cuttime){
+  # Declare variables
+  ds <- dspps <- ts.ppd <- fit.ppd <- ts.ttp <- fit.ttp <- NULL
+  ts.pfs <- fit.pfs <- ts.os <- fit.os <- NULL
+  ts.pps_cf <- fit.pps_cf <- ts.pps_cr <- fit.pps_cr <- NULL
+  # Extend datasets
+  ds <- create_extrafields(simdat, cuttime)
+  dspps <- ds |> dplyr::filter(pps.durn>0, ttp.flag==1) 
+  # Fit chosen distributions to each endpoint - PPD
+  ts.ppd <- convert_fit2spec(dpam$ppd)
+  fit.ppd <- fit_mods(durn1 = ds$tzero,
+                      durn2 = ds$ppd.durn,
+                      evflag = ds$ppd.flag,
+                      type = ts.ppd$type,
+                      spec = ts.ppd$spec
+                      )[[1]]
+  # TTP
+  ts.ttp <- convert_fit2spec(dpam$ttp)
+  fit.ttp <- fit_mods(durn1 = ds$tzero,
+                      durn2 = ds$ttp.durn,
+                      evflag = ds$ttp.flag,
+                      type = ts.ttp$type,
+                      spec = ts.ttp$spec
+                      )[[1]]
+  # PFS
+  ts.pfs <- convert_fit2spec(dpam$pfs)
+  fit.pfs <- fit_mods(durn1 = ds$tzero,
+                      durn2 = ds$pfs.durn,
+                      evflag = ds$pfs.flag,
+                      type = ts.pfs$type,
+                      spec = ts.pfs$spec
+                      )[[1]]
+  # OS
+  ts.os <- convert_fit2spec(dpam$os)
+  fit.os <- fit_mods(durn1 = ds$tzero,
+                     durn2 = ds$os.durn,
+                     evflag = ds$os.flag,
+                     type = ts.os$type,
+                     spec = ts.os$spec
+                      )[[1]]
+  # PPS CF - requires two time values
+  ts.pps_cf <- convert_fit2spec(dpam$pps_cf)
+  fit.pps_cf <- fit_mods(durn1 = dspps$ttp.durn,
+                         durn2 = dspps$os.durn,
+                         evflag = dspps$pps.flag,
+                         type = ts.pps_cf$type,
+                         spec = ts.pps_cf$spec
+                          )[[1]]
+  # PPS CR
+  ts.pps_cr <- convert_fit2spec(dpam$pps_cr)
+  fit.pps_cr <- fit_mods(durn1 = dspps$tzero,
+                         durn2 = dspps$pps.durn,
+                         evflag = dspps$pps.flag,
+                         type = ts.pps_cr$type,
+                         spec = ts.pps_cr$spec
+                        )[[1]]
+  # Bring together the best fits for each endpoint in a list
+  list(ppd=fit.ppd$result,
+               ttp=fit.ttp$result,
+               pfs=fit.pfs$result,
+               os=fit.os$result,
+               pps_cf=fit.pps_cf$result,
+               pps_cr=fit.pps_cr$result)
+}
+
+#' Calculate restricted mean duration in respect of the first part of a two-piece model
+#' Internal function to calculate the restricted mean duration up to the cut-off time, the first part of a two-piece model. Assumes the time horizon is beyond the cutoff time.
+#' @param ds patient-level dataset
+#' @param cuttime time cut-off
+#' @return list containing:
+#' - pfsurv: the PF survival function at the cut-off time
+#' - pfarea: area under the PF survival function up to the cut-off time
+#' - ossurv: the OS survival function at the cut-off time
+#' - osarea: area under the OS survival function up to the cut-off time
+#' @examples
+#' cuttime <- 20
+#' bosonc <- create_dummydata("flexbosms")
+#' ds <- create_extrafields(bosonc, cuttime=cuttime)
+#' dpam <- fit_ends_mods_par(bosonc, cuttime=cuttime)
+#' calc_rmd_first(ds=ds, cuttime=cuttime)
+calc_rmd_first <- function(ds, cuttime) {
+  # Declare local variables
+  pf_km <- os_km <- NULL
+  pfdat <- pfarea <- pfsurv <- osdat <- osarea <- ossurv <- NULL
+  # Fit KM curves
+  pf_km <- survival::survfit(
+    survival::Surv(pfs.odurn, pfs.flag) ~ 1, data=ds)
+  os_km <- survival::survfit(
+    survival::Surv(os.odurn, os.flag) ~ 1, data=ds)
+  # PF calculations
+  pfdat <- tidyr::as_tibble(cbind(time=pf_km$time, surv=pf_km$surv)) |>
+    dplyr::mutate(
+      row = dplyr::row_number(),
+      itime = dplyr::if_else(.data$row==1, .data$time, .data$time-dplyr::lag(.data$time)),
+      incl = dplyr::if_else(.data$time<cuttime, 1, 0),
+      area = .data$incl*.data$surv*.data$itime
+    )
+  pfarea <- sum(pfdat$area)
+  pfsurv <- min(pfdat[pfdat$incl==1,]$surv)
+  # OS calculations
+  osdat <- tidyr::as_tibble(cbind(time=os_km$time, surv=os_km$surv)) |>
+    dplyr::mutate(
+      row = dplyr::row_number(),
+      itime = dplyr::if_else(.data$row==1, .data$time, .data$time-dplyr::lag(.data$time)),
+      incl = dplyr::if_else(.data$time<cuttime, 1, 0),
+      area = .data$incl*.data$surv*.data$itime
+    )
+  osarea <- sum(osdat$area)
+  ossurv <- min(osdat[osdat$incl==1,]$surv)
+  # Return variables needed
+  list(pfarea=pfarea, pfsurv=pfsurv, osarea=osarea, ossurv=ossurv)
+}
+
 #' Calculate restricted mean durations for each health state and all three models
 #' @description Calculate restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
 #' @param simdat Dataset of patient level data. Must be a tibble with columns named:
@@ -387,11 +513,8 @@ calc_allrmds <- function(simdat,
                          lifetable = NA,
                          discrate = 0) {
   # Declare local variables
-  ds <- ts.ppd <- fit.ppd <- ts.ttp <- fit.ttp <- NULL
-  ts.pfs <- fit.pfs <- ts.os <- fit.os <- NULL
-  ts.pps_cf <- fit.pps_cf <- ts.pps_cr <- fit.pps_cr <- NULL
   ds <- chvalid <- pf_km <- os_km <- NULL
-  pfdat <- pfarea <- pfsurv <- osdat <- osarea <- ossurv <- NULL
+  pfarea <- pfsurv <- osarea <- ossurv <- NULL
   adjTy <- pf_psm_post <- os_psm_post <- pf_stm_post <- pd_stmcf_post <- pd_stmcr_post <- NULL
   pf_psm <- os_psm <- pf_stm <- os_stm_cf <- os_stm_cr <- NULL
   pd_psm <- pd_stm_cf <- pd_stm_cr <- NULL
@@ -404,104 +527,24 @@ calc_allrmds <- function(simdat,
   os_stmcr_post <- pf_stm_post+pd_stmcr_post
   # For a bootstrap sample, refit all distributions
   if (inclset[1]!=0) {
-    simdat <- simdat[inclset,]
-    ds <- create_extrafields(simdat, cuttime)
-    dspps <- ds |> dplyr::filter(pps.durn>0, ttp.flag==1) 
-    # Fit chosen distributions to each endpoint - PPD
-    ts.ppd <- convert_fit2spec(dpam$ppd)
-    fit.ppd <- fit_mods(durn1 = ds$tzero,
-                       durn2 = ds$ppd.durn,
-                       evflag = ds$ppd.flag,
-                       type = ts.ppd$type,
-                       spec = ts.ppd$spec
-                       )[[1]]
-    # TTP
-    ts.ttp <- convert_fit2spec(dpam$ttp)
-    fit.ttp <- fit_mods(durn1 = ds$tzero,
-                       durn2 = ds$ttp.durn,
-                       evflag = ds$ttp.flag,
-                       type = ts.ttp$type,
-                       spec = ts.ttp$spec
-                       )[[1]]
-    # PFS
-    ts.pfs <- convert_fit2spec(dpam$pfs)
-    fit.pfs <- fit_mods(durn1 = ds$tzero,
-                       durn2 = ds$pfs.durn,
-                       evflag = ds$pfs.flag,
-                       type = ts.pfs$type,
-                       spec = ts.pfs$spec
-                       )[[1]]
-    # OS
-    ts.os <- convert_fit2spec(dpam$os)
-    fit.os <- fit_mods(durn1 = ds$tzero,
-                      durn2 = ds$os.durn,
-                      evflag = ds$os.flag,
-                      type = ts.os$type,
-                      spec = ts.os$spec
-                      )[[1]]
-    # PPS CF - requires two time values
-    ts.pps_cf <- convert_fit2spec(dpam$pps_cf)
-    fit.pps_cf <- fit_mods(durn1 = dspps$ttp.durn,
-                      durn2 = dspps$os.durn,
-                      evflag = dspps$pps.flag,
-                      type = ts.pps_cf$type,
-                      spec = ts.pps_cf$spec
-                      )[[1]]
-    # PPS CR
-    ts.pps_cr <- convert_fit2spec(dpam$pps_cr)
-    fit.pps_cr <- fit_mods(durn1 = dspps$tzero,
-                       durn2 = dspps$pps.durn,
-                       evflag = dspps$pps.flag,
-                       type = ts.pps_cr$type,
-                       spec = ts.pps_cr$spec
-                       )[[1]]
-    # Bring together the best fits for each endpoint in a list
-    dpam <- list(ppd=fit.ppd$result,
-                   ttp=fit.ttp$result,
-                   pfs=fit.pfs$result,
-                   os=fit.os$result,
-                   pps_cf=fit.pps_cf$result,
-                   pps_cr=fit.pps_cr$result)
+    dpam <- fit_ends_mods_given(simdat[inclset,], dpam, cuttime)
   } else {
     ds <- create_extrafields(simdat, cuttime)
   }
   # Check calculations valid
   chvalid <- is.na(dpam[1])==FALSE
-  # Calculate mean duration and survival probability up to cutoff time
+  # Two piece adjustment if cutime>0
   if (cuttime>0) {
-    pf_km <- survival::survfit(
-      survival::Surv(pfs.odurn, pfs.flag) ~ 1, data=ds)
-    os_km <- survival::survfit(
-      survival::Surv(os.odurn, os.flag) ~ 1, data=ds)
-    # PF calculations
-    pfdat <- tidyr::as_tibble(cbind(time=pf_km$time, surv=pf_km$surv)) |>
-      dplyr::mutate(
-        row = dplyr::row_number(),
-        itime = dplyr::if_else(.data$row==1, .data$time, .data$time-dplyr::lag(.data$time)),
-        incl = dplyr::if_else(.data$time<cuttime, 1, 0),
-        area = .data$incl*.data$surv*.data$itime
-      )
-    pfarea <- sum(pfdat$area)
-    pfsurv <- min(pfdat[pfdat$incl==1,]$surv)
-    # OS calculations
-    osdat <- tidyr::as_tibble(cbind(time=os_km$time, surv=os_km$surv)) |>
-      dplyr::mutate(
-        row = dplyr::row_number(),
-        itime = dplyr::if_else(.data$row==1, .data$time, .data$time-dplyr::lag(.data$time)),
-        incl = dplyr::if_else(.data$time<cuttime, 1, 0),
-        area = .data$incl*.data$surv*.data$itime
-      )
-    osarea <- sum(osdat$area)
-    ossurv <- min(osdat[osdat$incl==1,]$surv)
+    # Calculate mean duration and survival probability up to cutoff time
+    first <- calc_rmd_first(ds, cuttime)
   } else {
     # No adjustments if cuttime<=0
-    pfarea <- osarea <-0
-    pfsurv <- ossurv <-1
+    first <- list(pfarea=0, pfsurv=1, osarea=0, ossurv=1)
   }
-  starting <- c(pfsurv, ossurv-pfsurv, 1-ossurv)
+  starting <- c(first$pfsurv, first$ossurv-first$pfsurv, 1-first$ossurv)
   if (chvalid) {
     # Call functions to calculate mean durations
-    adjTy <- Ty - cuttime*7/365.25
+    adjTy <- Ty - convert_wks2yrs(cuttime)
     pf_psm_post <- prmd_pf_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
     os_psm_post <- prmd_os_psm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
     pf_stm_post <- prmd_pf_stm(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
@@ -509,11 +552,11 @@ calc_allrmds <- function(simdat,
     pd_stmcr_post <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, lifetable=lifetable, discrate=discrate)
   }
   # Calculating overall means
-  pf_psm <- pfarea + pf_psm_post
-  os_psm <- osarea + os_psm_post
-  pf_stm <- pfarea + pf_stm_post
-  os_stm_cf <- osarea + pf_stm_post + pd_stmcf_post
-  os_stm_cr <- osarea + pf_stm_post + pd_stmcr_post
+  pf_psm <- first$pfarea + pf_psm_post
+  os_psm <- first$osarea + os_psm_post
+  pf_stm <- first$pfarea + pf_stm_post
+  os_stm_cf <- first@osarea + pf_stm_post + pd_stmcf_post
+  os_stm_cr <- first$osarea + pf_stm_post + pd_stmcr_post
   pd_psm <- os_psm-pf_psm
   pd_stm_cf <- os_stm_cf-pf_stm
   pd_stm_cr <- os_stm_cr-pf_stm
@@ -549,7 +592,7 @@ calc_allrmds <- function(simdat,
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
-#' calc_allrmds_boot(bosonc, dpam=params)
+#' calc_allrmds_boot(simdat=bosonc, dpam=params)
 calc_allrmds_boot <- function(simdat,
                               inclset = 0,
                               dpam,
