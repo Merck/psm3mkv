@@ -46,7 +46,7 @@ params <- list(
 drmd_stm_cr(dpam=params)
 # Add a lifetable constraint
 ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-drmd_stm_cr(dpam=params, lifetable=lifetable)
+drmd_stm_cr(dpam=params, lifetable=ltable)
 }
 \seealso{
 \code{\link[=drmd_stm_cf]{drmd_stm_cf()}} \code{\link[=drmd_psm]{drmd_psm()}}

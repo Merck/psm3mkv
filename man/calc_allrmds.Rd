@@ -67,8 +67,9 @@ params <- list(
   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
-# Find mean(s) with integral (default) and discretized approximation (should be quicker), without lifetable or discounting adjustment
+# RMD using default "int" method, no lifetable constraint
 calc_allrmds(bosonc, dpam=params)
+# RMD using discretized ("disc") method, no lifetable constraint
 calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
 }
 \seealso{

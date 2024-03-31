@@ -36,7 +36,6 @@
 #' @param dpam List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).
 #' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param starting Vector of membership probabilities at time zero.
-#' @param lifetable Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @param discrate Discount rate (%) per year
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @include basics.R
@@ -290,7 +289,7 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #' # Now with lifetable
 #' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
 #' rmd_os_psm(params, lifetable=ltable, abs.tol=0.01, subdivisions=1000)
-rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0, ...) {
+rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- os.ts  <- NULL
   # Bound to aid integration in weeks
@@ -305,7 +304,7 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0, ...) {
     sos <- calc_surv(x, os.ts$type, os.ts$spec)
     vn*sos
   }
-  int_os <- stats::integrate(integrand_os, 0, Tw, ...)
+  int_os <- stats::integrate(integrand_os, 0, Tw)
   # Finally multiply by starting population in OS
   (starting[1] + starting[2]) * int_os$value
 }
@@ -534,9 +533,9 @@ calc_allrmds <- function(simdat,
     model = c("PSM", "STM-CF", "STM-CR")
   )
   # Now make one-piece area adjustment
-  rmdres$pf <- rmdres$pf + first$pfsurv
-  rmdres$pd <- rmdres$pd + first$ossurv - first$pfsurv
-  rmdres$os <- rmdres$os + first$ossurv
+  rmdres$pf <- rmdres$pf + first$pfarea
+  rmdres$pd <- rmdres$pd + first$osarea - first$pfarea
+  rmdres$os <- rmdres$os + first$osarea
   return(list(cutadj=first, results=rmdres))
 }
 

@@ -54,7 +54,7 @@
 #' drmd_psm(dpam=params, lifetable=ltable)
 drmd_psm <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
-  Tw <- tvec <- pfprob <- osprob <- adjosprob <- adjprob <- vn <- NULL
+  Tw <- tvec <- pfprob <- osprob <- adjosprob <- adjfac <- adjprob <- vn <- NULL
   # Time horizon in weeks (ceiling)
   Tw <- convert_yrs2wks(Ty)
   # Create time vector, with half-cycle addition
@@ -63,7 +63,9 @@ drmd_psm <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   pfprob <- prob_pf_psm(tvec, dpam)
   osprob <- prob_os_psm(tvec, dpam)
   adjosprob <- constrain_survprob(osprob, lifetable=lifetable, timevec=tvec)
-  adjpfprob <- pfprob * adjosprob/osprob
+  adjfac <- adjosprob/osprob
+  adjfac[is.na(adjfac)] <- 1
+  adjpfprob <- pfprob * adjfac
   # Discount factor
   vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
   # Calculate RMDs
