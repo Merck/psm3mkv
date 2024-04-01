@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,6 +107,16 @@ helpful code</a>).</p>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv"</span>,</span>
 <span>                        ref<span class="op">=</span><span class="st">"v0.2"</span>,</span>
 <span>                        build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="color: #00BBBB;">R CMD build</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
+<span><span class="co">#&gt; * checking for file ‘/tmp/RtmpkHXlLx/remotes20245dc56ca9/Merck-psm3mkv-36bbb5b/DESCRIPTION’ ... OK</span></span>
+<span><span class="co">#&gt; * preparing ‘psm3mkv’:</span></span>
+<span><span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span></span>
+<span><span class="co">#&gt; * installing the package to build vignettes</span></span>
+<span><span class="co">#&gt; * creating vignettes ... OK</span></span>
+<span><span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span></span>
+<span><span class="co">#&gt; * checking for empty or unneeded directories</span></span>
+<span><span class="co">#&gt; * building ‘psm3mkv_0.2.0.tar.gz’</span></span>
 <span></span>
 <span><span class="co"># First specify the packages of interest</span></span>
 <span><span class="va">packages</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"psm3mkv"</span>, <span class="st">"dplyr"</span>, <span class="st">"boot"</span>, <span class="st">"ggsci"</span>, <span class="st">"flexsurv"</span>, <span class="st">"survival"</span><span class="op">)</span></span>
@@ -514,14 +524,16 @@ states.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for PF state</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pf</span> <span class="op">+</span> <span class="fu">scale_color_npg</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 5 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 5 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_pf-1.png" width="700"></p>
 <p>The PF curves fully overlap with each other in the observed period,
 and appear to fit well visually to the observed PF data.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for PD state</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pd</span> <span class="op">+</span> <span class="fu">scale_color_npg</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 5 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 5 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_pd-1.png" width="700"></p>
 <p>There are big differences in the fit between the models to the PD
 membership probability. The best visual fit comes from the PSM. Both
@@ -532,7 +544,8 @@ either PF or PD state).</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for OS</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">os</span> <span class="op">+</span> <span class="fu">scale_color_npg</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 5 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 5 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_os-1.png" width="700"></p>
 <p>Again, all three models fit fairly well up to 15 weeks. The closest
 visual fit to the OS curve is from the PSM. This is not surprising
@@ -549,7 +562,8 @@ patients’ expected PPS-CF survival relative to their TTP timepoint.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Probabilities of PPS</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pps</span> <span class="op">+</span> <span class="fu">scale_color_npg</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 85 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 85 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_pps-1.png" width="700"></p>
 </div>
 <div class="section level2">

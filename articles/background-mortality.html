@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,18 +89,14 @@
 
     
     
-<div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h2>
 <p>This is the second in a series of vignettes illustrating methods for
 evaluating the fit and efficiency of three state oncology
 cost-effectiveness model structures, as described in an accompanying
 journal article.[1] The package is heavily dependent on <a href="https://cran.r-project.org/package=flexsurv" class="external-link">flexsurv</a>).[2]</p>
 <p>After fitting models, as described in
-<code><a href="../articles/example.html">vignette("example")</a></code>, estimates of restricted mean durations
-in health states can be calculated after constraining for background
-mortality from a given life table.</p>
-</div>
+<code><a href="../articles/example.html">vignette("example")</a></code>, estimates of Restricted Mean Durations
+(RMDs) in health states can be calculated after constraining for
+background mortality from a given life table.</p>
 <div class="section level2">
 <h2 id="what-does-constraining-for-background-mortality-mean">What does constraining for background mortality mean?<a class="anchor" aria-label="anchor" href="#what-does-constraining-for-background-mortality-mean"></a>
 </h2>
@@ -124,7 +120,7 @@ background mortality.</p>
 <div class="section level3">
 <h3 id="approach-2---constraining-the-hazard-function">Approach 2 - Constraining the hazard function<a class="anchor" aria-label="anchor" href="#approach-2---constraining-the-hazard-function"></a>
 </h3>
-<p>A more reasonable adjustment would be that the hazard of background
+<p>A more rigorous adjustment would be that the hazard of background
 mortality acts as a constraint to the unadjusted hazard.[4]</p>
 <p><span class="math display">\[
 h_{adjusted}(t) = \max \left[ h_{unadjusted}(t), h_{background}(t)
@@ -149,14 +145,6 @@ extrapolations after the fact. Further discussion of survival
 extrapolation incorporating general population mortality is provided by
 Sweeting et al.[4]</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="deriving-restricted-mean-duration-estimates-under-approach-1">Deriving restricted mean duration estimates under Approach 1<a class="anchor" aria-label="anchor" href="#deriving-restricted-mean-duration-estimates-under-approach-1"></a>
-</h2>
-<p>Following the notation in the journal article supporting this
-package, where membership probabilities at time <span class="math inline">\(t\)</span> from baseline are defined in terms of
-survival and hazard functions of <span class="math inline">\(t\)</span>
-[1].</p>
 <div class="section level3">
 <h3 id="background-mortality-survival-and-hazard-functions">Background mortality survival and hazard functions<a class="anchor" aria-label="anchor" href="#background-mortality-survival-and-hazard-functions"></a>
 </h3>
@@ -177,91 +165,64 @@ h_{gen}(t) = \frac{\log[S_{gen}(t_1)] - \log[S_{gen}(t_2)]}{t_2 - t_1}
 </h3>
 <p>The restricted mean time in the PF state and time alive are integrals
 over the time horizon, <span class="math inline">\(T\)</span>, of the
-survival functions of PFS and OS. In both cases, the survival functions
-must be constrained to be no greater than background survival. The
-accompanying article discusses possibilities for calculating <span class="math inline">\(S_{TTP}(t)\)</span>, which is not strictly defined
-for PSMs but required for calculating likelihoods and often implicitly
-calculated in economic models to evaluate certain payoffs.</p>
-<p>The mean time in PF and alive are as follows.</p>
+survival functions of PFS and OS. In both cases, the hazard functions
+must be constrained to be at least as great as the hazard for background
+mortality. The hazard for the time in PF and time alive (OS) are as
+follows.</p>
 <p><span class="math display">\[
-E[PF, PSM] = \int_0^T \min \left[ S_{PFS}(u), S_{TTP}(u) \cdot
-S_{gen}(u) \right] du
-\]</span> <span class="math display">\[
-E[OS, PSM] = \int_0^T \min \left[ S_{OS}(u), S_{gen}(u) \right] du
-\]</span> Time in the PD state is then the difference.</p>
-<p><span class="math display">\[
-E[PD, PSM] = E[OS, PSM] - E[PF, PSM]
+h^{adj}_{OS}(t) = \max \left[h_{gen}(t), h_{OS}(t) \right] \\
+h^{adj}_{PFS}(t) = h_{PFS}(t) - h_{OS}(t) + h^{adj}_{OS}(t)
 \]</span></p>
 </div>
 <div class="section level3">
-<h3 id="state-transition-models">State Transition Models<a class="anchor" aria-label="anchor" href="#state-transition-models"></a>
+<h3 id="state-transition-models-stms">State Transition Models (STMs)<a class="anchor" aria-label="anchor" href="#state-transition-models-stms"></a>
 </h3>
-<p>The mean time in PF is as follows.</p>
+<p>Formulas for the mean time in PF and OS are shown in the accompanying
+article in respect of hazard and survival functions for TTP, PPD and PPS
+endpoints, where PPS is a function of time from baseline in a Clock
+Forward (CF) and time from progression in a Clock Reset (CR) model.</p>
+<p>Adjusting for background mortality requires adjusting the hazard (and
+equivalently survival) functions of endpoints relating to mortality, PPD
+and PPS. This is straightforward for PPD:</p>
 <p><span class="math display">\[
-E[PF, STM_{CF}] = \int_0^T S_{TTP}(u) \cdot \min \left[ S_{PPD}(u),
-S_{gen}(u) \right] du
-\]</span> The mean time in PD is rather more complicated. Note that the
-PPS survival differs between the clock forward and clock reset model
-structures.</p>
-<p><span class="math display">\[
-E[PD, STM] = \int_0^T \int_0^t \min \left[ S_{PPD}(u), S_{gen}(u)
-\right] \cdot S_{TTP}(u) \cdot h_{TTP}(u) \cdot \min \left[ S_{PPS}(u,
-t), \frac{S_{gen}(t)}{S_{gen}(u)} \right] du dt
-\]</span> The observant statistician would note <span class="math inline">\(S_{TTP}(u) \cdot h_{TTP}(u) = f_{TTP}(u)\)</span>,
-the density function. The time alive is then the sum of these
-quantities.</p>
-<p><span class="math display">\[
-E[OS, STM] = E[PF, STM] + E[PD, STM]
-\]</span></p>
+h^{adj}_{PPD}(t) = \max left[h_{gen}(t), h_{PPD}(t) \right]
+\]</span> But it is more complex for the PPS endpoint because, in the
+case of the Clock Reset model, its hazard (and survival) is a function
+of two times rather than just one. This package does not provide
+integral solutions relying on continuous time for RMDs, and must instead
+rely on discretization.</p>
+<p>Spreadsheet-based economic models almost always rely on discretizing
+time into timesteps rather than follow the integral formulas described
+above for continuous time. As long as timesteps are reasonably short,
+restricted mean duration results should remain reasonably accurate.
+Derided as a “kludge”, half-cycle corrections are nevertheless
+recommended.[5]</p>
 </div>
 <div class="section level3">
-<h3 id="discounting">Discounting<a class="anchor" aria-label="anchor" href="#discounting"></a>
-</h3>
-<p>Health economic models such as cost-effectiveness models usually
-evaluate quantities of interest in (net) present value terms, after
-applying discounting. This can be readily included in formulae above by
-including a discounting factor in the integrals.</p>
-<p>Suppose a discount rate <span class="math inline">\(i\)</span>%
-applies over unit time. Then the discounting factor at time <span class="math inline">\(t\)</span> is <span class="math inline">\(v(t;i)=(1+i)^{-t}\)</span>. Note that <span class="math inline">\(v(t;i=0)=1\)</span>.</p>
-</div>
-<div class="section level3">
-<h3 id="programming-implications">Programming implications<a class="anchor" aria-label="anchor" href="#programming-implications"></a>
-</h3>
-<p>The calculation of restricted mean durations in <em>psm3mkv</em>
-default to assume no life table constraints or discounting. However,
-when a lifetable is specified, then <span class="math inline">\(S_{gen}(t)\)</span> and <span class="math inline">\(h_{gen}(t)\)</span> are specified and constrain
-the estimated means as indicated. When a discount rate is specified,
-then the mean estimates reflect this also.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="demonstration">Demonstration<a class="anchor" aria-label="anchor" href="#demonstration"></a>
-</h2>
-<div class="section level3">
-<h3 id="initializing">Initializing<a class="anchor" aria-label="anchor" href="#initializing"></a>
+<h3 id="set-up">Set-up<a class="anchor" aria-label="anchor" href="#set-up"></a>
 </h3>
 <p>First we load the packages we need - all of which are suggested for
 or imported to <em>psm3mkv</em>. With thanks again to <span class="citation">@vbaliga</span> for <a href="https://vbaliga.github.io/posts/2019-04-28-verify-that-r-packages-are-installed-and-loaded/" class="external-link">this
 helpful code</a>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install psm3mkv version 0.2 from github</span></span>
+<code class="sourceCode R"><span><span class="co"># Install latest 'Nextrel' version from github, without vignettes</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv"</span>,</span>
-<span>                        ref<span class="op">=</span><span class="st">"v0.2"</span>,</span>
-<span>                        build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>                        ref<span class="op">=</span><span class="st">"Nextrel"</span>,</span>
+<span>                        build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; prettyunits  (NA -&gt; 1.2.0     ) [CRAN]</span></span>
 <span><span class="co">#&gt; progress     (NA -&gt; 1.2.3     ) [CRAN]</span></span>
-<span><span class="co">#&gt; RcppEigen    (NA -&gt; 0.3.3.9.4 ) [CRAN]</span></span>
-<span><span class="co">#&gt; RcppArmad... (NA -&gt; 0.12.6.6.1) [CRAN]</span></span>
+<span><span class="co">#&gt; cpp11        (NA -&gt; 0.4.7     ) [CRAN]</span></span>
+<span><span class="co">#&gt; RcppEigen    (NA -&gt; 0.3.4.0.0 ) [CRAN]</span></span>
+<span><span class="co">#&gt; RcppArmad... (NA -&gt; 0.12.8.1.0) [CRAN]</span></span>
 <span><span class="co">#&gt; BH           (NA -&gt; 1.84.0-0  ) [CRAN]</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="color: #00BBBB;">R CMD build</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; * checking for file ‘/tmp/RtmpQjnPrV/remotes1cc334b610ac/Merck-psm3mkv-36bbb5b/DESCRIPTION’ ... OK</span></span>
+<span><span class="co">#&gt; * checking for file ‘/tmp/Rtmp929xfb/remotes1ee3751b29d1/Merck-psm3mkv-481d91f/DESCRIPTION’ ... OK</span></span>
 <span><span class="co">#&gt; * preparing ‘psm3mkv’:</span></span>
 <span><span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span></span>
-<span><span class="co">#&gt; * installing the package to build vignettes</span></span>
-<span><span class="co">#&gt; * creating vignettes ... OK</span></span>
 <span><span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span></span>
 <span><span class="co">#&gt; * checking for empty or unneeded directories</span></span>
-<span><span class="co">#&gt; * building ‘psm3mkv_0.2.0.tar.gz’</span></span>
+<span><span class="co">#&gt; * building ‘psm3mkv_0.2.1.tar.gz’</span></span>
 <span></span>
 <span><span class="co"># First specify the packages of interest</span></span>
 <span><span class="va">packages</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"psm3mkv"</span>, <span class="st">"dplyr"</span>, <span class="st">"flexsurv"</span>, <span class="st">"HMDHFDplus"</span>, <span class="st">"remotes"</span><span class="op">)</span></span>
@@ -383,9 +344,9 @@ approximately 52.18 weeks per year.</p>
 </h3>
 <p>We are skipping over any internal or external validation for the
 purposes of this vignette, and jump instead straight to making the
-survival projections.</p>
-<p>First we derive a projection without lifetable constraints over a 10
-year time horizon.</p>
+survival projections. We will assume a 10 year time horizon.</p>
+<p>First we derive a projection using integral formulae, without
+lifetable constraints.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set time horizon</span></span>
 <span><span class="va">thoz</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
@@ -394,76 +355,57 @@ year time horizon.</p>
 <span><span class="va">proj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Present the results</span></span>
-<span><span class="va">res1</span> <span class="op">&lt;-</span> <span class="va">proj1</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lxadj<span class="op">=</span><span class="st">"no"</span>, disc<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">res1</span> <span class="op">&lt;-</span> <span class="va">proj1</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"int"</span>, lxadj<span class="op">=</span><span class="st">"no"</span><span class="op">)</span></span>
 <span><span class="va">res1</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
-<span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        274.4     118.3     392.7 no        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     270.2     119.7     389.9 no        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     270.2     123.8     393.9 no        0</span></span></code></pre></div>
-<p>Then we derive a projection with lifetable constraints (according to
-Approach 1) over the same time horizon.</p>
+<span><span class="co">#&gt;          pf        pd        os model  method lxadj</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     274.4     118.3     392.7 PSM    int    no   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     270.2     119.7     389.9 STM-CF int    no   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     270.2     123.8     393.9 STM-CR int    no</span></span></code></pre></div>
+<p>In this example, there were problems estimating the RMD in the PD and
+OS states in the STM-CF model, which should normally be
+investigated.</p>
+<p>Next we derive a projection using a discretization approximation,
+still without any lifetable constraints.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the calculation</span></span>
-<span><span class="va">proj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, lifetable<span class="op">=</span><span class="va">ltable</span><span class="op">)</span></span>
+<span><span class="va">proj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, rmdmethod<span class="op">=</span><span class="st">"disc"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Present the results</span></span>
-<span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="va">proj2</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lxadj<span class="op">=</span><span class="st">"yes"</span>, disc<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="va">proj2</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"disc"</span>, lxadj<span class="op">=</span><span class="st">"no"</span><span class="op">)</span></span>
 <span><span class="va">res2</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
-<span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        230.2     140.5     370.7 yes       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     230.2     107.6     337.8 yes       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     230.2     111.1     341.4 yes       0</span></span></code></pre></div>
-<p>The State Transition Model Clock Reset (STM-CR) estimate of mean time
-alive has reduced by 52.6 weeks for example, from 393.9 to 341.4
-weeks.</p>
-</div>
-<div class="section level3">
-<h3 id="discounting-1">Discounting<a class="anchor" aria-label="anchor" href="#discounting-1"></a>
-</h3>
-<p>Let us compare the effects of the lifetable constraint with the
-effect of discounting. First we run a model with discounting at 3.5% per
-year, but no lifetable constraint.</p>
+<span><span class="co">#&gt;          pf        pd        os model  method lxadj</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     273.4     118.4     391.8 PSM    disc   no   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     269.2     119.8     389.0 STM-CF disc   no   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     269.2     123.8     393.0 STM-CR disc   no</span></span></code></pre></div>
+<p>Discretization has proven fairly accurate. The State Transition Model
+Clock Reset (STM-CR) estimate of mean time alive has reduced by just 0.9
+weeks for example, from 393.9 to 393 weeks.</p>
+<p>Finally, we use a discretization approximation and apply the
+lifetable constraints.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the calculations</span></span>
-<span><span class="va">proj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, discrate<span class="op">=</span><span class="fl">0.035</span><span class="op">)</span></span>
+<span><span class="va">proj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, rmdmethod<span class="op">=</span><span class="st">"disc"</span>, lifetable<span class="op">=</span><span class="va">ltable</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Present the results</span></span>
 <span><span class="va">res3</span> <span class="op">&lt;-</span> <span class="va">proj3</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lxadj<span class="op">=</span><span class="st">"no"</span>, disc<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"disc"</span>, lxadj<span class="op">=</span><span class="st">"yes"</span><span class="op">)</span></span>
 <span><span class="va">res3</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
-<span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        241.6      98.0     339.6 no      3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     237.6      99.6     337.2 no      3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     237.6     103.2     340.7 no      3.5</span></span></code></pre></div>
-<p>Discounting alone reduces the STM-CR estimate of mean time alive by
-53.2 weeks for example, from 393.9 to 340.7 weeks.</p>
-<p>Applying a lifetable constraint and discounting at 3.5% per year
-produces our final model for this vignette.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Run the calculations</span></span>
-<span><span class="va">proj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, lifetable<span class="op">=</span><span class="va">ltable</span>, discrate<span class="op">=</span><span class="fl">0.035</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Present the results</span></span>
-<span><span class="va">res4</span> <span class="op">&lt;-</span> <span class="va">proj4</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lxadj<span class="op">=</span><span class="st">"yes"</span>, disc<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span></span>
-<span><span class="va">res4</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
-<span><span class="co">#&gt;   model         pf        pd        os lxadj  disc</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSM        204.5     116.1     320.6 yes     3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> STM-CF     204.5      89.9     294.4 yes     3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> STM-CR     204.5      93.0     297.5 yes     3.5</span></span></code></pre></div>
-<p>The final STM-CR estimate of mean time alive, with both a lifetable
-constraint and discounting at 3.5% per year is 297.5 weeks.</p>
+<span><span class="co">#&gt;          pf        pd        os model  method lxadj</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     256.2     109.4     365.6 PSM    disc   yes  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     229.6     136.6     366.2 STM-CF disc   yes  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     229.6     135.1     364.7 STM-CR disc   yes</span></span></code></pre></div>
+<p>The estimate of mean time alive has reduced by 29.2 weeks for
+example, from 393.9 originally to 364.7 weeks now.</p>
 <p>A summary of the STM-CR estimates of mean time in PF is given in the
 table below.</p>
 <table class="table">
@@ -483,32 +425,25 @@ table below.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">No lifetable constraint, no discounting</td>
+<td align="left">No lifetable constraint, integral methods</td>
 <td align="left">270.2</td>
 <td align="left">-</td>
 <td align="left">393.9</td>
 <td align="left">-</td>
 </tr>
 <tr class="even">
-<td align="left">With lifetable constraint, no discounting</td>
-<td align="left">230.2</td>
-<td align="left">-39.9</td>
-<td align="left">341.4</td>
-<td align="left">-52.6</td>
+<td align="left">No lifetable constraint, discretized calculation</td>
+<td align="left">269.2</td>
+<td align="left">-0.9</td>
+<td align="left">393</td>
+<td align="left">-0.9</td>
 </tr>
 <tr class="odd">
-<td align="left">No lifetable constraint, discounting at 3.5% pa</td>
-<td align="left">237.6</td>
-<td align="left">-32.6</td>
-<td align="left">340.7</td>
-<td align="left">-53.2</td>
-</tr>
-<tr class="even">
-<td align="left">With lifetable constraint, discounting at 3.5% pa</td>
-<td align="left">204.5</td>
-<td align="left">-65.7</td>
-<td align="left">297.5</td>
-<td align="left">-96.4</td>
+<td align="left">With lifetable constraint, discretized calculation</td>
+<td align="left">229.6</td>
+<td align="left">-40.5</td>
+<td align="left">364.7</td>
+<td align="left">-29.2</td>
 </tr>
 </tbody>
 </table>
@@ -531,6 +466,10 @@ guidance [TA821]. August 24, 2022. Available from: <a href="https://www.nice.org
 Population Mortality Using Excess Hazard and Cure Models: A Tutorial.
 Med Decis Making 2023 Aug;43(6):737-748. <a href="https://doi.org/10.1177/0272989X231184247" class="external-link">DOI:
 10.1177/0272989X231184247</a></p></li>
+<li><p>Naimark DMJ, Kabboul NN, Krahn MD. The half-cycle correction
+revisited: redemption of a kludge. Medical Decision Making 2013;
+33(7):961-70. <a href="https://doi.org/10.1177/0272989X13501558" class="external-link">DOI:
+10.1177/0272989X13501558</a>.</p></li>
 </ol>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

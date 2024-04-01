@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -158,6 +158,12 @@
         <dd>Calculate restricted mean durations</dd>
       </dl><dl><dt>
           
+          <code><a href="calc_rmd_first.html">calc_rmd_first()</a></code> 
+        </dt>
+        <dd>Calculate restricted mean duration in respect of the first part of a two-piece model
+Internal function to calculate the restricted mean duration up to the cut-off time, the first part of a two-piece model. Assumes the time horizon is beyond the cutoff time.</dd>
+      </dl><dl><dt>
+          
           <code><a href="calc_rmd_par.html">calc_rmd_par()</a></code> 
         </dt>
         <dd>Calculate restricted mean durations (parametric form)</dd>
@@ -176,6 +182,12 @@
           <code><a href="check_posdef.html">check_posdef()</a></code> 
         </dt>
         <dd>Checks whether the Hessian for a survival regression is positive-definite</dd>
+      </dl><dl><dt>
+          
+          <code><a href="constrain_survprob.html">constrain_survprob()</a></code> 
+        </dt>
+        <dd>Constrain survival probabilities according to hazards in a lifetable
+Recalculated constrained survival probabilities (by week) as the lower of the original unadjusted survival probability and the survival implied by the given lifetable (assumed indexed as years).</dd>
       </dl><dl><dt>
           
           <code><a href="convert_fit2spec.html">convert_fit2spec()</a></code> 
@@ -213,6 +225,24 @@
         <dd>Create the additional time-to-event endpoints, adjusting for cutpoint</dd>
       </dl><dl><dt>
           
+          <code><a href="drmd_psm.html">drmd_psm()</a></code> 
+        </dt>
+        <dd>Discretized Restricted Mean Duration calculation for Partitioned Survival Model
+Calculate restricted mean duration (RMD) in PF, PD and OS states under a Partitioned Survival Model structure.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="drmd_stm_cf.html">drmd_stm_cf()</a></code> 
+        </dt>
+        <dd>Discretized Restricted Mean Duration calculation for State Transition Model Clock Forward structure
+Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Forward structure.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="drmd_stm_cr.html">drmd_stm_cr()</a></code> 
+        </dt>
+        <dd>Discretized Restricted Mean Duration calculation for State Transition Model Clock Reset structure
+Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Reset structure.</dd>
+      </dl><dl><dt>
+          
           <code><a href="find_bestfit_par.html">find_bestfit_par()</a></code> 
         </dt>
         <dd>Find the "best" survival regression from a list</dd>
@@ -221,6 +251,12 @@
           <code><a href="find_bestfit_spl.html">find_bestfit_spl()</a></code> 
         </dt>
         <dd>Find the "best" survival regression from a list of spline model fits</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fit_ends_mods_given.html">fit_ends_mods_given()</a></code> 
+        </dt>
+        <dd>Fit survival models to each endpoint, given type and spec
+Internal function to fit survival models to each endpoint, given type and spec in format of <code><a href="../reference/convert_fit2spec.html">convert_fit2spec()</a></code></dd>
       </dl><dl><dt>
           
           <code><a href="fit_ends_mods_par.html">fit_ends_mods_par()</a></code> 
