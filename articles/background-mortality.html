@@ -158,15 +158,16 @@ study population at baseline, and <span class="math inline">\(l_x\)</span> is an
 <p>We can also derive the average background mortality hazard for <span class="math inline">\(t\)</span> in the range <span class="math inline">\([t_1, t_2)\)</span>.</p>
 <p><span class="math display">\[
 h_{gen}(t) = \frac{\log[S_{gen}(t_1)] - \log[S_{gen}(t_2)]}{t_2 - t_1}
-\]</span></p>
+\]</span> ## Application to three state cost-effectiveness model
+structures</p>
 </div>
 <div class="section level3">
 <h3 id="partitioned-survival-model-psm">Partitioned Survival Model (PSM)<a class="anchor" aria-label="anchor" href="#partitioned-survival-model-psm"></a>
 </h3>
-<p>The restricted mean time in the PF state and time alive are integrals
-over the time horizon, <span class="math inline">\(T\)</span>, of the
-survival functions of PFS and OS. In both cases, the hazard functions
-must be constrained to be at least as great as the hazard for background
+<p>The RMD in the PF state and time alive are integrals over the time
+horizon, <span class="math inline">\(T\)</span>, of the survival
+functions of PFS and OS. Under Approach 2, the hazard functions must be
+constrained to be at least as great as the hazard for background
 mortality. The hazard for the time in PF and time alive (OS) are as
 follows.</p>
 <p><span class="math display">\[
@@ -185,7 +186,7 @@ Forward (CF) and time from progression in a Clock Reset (CR) model.</p>
 equivalently survival) functions of endpoints relating to mortality, PPD
 and PPS. This is straightforward for PPD:</p>
 <p><span class="math display">\[
-h^{adj}_{PPD}(t) = \max left[h_{gen}(t), h_{PPD}(t) \right]
+h^{adj}_{PPD}(t) = \max \left[h_{gen}(t), h_{PPD}(t) \right]
 \]</span> But it is more complex for the PPS endpoint because, in the
 case of the Clock Reset model, its hazard (and survival) is a function
 of two times rather than just one. This package does not provide
@@ -198,6 +199,10 @@ restricted mean duration results should remain reasonably accurate.
 Derided as a “kludge”, half-cycle corrections are nevertheless
 recommended.[5]</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="illustration-of-calculations">Illustration of calculations<a class="anchor" aria-label="anchor" href="#illustration-of-calculations"></a>
+</h2>
 <div class="section level3">
 <h3 id="set-up">Set-up<a class="anchor" aria-label="anchor" href="#set-up"></a>
 </h3>
@@ -210,14 +215,9 @@ helpful code</a>).</p>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv"</span>,</span>
 <span>                        ref<span class="op">=</span><span class="st">"Nextrel"</span>,</span>
 <span>                        build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; prettyunits  (NA -&gt; 1.2.0     ) [CRAN]</span></span>
-<span><span class="co">#&gt; progress     (NA -&gt; 1.2.3     ) [CRAN]</span></span>
-<span><span class="co">#&gt; cpp11        (NA -&gt; 0.4.7     ) [CRAN]</span></span>
-<span><span class="co">#&gt; RcppEigen    (NA -&gt; 0.3.4.0.0 ) [CRAN]</span></span>
-<span><span class="co">#&gt; RcppArmad... (NA -&gt; 0.12.8.1.0) [CRAN]</span></span>
-<span><span class="co">#&gt; BH           (NA -&gt; 1.84.0-0  ) [CRAN]</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="color: #00BBBB;">R CMD build</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; * checking for file ‘/tmp/Rtmp929xfb/remotes1ee3751b29d1/Merck-psm3mkv-481d91f/DESCRIPTION’ ... OK</span></span>
+<span><span class="co">#&gt; * checking for file ‘/tmp/RtmpZPONxz/remotes1d4aec43d50/Merck-psm3mkv-481d91f/DESCRIPTION’ ... OK</span></span>
 <span><span class="co">#&gt; * preparing ‘psm3mkv’:</span></span>
 <span><span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span></span>
 <span><span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span></span>
@@ -265,8 +265,8 @@ Lifetables are constructed by time in years.</p>
 <span><span class="co"># The table needs to end with lx=0</span></span>
 <span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span><span class="va">mort</span>, Age<span class="op">=</span><span class="fl">111</span>, lx<span class="op">=</span><span class="fl">0</span>, Timey<span class="op">=</span><span class="fl">60</span><span class="op">)</span></span></code></pre></div>
 <p>You will see that the above code cannot run without a login for the
-Human Mortality Database (www.mortality.org). Alternatively, we could
-just make up a mortality table.</p>
+<a href="www.mortality.org">Human Mortality Database</a>. Alternatively,
+we could just make up a mortality table.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  Timey <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">30</span>,</span>
@@ -406,6 +406,10 @@ lifetable constraints.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     229.6     135.1     364.7 STM-CR disc   yes</span></span></code></pre></div>
 <p>The estimate of mean time alive has reduced by 29.2 weeks for
 example, from 393.9 originally to 364.7 weeks now.</p>
+</div>
+<div class="section level3">
+<h3 id="comparing-the-results">Comparing the results<a class="anchor" aria-label="anchor" href="#comparing-the-results"></a>
+</h3>
 <p>A summary of the STM-CR estimates of mean time in PF is given in the
 table below.</p>
 <table class="table">
@@ -447,6 +451,12 @@ table below.</p>
 </tr>
 </tbody>
 </table>
+<p>In this fictional case, the application of a lifetable constraint had
+fairly sizeable effects on the results - although this was by design of
+this demonstration. The vignette focussed on the STM-CR model, although
+other model structures were fitted and estimated also. The package also
+allows application of discounting through the <code>discrate</code>
+optional call to <code>calc_allrnds()</code>.</p>
 </div>
 </div>
 <div class="section level2">
