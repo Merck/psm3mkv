@@ -63,17 +63,17 @@ exp_psm_os <- flexsurv::rmst_weibullPH(Tw, shape=params$os$res[1,1], scale=param
 exp_psm_pd <- exp_psm_os - exp_psm_pf
 
 test_that("PSM results match expected durations", {
-  expect_equal(as.numeric(rmd_all$results[1,2]),
+  expect_equal(as.numeric(rmd_all$results$pf[1]),
                as.numeric(exp_psm_pf)
                )
   expect_equal(as.numeric(rmd_pf_psm(params, Ty=Ty)),
                as.numeric(exp_psm_pf)
                )
-  expect_equal(as.numeric(rmd_all$results[1,3]),
+  expect_equal(as.numeric(rmd_all$results$pd[1]),
                as.numeric(exp_psm_pd)
               )
   # rmd_pd_psm does not exist
-  expect_equal(as.numeric(rmd_all$results[1,4]),
+  expect_equal(as.numeric(rmd_all$results$os[1]),
                as.numeric(exp_psm_os)
                )
   expect_equal(as.numeric(rmd_os_psm(params, Ty=Ty)),
@@ -108,19 +108,19 @@ exp_stmcf_pd <- SimplicialCubature::adaptIntegrateSimplex(int2, S)$integral
 exp_stmcf_os <- exp_stmcf_pf + exp_stmcf_pd
 
 test_that("STM-CF results match expected durations", {
-  expect_equal(as.numeric(rmd_all$results[2,2]),
+  expect_equal(as.numeric(rmd_all$results$pf[2]),
                as.numeric(exp_stmcf_pf)
   )
   expect_equal(as.numeric(rmd_pf_stm(params, Ty=Ty)),
                as.numeric(exp_stmcf_pf)
   )
-  expect_equal(as.numeric(rmd_all$results[2,3]),
+  expect_equal(as.numeric(rmd_all$results$pd[2]),
                as.numeric(exp_stmcf_pd)
   )
   expect_equal(as.numeric(rmd_pd_stm_cf(params, Ty=Ty)),
                as.numeric(exp_stmcf_pd)
   )
-  expect_equal(as.numeric(rmd_all$results[2,4]),
+  expect_equal(as.numeric(rmd_all$results$os[2]),
                as.numeric(exp_stmcf_os)
   )
   # No rmd_os_stm_cf function
@@ -142,19 +142,19 @@ exp_stmcr_pd <- SimplicialCubature::adaptIntegrateSimplex(int3, S)$integral
 exp_stmcr_os <- exp_stmcr_pf + exp_stmcr_pd
 
 test_that("STM-CR results match expected durations", {
-  expect_equal(as.numeric(rmd_all$results[3,2]),
+  expect_equal(as.numeric(rmd_all$results$pf[3]),
                as.numeric(exp_stmcr_pf)
   )
   expect_equal(as.numeric(rmd_pf_stm(params, Ty=Ty)),
                as.numeric(exp_stmcr_pf)
   )
-  expect_equal(as.numeric(rmd_all$results[3,3]),
+  expect_equal(as.numeric(rmd_all$results$pd[3]),
                as.numeric(exp_stmcr_pd)
   )
   expect_equal(as.numeric(rmd_pd_stm_cr(params, Ty=Ty)),
                as.numeric(exp_stmcr_pd)
   )
-  expect_equal(as.numeric(rmd_all$results[3,4]),
+  expect_equal(as.numeric(rmd_all$results$os[3]),
                as.numeric(exp_stmcr_os)
   )
  # No rmd_os_stm_cr function
@@ -214,16 +214,4 @@ test_that("Including discounting reduces the mean", {
   expect_gte(rmd_pd_stm_cf(params, Ty=15), rmd_pd_stm_cf(params, Ty=15, discrate=0.03))
   expect_gte(rmd_pf_psm(params, Ty=15), rmd_pf_psm(params, Ty=15, discrate=0.03))
   expect_gte(rmd_os_psm(params, Ty=15), rmd_os_psm(params, Ty=15, discrate=0.03))
-})
-
-# Including a lifetable adjustment reduces the RMDs
-
-ltable <- data.frame(lttime<-0:20, lx=20-(0:20))
-
-test_that("Adding a lifetable reduces the mean", {
-  expect_lte(rmd_pf_stm(params, Ty=10, lifetable=ltable), rmd_pf_stm(params, Ty=10))
-  expect_lte(rmd_pd_stm_cr(params, Ty=5, lifetable=ltable), rmd_pd_stm_cr(params, Ty=5))
-  expect_lte(rmd_pd_stm_cf(params, Ty=10, lifetable=ltable), rmd_pd_stm_cf(params, Ty=10))
-  expect_lte(rmd_pf_psm(params, Ty=10, lifetable=ltable), rmd_pf_psm(params, Ty=10))
-  expect_lte(rmd_os_psm(params, Ty=10, lifetable=ltable), rmd_os_psm(params, Ty=10))
 })

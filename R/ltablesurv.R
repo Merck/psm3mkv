@@ -34,9 +34,9 @@
 #' - `geom`: Geometric mean, where interpolation is required between measured values
 #' @seealso [psm3mkv::vlookup]
 vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
+  if (is.na(oneindexval)) return(NA) # Return NA rather than error if index value lookup is NA
   if (oneindexval<min(indexvec)) stop("Lookup value is below range of lookup table")
   if (oneindexval>max(indexvec)) stop("Lookup value is above range of lookup table")
-  # stopifnot(oneindexval >= min(indexvec), oneindexval<=max(indexvec))
   loc <- indexrange <- valrange <- NULL
   # Location of index values
   loc <- match(1, (oneindexval>=indexvec)*(oneindexval<=dplyr::lead(indexvec)))
@@ -110,12 +110,12 @@ calc_ltsurv <- function(looktime, lifetable=NA){
 #' @export
 #' @examples
 #' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
-#' calc_ltsurv(c(2, 2.5, 9.3), ltable)
+#' calc_ltdens(c(2, 2.5, 9.3), ltable)
 calc_ltdens <- function(looktime, lifetable=NA){
   if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
   if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
   # Floor time from lifetable
-  tlo <- vlookup(looktime, lifetable$lttime, lifetable$lttime, meth="floor")
+  tlo <- vlookup(looktime, lifetable$lttime, lifetable$lttime, method="floor")
   pos <- match(tlo, lifetable$lttime)
   # Pick out useful lx values
   lx0 <- lifetable$lx[1]
@@ -163,4 +163,35 @@ calc_ex <- function(Ty=10, lifetable, discrate=0) {
     ex_y = ex,
     ex_w = convert_yrs2wks(ex),
     calcs = res1)
+}
+
+#' Constrain survival probabilities according to hazards in a lifetable
+#' Recalculated constrained survival probabilities (by week) as the lower of the original unadjusted survival probability and the survival implied by the given lifetable (assumed indexed as years).
+#' @param survprob (Unconstrained) survival probability value or vector
+#' @param lifetable Lifetable
+#' @param timevec Vector of times corresponding with survival probabilities above
+#' @return Vector of constrained survival probabilities
+#' @export
+#' @examples
+#' ltable <- tibble::tibble(lttime=0:20, lx=c(1,0.08,0.05,0.03,0.01,rep(0,16)))
+#' survprob <- c(1,0.5,0.4,0.2,0)
+#' constrain_survprob(survprob, lifetable=ltable)
+#' timevec <- 100*(0:4)
+#' constrain_survprob(survprob, lifetable=ltable, timevec=timevec)
+constrain_survprob <- function(survprob, lifetable, timevec=0:(length(survprob)-1)) {
+  # Check lifetable exists or return survprob
+  if (!is.data.frame(lifetable)) {return(survprob)}
+  # Vector of lifetables
+  lxprob <- calc_ltsurv(convert_wks2yrs(timevec), lifetable)
+  # Length of survprob
+  N <- length(survprob)
+  # Cycle through each element
+  adjsurv <- slx <- sprob <- rep(NA, N)
+  adjsurv[1] <- survprob[1]
+  for (i in 2:N) {
+    slx[i] <- ifelse(lxprob[i-1]==0, 1, lxprob[i]/lxprob[i-1])
+    sprob[i] <- ifelse(survprob[i-1]==0, 1, survprob[i]/survprob[i-1])
+    adjsurv[i] <- adjsurv[i-1] * pmin(slx[i], sprob[i])
+  }
+  return(adjsurv)
 }

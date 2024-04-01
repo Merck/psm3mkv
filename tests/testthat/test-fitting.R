@@ -79,7 +79,7 @@ test_that("Fitted parameters, CI, SE, N and events match for OS", {
   }
 })
 
-fitnull <- fit_ends_mods_par(ds=bosonc,
+fitnull <- fit_ends_mods_par(simdat=bosonc,
                              ppd.dist=NA,
                              ttp.dist=NA,
                              pfs.dist=NA,
