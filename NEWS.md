@@ -1,4 +1,4 @@
-# psm3mkv (development version)
+# psm3mkv 0.2.1
 
 # 31 Mar 2024 - Version 0.2.1
 
