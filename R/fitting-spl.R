@@ -75,7 +75,7 @@ fit_mods_spl <- function(durn1, durn2=NA, evflag,
 
 #' Fit multiple spline regressions to the multiple required endpoints
 #' @description Fits multiple survival regressions, according to the distributions stipulated, to the multiple endpoints required in fitting partitioned survival analysis, clock forward and clock reset semi-markov models.
-#' @param ds Dataset of patient level data. Must be a tibble with columns named:
+#' @param simdat Dataset of patient level data. Must be a tibble with columns named:
 #' - ptid: patient identifier
 #' - pfs.durn: duration of PFS from baseline
 #' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
@@ -98,18 +98,18 @@ fit_mods_spl <- function(durn1, durn2=NA, evflag,
 #' # Create dataset in suitable form using bos dataset from the flexsurv package
 #' bosonc <- create_dummydata("flexbosms")
 #' fit_ends_mods_spl(bosonc, expvar=bosonc$ttp.durn)
-fit_ends_mods_spl <- function(ds,
+fit_ends_mods_spl <- function(simdat,
                               knot_set=1:3,
                               scale_set=c("hazard", "odds", "normal"),
                               expvar = NA
                               ) {
   # Declare local variables
-  dspps <- pps.durn <- fits.ppd <- fits.ttp <- fits.pfs <- NULL
+  ds <- dspps <- pps.durn <- fits.ppd <- fits.ttp <- fits.pfs <- NULL
   fits.os <- fits.pps_cf <- fits.pps_cr <- NULL
   # Derive additional fields, as with regular function
-  ds <- create_extrafields(ds, cuttime=0)
+  ds <- create_extrafields(simdat, cuttime=0)
   # For PPS analysis, require there to be a known progression event, plus a positive PPS
-  dspps <- ds |> dplyr::filter(pps.durn>0, ttp.flag==1)
+  dspps <- ds |> dplyr::filter(.data$pps.durn>0, .data$ttp.flag==1)
   # Captures lists of fitted models to each endpoint
   fits.ppd <- fit_mods_spl(durn1 = ds$tzero,
                        durn2 = ds$ppd.durn,

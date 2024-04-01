@@ -1,4 +1,8 @@
-# psm3mkv (development version)
+# psm3mkv 0.2.1
+
+# 31 Mar 2024 - Version 0.2.1
+
+Constraining calculations of restricted mean durations and the accompanying `vignette("background-mortality")` has been reworked. The calculations using integral/continuous methods was not reliable. Instead, `calc_allrmds` now has a `rmdmethod="disc"` option to allow for discretized calculations for a given timestep (defaulting at one week). There is a new collection of functions in `discrmd.R` to provide for this, as well as `constrain_survprob()` function, which constrains a vector of survival estimates at given times such that the underlying hazard is at least as great as in an accompanying lifetable.
 
 # 26 Jan 2024 - Version 0.2
 

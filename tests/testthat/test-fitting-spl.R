@@ -85,7 +85,7 @@ test_that("Fitted parameters, CI, SE, N and events match for bosonc data, OS", {
 })
 
 test_that("NA is produced when there are no distributions specified", {
-  fitnull <- fit_ends_mods_spl(ds=bosonc, k = NA, scale = NA)
+  fitnull <- fit_ends_mods_spl(simdat=bosonc, k = NA, scale = NA)
   for (i in 1:6) {
     expect_equal(fitnull[[i]], NA)
   }

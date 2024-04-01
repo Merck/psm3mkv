@@ -19,5 +19,5 @@ Calculate mortality density a given time, according to a provided lifetable
 }
 \examples{
 ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
-calc_ltsurv(c(2, 2.5, 9.3), ltable)
+calc_ltdens(c(2, 2.5, 9.3), ltable)
 }

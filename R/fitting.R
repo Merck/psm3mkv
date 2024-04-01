@@ -133,7 +133,7 @@ create_extrafields <- function(ds, cuttime=0){
 
 #' Fit multiple parametric survival regressions to the multiple required endpoints
 #' @description Fits multiple parametric survival regressions, according to the distributions stipulated, to the multiple endpoints required in fitting partitioned survival analysis, clock forward and clock reset semi-markov models.
-#' @param ds Dataset of patient level data. Must be a tibble with columns named:
+#' @param simdat Dataset of patient level data. Must be a tibble with columns named:
 #' - ptid: patient identifier
 #' - pfs.durn: duration of PFS from baseline
 #' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
@@ -159,7 +159,7 @@ create_extrafields <- function(ds, cuttime=0){
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fit_ends_mods_par(bosonc, expvar=bosonc$ttp.durn)
-fit_ends_mods_par <- function(ds,
+fit_ends_mods_par <- function(simdat,
                 cuttime = 0,
                 ppd.dist = c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz"),
                 ttp.dist = c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz"),
@@ -169,12 +169,12 @@ fit_ends_mods_par <- function(ds,
                 pps_cr.dist = c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz"),
                 expvar = NA) {
   # Declare local variables
-  dspps <- pps.durn <- NULL
+  ds <- dspps <- pps.durn <- NULL
   fits.ppd <- fits.ttp <- fits.pfs <- fits.os <- fits.pps_cf <- fits.pps_cr <- NULL
   # Derive additional fields, as with regular function
-  ds <- create_extrafields(ds, cuttime)
+  ds <- create_extrafields(simdat, cuttime)
   # For PPS analysis, require there to be a known progression event, plus a positive PPS
-  dspps <- ds |> dplyr::filter(pps.durn>0, ttp.flag==1)
+  dspps <- ds |> dplyr::filter(.data$pps.durn>0, .data$ttp.flag==1)
   # Captures lists of fitted models to each endpoint
   fits.ppd <- fit_mods_par(durn1 = ds$tzero,
                        durn2 = ds$ppd.durn,
