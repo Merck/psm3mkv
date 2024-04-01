@@ -63,10 +63,11 @@ We can also derive the average background mortality hazard for $t$ in the range 
 $$
 h_{gen}(t) = \frac{\log[S_{gen}(t_1)] - \log[S_{gen}(t_2)]}{t_2 - t_1}
 $$
+## Application to three state cost-effectiveness model structures
 
 ### Partitioned Survival Model (PSM)
 
-The restricted mean time in the PF state and time alive are integrals over the time horizon, $T$, of the survival functions of PFS and OS. In both cases, the hazard functions must be constrained to be at least as great as the hazard for background mortality. The hazard for the time in PF and time alive (OS) are as follows.
+The RMD in the PF state and time alive are integrals over the time horizon, $T$, of the survival functions of PFS and OS. Under Approach 2, the hazard functions must be constrained to be at least as great as the hazard for background mortality. The hazard for the time in PF and time alive (OS) are as follows.
 
 $$
 h^{adj}_{OS}(t) = \max \left[h_{gen}(t), h_{OS}(t) \right] \\
@@ -80,11 +81,13 @@ Formulas for the mean time in PF and OS are shown in the accompanying article in
 Adjusting for background mortality requires adjusting the hazard (and equivalently survival) functions of endpoints relating to mortality, PPD and PPS. This is straightforward for PPD:
 
 $$
-h^{adj}_{PPD}(t) = \max left[h_{gen}(t), h_{PPD}(t) \right]
+h^{adj}_{PPD}(t) = \max \left[h_{gen}(t), h_{PPD}(t) \right]
 $$
 But it is more complex for the PPS endpoint because, in the case of the Clock Reset model, its hazard (and survival) is a function of two times rather than just one. This package does not provide integral solutions relying on continuous time for RMDs, and must instead rely on discretization.
 
 Spreadsheet-based economic models almost always rely on discretizing time into timesteps rather than follow the integral formulas described above for continuous time. As long as timesteps are reasonably short, restricted mean duration results should remain reasonably accurate. Derided as a "kludge", half-cycle corrections are nevertheless recommended.[5]
+
+## Illustration of calculations
 
 ### Set-up
 
@@ -135,7 +138,7 @@ mort <- HMDHFDplus::readHMDweb(CNTRY="GBRTENW",
 mort <- dplyr::add_row(mort, Age=111, lx=0, Timey=60)
 ```
 
-You will see that the above code cannot run without a login for the Human Mortality Database (www.mortality.org). Alternatively, we could just make up a mortality table.
+You will see that the above code cannot run without a login for the [Human Mortality Database](www.mortality.org). Alternatively, we could just make up a mortality table.
 
 ```{r ltable2}
 mort <- tibble::tibble(
@@ -253,6 +256,8 @@ res3 |> dplyr::mutate(
 
 The estimate of mean time alive has reduced by `r round(res1$os[3]-res3$os[3],1)` weeks for example, from `r round(res1$os[3],1)` originally to `r round(res3$os[3],1)` weeks now.
 
+### Comparing the results
+
 A summary of the STM-CR estimates of mean time in PF is given in the table below.
 
 |Model | Mean time in PF (weeks) | Change (weeks) | Mean time alive (weeks) | Change (weeks) |
@@ -260,6 +265,8 @@ A summary of the STM-CR estimates of mean time in PF is given in the table below
 | No lifetable constraint, integral methods | `r round(res1$pf[3],1)` | - | `r round(res1$os[3],1)` | - |
 | No lifetable constraint, discretized calculation | `r round(res2$pf[3],1)` | `r round(res2$pf[3]-res1$pf[3],1)` | `r round(res2$os[3],1)` | `r round(res2$os[3]-res1$os[3],1)` |
 | With lifetable constraint, discretized calculation | `r round(res3$pf[3],1)` | `r round(res3$pf[3]-res1$pf[3],1)` | `r round(res3$os[3],1)` | `r round(res3$os[3]-res1$os[3],1)` |
+
+In this fictional case, the application of a lifetable constraint had fairly sizeable effects on the results - although this was by design of this demonstration. The vignette focussed on the STM-CR model, although other model structures were fitted and estimated also. The package also allows application of discounting through the `discrate` optional call to `calc_allrnds()`.
 
 ## References
 
