@@ -63,7 +63,15 @@ We can also derive the average background mortality hazard for $t$ in the range 
 $$
 h_{gen}(t) = \frac{\log[S_{gen}(t_1)] - \log[S_{gen}(t_2)]}{t_2 - t_1}
 $$
+
 ## Application to three state cost-effectiveness model structures
+
+In general, we wish to constrain the pre- and post-progression mortality (known as PPD and PPS respectively) to be at least as great as background mortality.
+
+$$
+h^{adj}_{PPD}(t) = \max \left[h_{gen}(t), h_{PPD}(t) \right] \\
+h^{adj}_{PPS}(t) = \max \left[h_{gen}(t), h_{PPS}(t) \right] \\
+$$
 
 ### Partitioned Survival Model (PSM)
 

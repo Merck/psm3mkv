@@ -5,7 +5,15 @@
 \title{Discretized Restricted Mean Duration calculation for Partitioned Survival Model
 Calculate restricted mean duration (RMD) in PF, PD and OS states under a Partitioned Survival Model structure.}
 \usage{
-drmd_psm(dpam, Ty = 10, discrate = 0, lifetable = NA, timestep = 1)
+drmd_psm(
+  ptdata,
+  dpam,
+  psmtype = "simple",
+  Ty = 10,
+  discrate = 0,
+  lifetable = NA,
+  timestep = 1
+)
 }
 \arguments{
 \item{dpam}{List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).}
@@ -46,7 +54,7 @@ params <- list(
 drmd_psm(dpam=params)
 # Add a lifetable constraint
 ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-drmd_psm(dpam=params, lifetable=ltable)
+drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)
 }
 \seealso{
 \code{\link[=drmd_stm_cf]{drmd_stm_cf()}} \code{\link[=drmd_stm_cr]{drmd_stm_cr()}}

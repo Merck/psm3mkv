@@ -4,25 +4,12 @@
 \alias{graph_psm_survs}
 \title{Graph the PSM survival functions}
 \usage{
-graph_psm_survs(timevar, endpoint, ptdata, dpam, psmtype)
+graph_psm_survs(timevar, endpoint, dpam, psmtype)
 }
 \arguments{
 \item{timevar}{Vector of times at which to calculate the hazards}
 
 \item{endpoint}{Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)}
-
-\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
-\itemize{
-\item ptid: patient identifier
-\item pfs.durn: duration of PFS from baseline
-\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
-\item os.durn: duration of OS from baseline
-\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
-\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
-\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
-}
-
-Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
 
 \item{dpam}{List of survival regressions for each endpoint:
 \itemize{
@@ -40,7 +27,7 @@ Survival data for all other endpoints (time to progression, pre-progression deat
 \code{adj} is the hazard adjusted for constraints, \code{unadj} is the unadjusted hazard
 }
 \description{
-EXPERIMENTAL. Graph the PSM survival functions
+Graph the PSM survival functions
 }
 \examples{
 bosonc <- create_dummydata("flexbosms")
