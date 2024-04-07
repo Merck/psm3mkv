@@ -41,7 +41,7 @@
 #' - overall survival (OS)
 #' - post-progression survival clock forward (PPS-CF) and
 #' - post-progression survival clock reset (PPS-CR).
-#' @param type Either "simple" or "complex" PSM formulation
+#' @param psmtype Either "simple" or "complex" PSM formulation
 #' @return List of pre, the pre-progression hazard, and post, the post-progression hazard
 #' @export
 #' @examples
@@ -147,12 +147,12 @@ calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
 #' #   ptdata=bosonc,
 #' #   dpam=params,
 #' #   type="simple")
-calc_surv_psmpps <- function(totime, fromtime=0, dpam, psmtype="simple") {
+calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, psmtype="simple") {
   # Declare local variables
   cumH <- NULL
   # Hazard function
   hazfn <- function(x) {
-    calc_haz_psm(timevar=x, dpam=dpam, psmtype=psmtype)$adj$pps
+    calc_haz_psm(timevar=x, dpam=dpam, ptdata=ptdata, psmtype=psmtype)$adj$pps
   }
   # Cum hazard function
   cumhazfn <- function(ptrow) {

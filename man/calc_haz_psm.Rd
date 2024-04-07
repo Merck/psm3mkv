@@ -32,7 +32,7 @@ Survival data for all other endpoints (time to progression, pre-progression deat
 \item post-progression survival clock reset (PPS-CR).
 }}
 
-\item{type}{Either "simple" or "complex" PSM formulation}
+\item{psmtype}{Either "simple" or "complex" PSM formulation}
 }
 \value{
 List of pre, the pre-progression hazard, and post, the post-progression hazard

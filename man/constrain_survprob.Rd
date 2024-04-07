@@ -5,12 +5,19 @@
 \title{Constrain survival probabilities according to hazards in a lifetable
 Recalculated constrained survival probabilities (by week) as the lower of the original unadjusted survival probability and the survival implied by the given lifetable (assumed indexed as years).}
 \usage{
-constrain_survprob(survprob, lifetable, timevec = 0:(length(survprob) - 1))
+constrain_survprob(
+  survprob1,
+  survprob2 = NA,
+  lifetable = NA,
+  timevec = 0:(length(survprob1) - 1)
+)
 }
 \arguments{
-\item{survprob}{(Unconstrained) survival probability value or vector}
+\item{survprob1}{(Unconstrained) survival probability value or vector}
 
-\item{lifetable}{Lifetable}
+\item{survprob2}{Optional survival probability value or vector to constrain on (default = NA)}
+
+\item{lifetable}{Lifetable (default = NA)}
 
 \item{timevec}{Vector of times corresponding with survival probabilities above}
 }
@@ -27,4 +34,6 @@ survprob <- c(1,0.5,0.4,0.2,0)
 constrain_survprob(survprob, lifetable=ltable)
 timevec <- 100*(0:4)
 constrain_survprob(survprob, lifetable=ltable, timevec=timevec)
+survprob2 <- c(1,0.45,0.35,0.15,0)
+constrain_survprob(survprob, survprob2)
 }

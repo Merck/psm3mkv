@@ -24,7 +24,18 @@
 
 #' Discretized Restricted Mean Duration calculation for Partitioned Survival Model
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a Partitioned Survival Model structure.
+#' @param ptdataDataset of patient level data. Must be a tibble with columns named:
+#' - ptid: patient identifier
+#' - pfs.durn: duration of PFS from baseline
+#' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - os.durn: duration of OS from baseline
+#' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#'
+#' Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.
 #' @param dpam List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).
+#' @param psmtype Either "simple" or "complex" PSM formulation
 #' @param Ty Time duration over which to calculate (defaults to 10 years). Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param discrate Discount rate (%) per year (defaults to zero).
 #' @param lifetable Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
@@ -68,8 +79,8 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
   maxos <- exp(-cumsum(allh$os))
   maxpfs <- exp(-cumsum(allh$pfs))
   # Further constrain OS by lifetable
-  conos <- constrain_survprob(pmin(maxos, osprob), lifetable=lifetable, timevec=tvec)
-  conpfs <- constrain_survprob(pmin(maxpfs, pfprob), lifetable=lifetable, timevec=tvec)
+  conos <- constrain_survprob(survprob1=maxos, survprob2=osprob, lifetable=lifetable, timevec=tvec)
+  conpfs <- constrain_survprob(survprob1=maxpfs, survprob2=pmin(pfprob, osprob), lifetable=lifetable, timevec=tvec)
   # Discount factor
   vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
   # Calculate RMDs

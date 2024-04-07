@@ -18,6 +18,8 @@ drmd_psm(
 \arguments{
 \item{dpam}{List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).}
 
+\item{psmtype}{Either "simple" or "complex" PSM formulation}
+
 \item{Ty}{Time duration over which to calculate (defaults to 10 years). Assumes input is in years, and patient-level data is recorded in weeks.}
 
 \item{discrate}{Discount rate (\%) per year (defaults to zero).}
@@ -25,6 +27,19 @@ drmd_psm(
 \item{lifetable}{Optional. The lifetable must be a dataframe with columns named time and lx. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.}
 
 \item{timestep}{Optional, defaults to one (week).}
+
+\item{ptdataDataset}{of patient level data. Must be a tibble with columns named:
+\itemize{
+\item ptid: patient identifier
+\item pfs.durn: duration of PFS from baseline
+\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+\item os.durn: duration of OS from baseline
+\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+}
+
+Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
 }
 \value{
 List containing:
