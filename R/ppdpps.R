@@ -127,7 +127,7 @@ calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
 #' @param fromtime Vector of times from which the survival function is calculated
 #' @param ptdata Patient-level dataset
 #' @param dpam List of fitted survival models for each endpoint
-#' @param type Either "simple" or "complex" PSM formulation
+#' @param psmtype Either "simple" or "complex" PSM formulation
 #' @return Vector of PPS survival function values
 #' @export
 #' @examples

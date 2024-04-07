@@ -15,7 +15,7 @@ calc_surv_psmpps(totime, fromtime = 0, ptdata, dpam, psmtype = "simple")
 
 \item{dpam}{List of fitted survival models for each endpoint}
 
-\item{type}{Either "simple" or "complex" PSM formulation}
+\item{psmtype}{Either "simple" or "complex" PSM formulation}
 }
 \value{
 Vector of PPS survival function values

@@ -197,7 +197,7 @@ constrain_survprob <- function(survprob1, survprob2=NA, lifetable=NA, timevec=0:
   }
   # Cycle through each element
   adjsurv <- slx <- sprob <- rep(NA, tN)
-  adjsurv[1] <- survprob[1]
+  adjsurv[1] <- survprob1[1]
   for (i in 2:tN) {
     slx[i] <- ifelse(lxprob[i-1]==0, 1, lxprob[i]/lxprob[i-1])
     sprob[i] <- ifelse(survprob1[i-1]==0, 1, survprob1[i]/survprob1[i-1])
