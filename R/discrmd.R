@@ -24,7 +24,7 @@
 
 #' Discretized Restricted Mean Duration calculation for Partitioned Survival Model
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a Partitioned Survival Model structure.
-#' @param ptdataDataset of patient level data. Must be a tibble with columns named:
+#' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
 #' - ptid: patient identifier
 #' - pfs.durn: duration of PFS from baseline
 #' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
