@@ -4,7 +4,7 @@
 \alias{calc_haz_psm}
 \title{Derive pre and post-progression hazards of death under PSM}
 \usage{
-calc_haz_psm(timevar, ptdata, dpam, type)
+calc_haz_psm(timevar, ptdata, dpam, psmtype)
 }
 \arguments{
 \item{timevar}{Vector of times at which to calculate the hazards}
@@ -52,6 +52,6 @@ params <- list(
   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
   )
-calc_haz_psm(0:10, ptdata=bosonc, dpam=params, type="simple")
-calc_haz_psm(0:10, ptdata=bosonc, dpam=params, type="complex")
+calc_haz_psm(0:10, ptdata=bosonc, dpam=params, psmtype="simple")
+calc_haz_psm(0:10, ptdata=bosonc, dpam=params, psmtype="complex")
 }

@@ -51,26 +51,30 @@
 #' drmd_psm(dpam=params)
 #' # Add a lifetable constraint
 #' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-#' drmd_psm(dpam=params, lifetable=ltable)
-drmd_psm <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
+#' drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)
+drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
   Tw <- tvec <- pfprob <- osprob <- adjosprob <- adjfac <- adjprob <- vn <- NULL
   # Time horizon in weeks (ceiling)
   Tw <- convert_yrs2wks(Ty)
   # Create time vector, with half-cycle addition
   tvec <- timestep*(1:floor(Tw/timestep)) + timestep/2
-  # Membership probabilities with lifetable constraint
+  # Obtain all the hazards
+  allh <- calc_haz_psm(timevar=tvec, ptdata=ptdata, dpam=dpam, psmtype=psmtype)$adj
+  # PFS and OS probabilties from PSM
   pfprob <- prob_pf_psm(tvec, dpam)
   osprob <- prob_os_psm(tvec, dpam)
-  adjosprob <- constrain_survprob(osprob, lifetable=lifetable, timevec=tvec)
-  adjfac <- adjosprob/osprob
-  adjfac[is.na(adjfac)] <- 1
-  adjpfprob <- pfprob * adjfac
+  # OS and PFS may be constrained already by definitions of PPD and PPS
+  maxos <- exp(-cumsum(allh$os))
+  maxpfs <- exp(-cumsum(allh$pfs))
+  # Further constrain OS by lifetable
+  conos <- constrain_survprob(pmin(maxos, osprob), lifetable=lifetable, timevec=tvec)
+  conpfs <- constrain_survprob(pmin(maxpfs, pfprob), lifetable=lifetable, timevec=tvec)
   # Discount factor
   vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
   # Calculate RMDs
-  pf <- sum(adjpfprob*vn) * timestep
-  os <- sum(adjosprob*vn) * timestep
+  pf <- sum(conpfs*vn) * timestep
+  os <- sum(conos*vn) * timestep
   # Return values
   return(list(pf=pf, pd=os-pf, os=os))
 }

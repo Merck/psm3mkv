@@ -56,9 +56,9 @@
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
-#' calc_haz_psm(0:10, dpam=params, type="simple")
-#' calc_haz_psm(0:10, dpam=params, type="complex")
-calc_haz_psm <- function(timevar, dpam, type) {
+#' calc_haz_psm(0:10, ptdata=bosonc, dpam=params, psmtype="simple")
+#' calc_haz_psm(0:10, ptdata=bosonc, dpam=params, psmtype="complex")
+calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
   # Declare local variables
   pfs.ts <- pfs.type <- pfs.spec <- NULL
   os.ts <- os.type <- os.spec <- NULL
@@ -89,12 +89,13 @@ calc_haz_psm <- function(timevar, dpam, type) {
   progfrac <- max(0, min(1, ne_ttp/ne_pfs))
   http_simple <- progfrac*hpf
   # TTP
-  http <- http_simple*(type=="simple") + http_complex*(type!="simple")
+  typeflag <- ifelse(psmtype=="simple", 1, 0)
+  http <- http_simple*typeflag + http_complex*(1-typeflag)
   # PPD
   hppd_unadj <- hpf-http
   hppd_simple <- pmax(0, pmin((1-progfrac)*hpf, sos*hos/spf))
   hppd_complex <- pmax(0, pmin(hpf-http, sos*hos/spf))
-  hppd <- hppd_simple*(type=="simple") + hppd_complex*(type!="simple")
+  hppd <- hppd_simple*typeflag + hppd_complex*(1-typeflag)
   # PPS
   hpps_unadj <- (sos*hos-spf*hppd)/(sos-spf)
   hpps <- pmax(0, pmin(hpps_unadj, 5000))
@@ -146,12 +147,12 @@ calc_haz_psm <- function(timevar, dpam, type) {
 #' #   ptdata=bosonc,
 #' #   dpam=params,
 #' #   type="simple")
-calc_surv_psmpps <- function(totime, fromtime=0, dpam, type="simple") {
+calc_surv_psmpps <- function(totime, fromtime=0, dpam, psmtype="simple") {
   # Declare local variables
   cumH <- NULL
   # Hazard function
   hazfn <- function(x) {
-    calc_haz_psm(timevar=x, dpam=dpam, type=type)$adj$pps
+    calc_haz_psm(timevar=x, dpam=dpam, psmtype=psmtype)$adj$pps
   }
   # Cum hazard function
   cumhazfn <- function(ptrow) {
@@ -175,7 +176,7 @@ calc_surv_psmpps <- function(totime, fromtime=0, dpam, type="simple") {
 #' @param psmtype Type of PSM - simple or complex
 #' @importFrom rlang .data
 #' @return `adj` is the hazard adjusted for constraints, `unadj` is the unadjusted hazard
-pickout_psmhaz <- function(timevar, endpoint, dpam, psmtype) {
+pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
   # Run calculation of all hazards
   allhaz <- calc_haz_psm(timevar, dpam, psmtype)
   # Required hazard, unadjusted
@@ -197,7 +198,7 @@ pickout_psmhaz <- function(timevar, endpoint, dpam, psmtype) {
     .default = NA
   )
   # Return adjusted and unadjusted hazard
-  return(list(adj=h_adj, unadj=h_unadj))
+  return(list(adj=h_adj, unadj=h_unadj, alladj=allhaz$adj))
 }
 
 #' Graph the PSM hazard functions
