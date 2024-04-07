@@ -4,16 +4,16 @@
 \alias{calc_surv_psmpps}
 \title{Derive PPS survival function under a PSM}
 \usage{
-calc_surv_psmpps(totime, fromtime = 0, dpam, psmtype = "simple")
+calc_surv_psmpps(totime, fromtime = 0, ptdata, dpam, psmtype = "simple")
 }
 \arguments{
 \item{totime}{Vector of times to which the survival function is calculated}
 
 \item{fromtime}{Vector of times from which the survival function is calculated}
 
-\item{dpam}{List of fitted survival models for each endpoint}
-
 \item{ptdata}{Patient-level dataset}
+
+\item{dpam}{List of fitted survival models for each endpoint}
 
 \item{type}{Either "simple" or "complex" PSM formulation}
 }
