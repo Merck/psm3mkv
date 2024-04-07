@@ -56,9 +56,9 @@
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
-#' calc_haz_psm(0:10, ptdata=bosonc, dpam=params, type="simple")
-#' calc_haz_psm(0:10, ptdata=bosonc, dpam=params, type="complex")
-calc_haz_psm <- function(timevar, ptdata, dpam, type) {
+#' calc_haz_psm(0:10, dpam=params, type="simple")
+#' calc_haz_psm(0:10, dpam=params, type="complex")
+calc_haz_psm <- function(timevar, dpam, type) {
   # Declare local variables
   pfs.ts <- pfs.type <- pfs.spec <- NULL
   os.ts <- os.type <- os.spec <- NULL
@@ -146,12 +146,12 @@ calc_haz_psm <- function(timevar, ptdata, dpam, type) {
 #' #   ptdata=bosonc,
 #' #   dpam=params,
 #' #   type="simple")
-calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
+calc_surv_psmpps <- function(totime, fromtime=0, dpam, type="simple") {
   # Declare local variables
   cumH <- NULL
   # Hazard function
   hazfn <- function(x) {
-    calc_haz_psm(timevar=x, ptdata=ptdata, dpam=dpam, type=type)$adj$pps
+    calc_haz_psm(timevar=x, dpam=dpam, type=type)$adj$pps
   }
   # Cum hazard function
   cumhazfn <- function(ptrow) {
@@ -175,9 +175,9 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, type="simple") {
 #' @param psmtype Type of PSM - simple or complex
 #' @importFrom rlang .data
 #' @return `adj` is the hazard adjusted for constraints, `unadj` is the unadjusted hazard
-pickout_psmhaz <- function(timevar, endpoint, ptdata, dpam, psmtype) {
+pickout_psmhaz <- function(timevar, endpoint, dpam, psmtype) {
   # Run calculation of all hazards
-  allhaz <- calc_haz_psm(timevar, ptdata, dpam, psmtype)
+  allhaz <- calc_haz_psm(timevar, dpam, psmtype)
   # Required hazard, unadjusted
   h_unadj <- dplyr::case_when(
     endpoint=="TTP" ~ allhaz$unadj$ttp,
@@ -201,7 +201,7 @@ pickout_psmhaz <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 }
 
 #' Graph the PSM hazard functions
-#' @description EXPERIMENTAL. Graph the PSM hazard functions
+#' @description Graph the PSM hazard functions
 #' @inheritParams pickout_psmhaz
 #' @inherit pickout_psmhaz return
 #' @importFrom rlang .data
@@ -232,8 +232,8 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Pull out hazards to plot (inefficiently calls function twice, but is quite quick)
-  adjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$adj)
-  unadjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$unadj)
+  adjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, dpam, psmtype)$adj)
+  unadjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, dpam, psmtype)$unadj)
   # Create dataset for graphic
   result_data <- dplyr::tibble(Time=timevar, Adjusted=adjhaz, Unadjusted=unadjhaz) |>
       tidyr::pivot_longer(cols=c(Adjusted, Unadjusted),
@@ -246,7 +246,7 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 }
 
 #' Graph the PSM survival functions
-#' @description EXPERIMENTAL. Graph the PSM survival functions
+#' @description Graph the PSM survival functions
 #' @inheritParams graph_psm_hazards
 #' @inherit graph_psm_hazards return
 #' @importFrom rlang .data
@@ -274,18 +274,18 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 #' # dpam=params,
 #' # psmtype="simple")
 #' # psms_simple$graph
-graph_psm_survs <- function(timevar, endpoint, ptdata, dpam, psmtype) {
+graph_psm_survs <- function(timevar, endpoint, dpam, psmtype) {
   # Declare local variables
   Adjusted <- Unadjusted <- Time <- Survival <- Method <- NULL
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Unadjusted hazard
   haz_unadj <- function(time) {
-    pickout_psmhaz(time, endpoint, ptdata, dpam, psmtype)$unadj
+    pickout_psmhaz(time, endpoint, dpam, psmtype)$unadj
   }
   # Adjusted hazard
   haz_adj <- function(time) {
-    pickout_psmhaz(time, endpoint, ptdata, dpam, psmtype)$adj
+    pickout_psmhaz(time, endpoint, dpam, psmtype)$adj
   }
   # Unadjusted cumulative hazard
   cumhaz_unadj <- function(time) {
