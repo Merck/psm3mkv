@@ -59,7 +59,7 @@
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
-#' drmd_psm(dpam=params)
+#' drmd_psm(ptdata=bosonc, dpam=params)
 #' # Add a lifetable constraint
 #' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
 #' drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)
@@ -114,7 +114,7 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
 #' drmd_stm_cf(dpam=params, lifetable=ltable)
 drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
-  Tw <- tvec <- ppd.ts <- ttp.ts <- sppd <- sttp <- sos <- NULL
+  Tw <- tvec <- ppd.ts <- ttp.ts <- pps.ts <- NULsppd <- sttp <- sos <- NULL
   adjsppd <- adjos <- vn <- pf <- os <- NULL
   # Time horizon in weeks (ceiling)
   Tw <- convert_yrs2wks(Ty)
@@ -124,27 +124,20 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   ppd.ts <- convert_fit2spec(dpam$ppd)
   ttp.ts <- convert_fit2spec(dpam$ttp)
   pps.ts <- convert_fit2spec(dpam$pps_cf)
-  # Calculate S_PPD, S_TTP and S_PPS
+  # Obtain hazard and survival functions
+  hppd <- tvec |> purrr::map_dbl(~calc_haz(.x, ppd.ts$type, ppd.ts$spec))
+  http <- tvec |> purrr::map_dbl(~calc_haz(.x, ttp.ts$type, ttp.ts$spec))
+  hpps <- tvec |> purrr::map_dbl(~calc_haz(.x, pps.ts$type, pps.ts$spec))
   sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, ppd.ts$type, ppd.ts$spec))
   sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, ttp.ts$type, ttp.ts$spec))
-  sppst <- tvec |> purrr::map_dbl(~calc_surv(.x, pps.ts$type, pps.ts$spec))
+  spps <- tvec |> purrr::map_dbl(~calc_surv(.x, pps.ts$type, pps.ts$spec))
   # Derive the constrained S_PPD and S_PFS
   con.sppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
-  con.spfs <- sttp*con.sppd
-  lxt <- calc_ltsurv(timevec, lifetable=lifetable)
-  con.sppst <- constrain_survprob(sppst, lifetable=lifetable, timevec=tvec)
-  # Probability of PD, starting from PD
-  integrand <- function(u) {
-    local.sttp <- calc_surv(u, ttp.ts$type, ttp.ts$spec)
-    local.sppd <- calc_surv(u, ppd.ts$type, ppd.ts$spec)
-    local.http <- calc_haz(u, ttp.ts$type, ttp.ts$spec)
-    local.sppsu <- calc_surv(u, pps.ts$type, pps.ts$spec)
-    lxu <- calc_ltsurv(u, lifetable=lifetable)
-    con.spps <- pmin(lxt/lxu, sppst/local.sppsu)
-    ifelse(local.sppsu==0, 0, local.sttp*local.sppd*local.http*con.spps)
-  }
-  integrand <- Vectorize(integrand, "u")
-  con.probpd <- stats::integrate(integrand, lower=0, upper=tvec)
+  con.spps <- constrain_survprob(spps, lifetable=lifetable, timevec=tvec)
+  # Partial prob PD
+  con.partprobpd <- sttp*con.sppd*http/con.spps
+  con.partprobpd[con.spps==0] <- 0
+  con.probpd <- con.spps * cumsum(con.partprobpd)
   # Discount factor
   vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
   # Calculate RMDs
