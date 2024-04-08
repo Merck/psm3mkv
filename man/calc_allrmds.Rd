@@ -8,6 +8,7 @@ calc_allrmds(
   simdat,
   inclset = 0,
   dpam,
+  psmtype = "simple",
   cuttime = 0,
   Ty = 10,
   lifetable = NA,
@@ -31,6 +32,8 @@ calc_allrmds(
 \item{inclset}{Vector to indicate which patients to include in analysis}
 
 \item{dpam}{List of statistical fits to each endpoint required in PSM, STM-CF and STM-CR models.}
+
+\item{psmtype}{Either "simple" or "complex" PSM formulation}
 
 \item{cuttime}{Time cutoff - this is nonzero for two-piece models.}
 
