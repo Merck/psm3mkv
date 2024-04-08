@@ -97,8 +97,8 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
 #' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
 #' calc_ltsurv(c(2, 2.5, 9.3), ltable)
 calc_ltsurv <- function(looktime, lifetable=NA){
-  if (lifetable$lttime[1]!=0) {stop("Lifetable must run from time zero")}
   if (!is.data.frame(lifetable)) {return(rep(1, length(looktime)))}
+  if (lifetable$lttime[1]!=0) {stop("Lifetable must run from time zero")}
   vlookup(looktime, lifetable$lttime, lifetable$lx) / lifetable$lx[1]
 }
 

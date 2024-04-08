@@ -192,8 +192,8 @@ drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
     i.sttp <- calc_surv(u, ttp.ts$type, ttp.ts$spec)
     i.u.sppd <- calc_surv(u, ppd.ts$type, ppd.ts$spec)
     i.u.spps <- calc_surv(t-u, pps.ts$type, pps.ts$spec)
-    i.slxu <- calc_ltsurv(u, lifetable=lifetable)
-    i.slxt <- calc_ltsurv(t, lifetable=lifetable)
+    i.slxu <- calc_ltsurv(convert_wks2yrs(u), lifetable=lifetable)
+    i.slxt <- calc_ltsurv(convert_wks2yrs(t), lifetable=lifetable)
     i.c.sppd <- pmin(i.u.sppd, i.slxu)
     i.c.spps <- pmin(i.u.spps, i.slxt/i.slxu)
     i.c.spps[i.slxu==0] <- 0

@@ -41,7 +41,7 @@ stmcf_drmd_wi <- drmd_stm_cf(dpam=params, lifetable=ltable)
 stmcr_drmd_wi <- drmd_stm_cr(dpam=params, lifetable=ltable)
 
 # Check that discretized results without lifetables are close to integral results
-# 'Close to' = within 5%
+# 'Close to' = within +/-5%
 margin <- 0.05
 
 test_that("Discretized results <= integral results + margin", {
