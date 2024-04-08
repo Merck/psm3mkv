@@ -180,21 +180,39 @@ drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Pull out type and spec for PPD and TTP
   ppd.ts <- convert_fit2spec(dpam$ppd)
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  # Calculate S_PPD, S_TTP and S_OS
+  pps.ts <- convert_fit2spec(dpam$pps_cr)
+  # Obtain unconstrained survival functions
   sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, ppd.ts$type, ppd.ts$spec))
   sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, ttp.ts$type, ttp.ts$spec))
-  # Next line is the difference with STM-CF
-  sos <- prob_os_stm_cr(tvec, dpam)
-  # Apply constraints to S_PPD and S_OS
-  adjsppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
-  adjos <- constrain_survprob(sos, lifetable=lifetable, timevec=tvec)
+  # Derive the constrained S_PPD
+  c.sppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
+  # Integrand with constraints on S_PPD and S_PPS
+  integrand <- function(u, t) {
+    i.http <- calc_haz(u, ttp.ts$type, ttp.ts$spec)
+    i.sttp <- calc_surv(u, ttp.ts$type, ttp.ts$spec)
+    i.u.sppd <- calc_surv(u, ppd.ts$type, ppd.ts$spec)
+    i.u.spps <- calc_surv(u-t, pps.ts$type, pps.ts$spec)
+    i.slxu <- calc_ltsurv(u, lifetable=lifetable)
+    i.slxt <- calc_ltsurv(t, lifetable=lifetable)
+    i.c.sppd <- pmin(i.u.sppd, i.slxu)
+    i.c.spps <- pmin(i.u.spps, i.slxt/i.slxu)  
+    i.c.sppd * i.sttp * i.http * i.c.spps
+  }
+  integrand <- Vectorize(integrand, "u")
+  # PD membership probability is the integral
+  probpd <- function(t) {
+    stats::integrate(integrand, lower=0, upper=t, t=t)$value
+  }
+  probpd <- Vectorize(probpd, "t")
+  # Calculate the PD membership probability for each time
+  c.probpd <- probpd(tvec)
   # Discount factor
   vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
   # Calculate RMDs
-  pf <- sum(sttp*adjsppd*vn) * timestep
-  os <- sum(adjos*vn) * timestep
+  pf <- sum(sttp*c.sppd*vn) * timestep
+  pd <- sum(c.probpd*vn) * timestep
   # Return values
-  return(list(pf=pf, pd=os-pf, os=os))
+  return(list(pf=pf, pd=pd, os=pf+pd))
 }
 
 
