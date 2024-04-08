@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Introduction
+
 This is the second in a series of vignettes illustrating methods for evaluating the fit and efficiency of three state oncology cost-effectiveness model structures, as described in an accompanying journal article.[1] The package is heavily dependent on [flexsurv](https://cran.r-project.org/package=flexsurv)).[2]
 
 After fitting models, as described in `vignette("example")`, estimates of Restricted Mean Durations (RMDs) in health states can be calculated after constraining for background mortality from a given life table.
@@ -24,36 +26,6 @@ After fitting models, as described in `vignette("example")`, estimates of Restri
 ### Notation
 
 We denote functions of survival, hazard and cumulative hazard as $S(t), h(t)$ and $H(t)$. There are 'unadjusted' values for relevant endpoints (e.g. PFS) dependent on the model structure (PSM, STM-CF or STM-CR). We assume that there is a 'general background mortality', against which any extrapolations and derivations of RMD should be constrained, denoted with subscript 'gen'. Consequently there are 'adjusted' values, denoted with superscript 'adj'.
-
-## What does constraining for background mortality mean?
-
-There are a number of approaches applied in literature and HTA submissions, so it could mean several things!
-
-### Approach 1 - Constraining only the survival function
-
-Under this approach, the background mortality is assumed to limit the survival function as follows. There is no direct constraint to the hazard.
-
-$$
-S^{adj}(t) = \min \left[ S(t), S_{gen}(t) \right]
-$$
-
-This is a simple approach, and has been used at least one NICE technology appraisal: "Patient longevity is always the lesser of values generated from the disease-specific survival curve (after adjustment for treatment and functional status) and the survival curve for the general population according to age and sex." [3] However, this approach does not ensure that the hazard is at least as great as the hazard of background mortality.
-
-### Approach 2 - Constraining the hazard function
-
-A more rigorous adjustment would be that the hazard of background mortality acts as a constraint to the unadjusted hazard.[4]
-
-$$
-h^{adj}(t) = \max \left[ h(t), h_{gen}(t) \right]
-$$
-$$
-\implies S^{adj}(t) = \exp \left[ - \int_0^t h^{adj}(u) du \right]
-$$
-In either case, we must assume that the original dataset was NOT subject to background mortality. Although unlikely to be true, this is a common, pragmatic assumption in cost-effectiveness models as long as background mortality is relatively insignificant during trial follow-up.
-
-### Approach 3 - Modeling excess hazard in the original dataset
-
-The above approaches work by adjusting extrapolations made from models fitted to data assumed to be not subject to background mortality. If - as is likely - the population in the dataset were in fact subject to background mortality, then it would be better to model that dataset using excess hazard methods rather than to seek to make adjustments to extrapolations after the fact. Further discussion of survival extrapolation incorporating general population mortality is provided by Sweeting et al.[4]
 
 ### Background mortality survival and hazard functions
 
@@ -72,6 +44,40 @@ $$
 h_{gen}(t) = \frac{\log[S_{gen}(t_1)] - \log[S_{gen}(t_2)]}{t_2 - t_1}
 $$
 
+## What does constraining for background mortality mean?
+
+There are a number of approaches applied in literature and HTA submissions, so it could mean several things!
+
+### Approach 1 - Constraining only the survival function
+
+Under this approach, the background mortality is assumed to limit the survival function as follows. There is no direct constraint to the hazard.
+
+$$
+S^{adj}(t) = \min \left[ S(t), S_{gen}(t) \right]
+$$
+
+This is a simple approach, and has been used at least one NICE technology appraisal:
+
+*"Patient longevity is always the lesser of values generated from the disease-specific survival curve (after adjustment for treatment and functional status) and the survival curve for the general population according to age and sex."[3]*
+
+However, this approach does not ensure that the hazard is at least as great as the hazard of background mortality.
+
+### Approach 2 - Constraining the hazard function
+
+A more rigorous adjustment would be that the hazard of background mortality acts as a constraint to the unadjusted hazard.[4]
+
+$$
+h^{adj}(t) = \max \left[ h(t), h_{gen}(t) \right]
+$$
+$$
+\implies S^{adj}(t) = \exp \left[ - \int_0^t h^{adj}(u) du \right]
+$$
+In either case, we must assume that the original dataset was NOT subject to background mortality. Although unlikely to be true, this is a common, pragmatic assumption in cost-effectiveness models as long as background mortality is relatively insignificant during trial follow-up.
+
+### Approach 3 - Modeling excess hazard in the original dataset
+
+The above approaches work by adjusting extrapolations made from models fitted to data assumed to be not subject to background mortality. If - as is likely - the population in the dataset were in fact subject to background mortality, then it would be better to model that dataset using excess hazard methods rather than to seek to make adjustments to extrapolations after the fact. Further discussion of survival extrapolation incorporating general population mortality is provided by Sweeting et al.[4]
+
 ## Application to 3-state State Transition Models (STMs)
 
 As discussed previously, state transition models with three states may be clock forward ('STM-CF') or 'clock reset' (STM-CR). Such structures involve modeling each transition directly, which may be performed by fitting survival distributions to the TTP, PPD and PPS endpoints.
@@ -89,13 +95,15 @@ This is straightforward enough for the PPD endpoint in the STM-CF and STM-CR str
 
 Spreadsheet-based economic models almost always rely on discretizing time into timesteps rather than follow the integral formulas described above for continuous time. As long as timesteps are reasonably short, restricted mean duration results should remain reasonably accurate. Derided as a "kludge", half-cycle corrections are nevertheless recommended.[5] The package provides discretized calculations.
 
-## Applicaion to Partitioned Survival Models (PSM)
+## Application to Partitioned Survival Models (PSM)
 
 The RMD in the PF state and time alive are integrals over the time horizon, $T$, of the survival functions of the endpoints PFS and OS. Endpoints PPD and PPS are not explicitly defined.
 
-However as discussed in the accompanying manuscript, TTP - and therefore the PPD and PPS endpoints which directly follow - are often in practice implicitly defined in PSM economic model in order to calculate payoffs that depend on progression events. Two methods are possible:
-* Simple - the hazard of TTP relative to PFS is proportionate to the progression events observed over the follow-up period relative to the total number of observed PFS events.
-* Complex - the hazard of TTP is directly modeled by fitting survival distributions as with other endpoints.
+However as discussed in the accompanying manuscript, TTP - and therefore the PPD and PPS endpoints which directly follow once PFS and OS are defined - are often in practice implicitly defined in PSM economic model in order to calculate payoffs that depend on progression events. Two methods are possible:
+
+* Simple (default): the hazard of TTP relative to PFS is proportionate to the progression events observed over the follow-up period relative to the total number of observed PFS events.
+
+* Complex: the hazard of TTP is directly modeled by fitting survival distributions as with other endpoints.
 
 The adjustment to RMD estimates can then proceed as with the STMs, with hazards and survival functions of TTP, PPD and PPS that reflect the PSM structure (in which PFS and OS endpoints are first estimated), a chosen model of progression (simple or complex), and then finally the adjustment to PPD and PPS for background mortality.
 
@@ -181,6 +189,8 @@ ltable <- tibble::tibble(lttime=mort$Timey, lx=mort$adjlx)
 head(ltable)
 ```
 
+### Obtaining and fitting distributions to patient-level data
+
 Next we get some patient-level data and fit the PSM and STMs. So far, we are closely following `vignette("example")`. Time is assumed to be recorded in the patient-level data in weeks, with approximately `r round(365.25/7,2)` weeks per year.
 
 ```{r datafit}
@@ -231,12 +241,10 @@ thoz <- 10
 proj1 <- calc_allrmds(bosonc, dpam=params, Ty=thoz)
 
 # Present the results
-res1 <- proj1$results |> dplyr::mutate(method="int", lxadj="no")
+res1 <- proj1$results |> dplyr::mutate(method="int", lxadj="no", psmmeth="simple")
 res1 |> dplyr::mutate(
   dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
 ```
-
-In this example, there were problems estimating the RMD in the PD and OS states in the STM-CF model, which should normally be investigated.
 
 Next we derive a projection using a discretization approximation, still without any lifetable constraints.
 
@@ -246,12 +254,12 @@ proj2 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, rmdmethod="disc")
 
 # Present the results
 res2 <- proj2$results |>
-  dplyr::mutate(method="disc", lxadj="no")
+  dplyr::mutate(method="disc", lxadj="no", psmmeth="simple")
 res2 |> dplyr::mutate(
   dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
 ```
 
-Discretization has proven fairly accurate. The State Transition Model Clock Reset (STM-CR) estimate of mean time alive has reduced by just `r round(res1$os[3]-res2$os[3],1)` weeks for example, from `r round(res1$os[3],1)` to `r round(res2$os[3],1)` weeks.
+Discretization has proven fairly accurate. The STM-CR estimate of mean time alive has reduced by just `r round(res1$os[3]-res2$os[3],1)` weeks for example, from `r round(res1$os[3],1)` to `r round(res2$os[3],1)` weeks.
 
 Finally, we use a discretization approximation and apply the lifetable constraints.
 
@@ -261,16 +269,39 @@ proj3 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, rmdmethod="disc", lifetable=
 
 # Present the results
 res3 <- proj3$results |>
-  dplyr::mutate(method="disc", lxadj="yes")
+  dplyr::mutate(method="disc", lxadj="yes", psmmeth="simple")
 res3 |> dplyr::mutate(
     dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+
+# Proportion of time alive spent in PF
+proppf3 <- res3$pf/res3$os
 ```
 
-The estimate of mean time alive has reduced by `r round(res1$os[3]-res3$os[3],1)` weeks for example, from `r round(res1$os[3],1)` originally to `r round(res3$os[3],1)` weeks now.
+There is now a large difference between the STM-CR compared to the STM-CF and PSM structures. All structures estimate fairly similar RMD estimates of being alive (range: `r round(min(res3$os),1)` to `r round(max(res3$os),1)` weeks). The estimate of mean time alive in the STM-CR structure has reduced by `r round(res1$os[3]-res3$os[3],1)` weeks from `r round(res1$os[3],1)` to `r round(res3$os[3],1)` weeks.
+
+The proportion of that time in the PF rather than PD state varies considerably (PSM: `r round(100*proppf3[1], 1)`%, STM-CF: `r round(100*proppf3[2], 1)`%, STM-CR: `r round(100*proppf3[3], 1)`%). Given that the hazard of mortality would typically be lower before rather than after progression, the pre-progression mortality is likely to be more affected by any mortality constraint that post-progression mortality. The STM-CR model of post-progression survival depends on time from progression and is therefore rather different from the STM-CF and PSM structures, which model mortality based on time from baseline.
+
+We can check whether using a 'complex' type of PSM structure rather than the default 'simple' affects RMD estimates from the PSM structure.
+
+```{r proj4}
+# Run the calculations
+proj4 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, psmtype="complex", rmdmethod="disc", lifetable=ltable)
+
+# Present the results
+res4 <- proj4$results |>
+  dplyr::mutate(method="disc", lxadj="yes", psmmeth="complex")
+res4 |> dplyr::mutate(
+    dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+
+# Proportion of time alive spent in PF
+proppf4 <- res4$pf/res4$os
+```
+
+All structures estimate fairly similar RMD estimates of being alive (range: `r round(min(res4$os),1)` to `r round(max(res4$os),1)` weeks). The proportion of that time in the PF rather than PD state varied again considerably by model structure (PSM: `r round(100*proppf4[1], 1)`%, STM-CF: `r round(100*proppf4[2], 1)`%, STM-CR: `r round(100*proppf4[3], 1)`%). 
 
 ### Comparing the results
 
-A summary of the STM-CR estimates of mean time in PF is given in the table below.
+A summary of the STM-CR estimates of mean time in PF state and mean time alive is given in the table below.
 
 |Model | Mean time in PF (weeks) | Change (weeks) | Mean time alive (weeks) | Change (weeks) |
 |:---------------|:----------|:----------|:----------|:----------|
@@ -279,6 +310,17 @@ A summary of the STM-CR estimates of mean time in PF is given in the table below
 | With lifetable constraint, discretized calculation | `r round(res3$pf[3],1)` | `r round(res3$pf[3]-res1$pf[3],1)` | `r round(res3$os[3],1)` | `r round(res3$os[3]-res1$os[3],1)` |
 
 In this fictional case, the application of a lifetable constraint had fairly sizeable effects on the results - although this was by design of this demonstration. The vignette focussed on the STM-CR model, although other model structures were fitted and estimated also. The package also allows application of discounting through the `discrate` optional call to `calc_allrnds()`.
+
+A summary of the PSM estimates of mean time in PF state and mean time alive is given in the table below.
+
+|Model | Mean time in PF (weeks) | Change (weeks) | Mean time alive (weeks) | Change (weeks) |
+|:---------------|:----------|:----------|:----------|:----------|
+| No lifetable constraint, integral methods, simple PSM | `r round(res1$pf[1],1)` | - | `r round(res1$os[1],1)` | - |
+| No lifetable constraint, discretized calculation, simple PSM | `r round(res2$pf[1],1)` | `r round(res2$pf[1]-res1$pf[1],1)` | `r round(res2$os[1],1)` | `r round(res2$os[1]-res1$os[1],1)` |
+| With lifetable constraint, discretized calculation, simple PSM | `r round(res3$pf[1],1)` | `r round(res3$pf[1]-res1$pf[1],1)` | `r round(res3$os[1],1)` | `r round(res3$os[1]-res1$os[1],1)` |
+| With lifetable constraint, discretized calculation, complex PSM | `r round(res4$pf[1],1)` | `r round(res4$pf[1]-res1$pf[1],1)` | `r round(res4$os[1],1)` | `r round(res4$os[1]-res1$os[1],1)` |
+
+The change in the RMDs for the 'complex' PSM structure compared to the 'simple' PSM structure were `r round(res4$pf[1]-res3$pf[1], 1)`, `r round(res4$pd[1]-res3$pd[1], 1)` and `r round(res4$os[1]-res3$os[1], 1)` weeks respectively for time in PF state, PD state and time alive.
 
 ## References
 

@@ -69,7 +69,7 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
   # Time horizon in weeks (ceiling)
   Tw <- convert_yrs2wks(Ty)
   # Create time vector, with half-cycle addition
-  tvec <- timestep*(1:floor(Tw/timestep)) + timestep/2
+  tvec <- timestep*(0:floor(Tw/timestep)) + timestep/2
   # Obtain all the hazards
   allh <- calc_haz_psm(timevar=tvec, ptdata=ptdata, dpam=dpam, psmtype=psmtype)$adj
   # PFS and OS probabilties from PSM
@@ -119,25 +119,39 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Time horizon in weeks (ceiling)
   Tw <- convert_yrs2wks(Ty)
   # Create time vector, with half-cycle addition
-  tvec <- timestep*(1:floor(Tw/timestep)) + timestep/2
+  tvec <- timestep*(0:floor(Tw/timestep)) + timestep/2
   # Pull out type and spec for PPD and TTP
   ppd.ts <- convert_fit2spec(dpam$ppd)
   ttp.ts <- convert_fit2spec(dpam$ttp)
-  # Calculate S_PPD, S_TTP and S_OS
+  pps.ts <- convert_fit2spec(dpam$pps_cf)
+  # Calculate S_PPD, S_TTP and S_PPS
   sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, ppd.ts$type, ppd.ts$spec))
   sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, ttp.ts$type, ttp.ts$spec))
-  # Next line is the difference with STM-CR
-  sos <- prob_os_stm_cf(tvec, dpam)
-  # Apply constraints to S_PPD and S_OS
-  adjsppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
-  adjos <- constrain_survprob(sos, lifetable=lifetable, timevec=tvec)
+  sppst <- tvec |> purrr::map_dbl(~calc_surv(.x, pps.ts$type, pps.ts$spec))
+  # Derive the constrained S_PPD and S_PFS
+  con.sppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
+  con.spfs <- sttp*con.sppd
+  lxt <- calc_ltsurv(timevec, lifetable=lifetable)
+  con.sppst <- constrain_survprob(sppst, lifetable=lifetable, timevec=tvec)
+  # Probability of PD, starting from PD
+  integrand <- function(u) {
+    local.sttp <- calc_surv(u, ttp.ts$type, ttp.ts$spec)
+    local.sppd <- calc_surv(u, ppd.ts$type, ppd.ts$spec)
+    local.http <- calc_haz(u, ttp.ts$type, ttp.ts$spec)
+    local.sppsu <- calc_surv(u, pps.ts$type, pps.ts$spec)
+    lxu <- calc_ltsurv(u, lifetable=lifetable)
+    con.spps <- pmin(lxt/lxu, sppst/local.sppsu)
+    ifelse(local.sppsu==0, 0, local.sttp*local.sppd*local.http*con.spps)
+  }
+  integrand <- Vectorize(integrand, "u")
+  con.probpd <- stats::integrate(integrand, lower=0, upper=tvec)
   # Discount factor
   vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
   # Calculate RMDs
-  pf <- sum(sttp*adjsppd*vn) * timestep
-  os <- sum(adjos*vn) * timestep
+  pf <- sum(con.spfs*vn) * timestep
+  pd <- sum(con.probpd*vn) * timestep
   # Return values
-  return(list(pf=pf, pd=os-pf, os=os))
+  return(list(pf=pf, pd=pd, os=pf+pd))
 }
 
 #' Discretized Restricted Mean Duration calculation for State Transition Model Clock Reset structure
@@ -169,7 +183,7 @@ drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Time horizon in weeks (ceiling)
   Tw <- convert_yrs2wks(Ty)
   # Create time vector, with half-cycle addition
-  tvec <- timestep*(1:floor(Tw/timestep)) + timestep/2
+  tvec <- timestep*(0:floor(Tw/timestep)) + timestep/2
   # Pull out type and spec for PPD and TTP
   ppd.ts <- convert_fit2spec(dpam$ppd)
   ttp.ts <- convert_fit2spec(dpam$ttp)
