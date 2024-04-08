@@ -97,7 +97,10 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
 #' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
 #' calc_ltsurv(c(2, 2.5, 9.3), ltable)
 calc_ltsurv <- function(looktime, lifetable=NA){
-  if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
+  if (!is.data.frame(lifetable)) {
+    warning("Lifetable is not specified")
+    return(rep(1, length(looktime)))
+  }
   if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
   vlookup(looktime, lifetable$lttime, lifetable$lx) / lifetable$lx[1]
 }
@@ -202,7 +205,7 @@ constrain_survprob <- function(survprob1, survprob2=NA, lifetable=NA, timevec=0:
     slx[i] <- ifelse(lxprob[i-1]==0, 1, lxprob[i]/lxprob[i-1])
     sprob[i] <- ifelse(survprob1[i-1]==0, 1, survprob1[i]/survprob1[i-1])
     sprob[i] <- ifelse(s2exists,
-                       ifelse(survprob2[i-1]==0, 1,
+                       ifelse(survprob2[i-1]==0, sprob[i],
                                  pmin(sprob[i], survprob2[i]/survprob2[i-1])),
                         sprob[i])
     adjsurv[i] <- adjsurv[i-1] * pmin(slx[i], sprob[i])
