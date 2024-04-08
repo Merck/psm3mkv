@@ -443,6 +443,7 @@ calc_rmd_first <- function(ds, cuttime) {
 #' @param cuttime Time cutoff - this is nonzero for two-piece models.
 #' @param Ty Time duration over which to calculate. Assumes input is in years, and patient-level data is recorded in weeks.
 #' @param dpam List of statistical fits to each endpoint required in PSM, STM-CF and STM-CR models.
+#' @param psmtype Either "simple" or "complex" PSM formulation
 #' @param lifetable Optional, a life table. Columns must include `lttime` (time in years, or 52.18 times shorter than the time index elsewhere, starting from zero) and `lx`
 #' @param discrate Discount rate (% per year)
 #' @param rmdmethod can be "int" (default for full integral calculations) or "disc" for approximate discretized calculations
@@ -473,6 +474,7 @@ calc_rmd_first <- function(ds, cuttime) {
 calc_allrmds <- function(simdat,
                          inclset = 0,
                          dpam,
+                         psmtype = "simple",
                          cuttime = 0,
                          Ty = 10,
                          lifetable = NA,
@@ -508,7 +510,7 @@ calc_allrmds <- function(simdat,
     pd_stmcr <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, discrate=discrate)
   } else if (rmdmethod=="disc") {
     if (cuttime>0) {stop("Cannot calculate discretized RMD for two-piece models")}
-    psm_drmd <- drmd_psm(dpam, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
+    psm_drmd <- drmd_psm(ptdata=bosonc, dpam, psmtype=psmtype, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
     stmcf_drmd <- drmd_stm_cf(dpam, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
     stmcr_drmd <- drmd_stm_cr(dpam, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
     pf_psm <- psm_drmd$pf

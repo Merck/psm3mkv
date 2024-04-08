@@ -97,8 +97,8 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
 #' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
 #' calc_ltsurv(c(2, 2.5, 9.3), ltable)
 calc_ltsurv <- function(looktime, lifetable=NA){
-  if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
-  if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
+  if (!is.data.frame(lifetable)) {return(rep(1, length(looktime)))}
+  if (lifetable$lttime[1]!=0) {stop("Lifetable must run from time zero")}
   vlookup(looktime, lifetable$lttime, lifetable$lx) / lifetable$lx[1]
 }
 
@@ -167,8 +167,9 @@ calc_ex <- function(Ty=10, lifetable, discrate=0) {
 
 #' Constrain survival probabilities according to hazards in a lifetable
 #' Recalculated constrained survival probabilities (by week) as the lower of the original unadjusted survival probability and the survival implied by the given lifetable (assumed indexed as years).
-#' @param survprob (Unconstrained) survival probability value or vector
-#' @param lifetable Lifetable
+#' @param survprob1 (Unconstrained) survival probability value or vector
+#' @param survprob2 Optional survival probability value or vector to constrain on (default = NA)
+#' @param lifetable Lifetable (default = NA)
 #' @param timevec Vector of times corresponding with survival probabilities above
 #' @return Vector of constrained survival probabilities
 #' @export
@@ -178,19 +179,32 @@ calc_ex <- function(Ty=10, lifetable, discrate=0) {
 #' constrain_survprob(survprob, lifetable=ltable)
 #' timevec <- 100*(0:4)
 #' constrain_survprob(survprob, lifetable=ltable, timevec=timevec)
-constrain_survprob <- function(survprob, lifetable, timevec=0:(length(survprob)-1)) {
-  # Check lifetable exists or return survprob
-  if (!is.data.frame(lifetable)) {return(survprob)}
-  # Vector of lifetables
-  lxprob <- calc_ltsurv(convert_wks2yrs(timevec), lifetable)
-  # Length of survprob
-  N <- length(survprob)
+#' survprob2 <- c(1,0.45,0.35,0.15,0)
+#' constrain_survprob(survprob, survprob2)
+constrain_survprob <- function(survprob1, survprob2=NA, lifetable=NA, timevec=0:(length(survprob1)-1)) {
+  # Check what exists
+  s2exists <- !is.na(survprob2)[1]
+  ltexists <- !is.na(lifetable)[1]
+  # Survprob1 and survprob2 must have equal length (when survprob2 is defined)
+  if(s2exists) {
+    stopifnot("Survival probability vectors must have equal length" = length(survprob1)==length(survprob1))
+    }
+  # Vector of lifetables (or ones, if lifetable not specified)
+  tN <- length(timevec)
+  lxprob <- rep(1, tN)
+  if(ltexists) {
+    lxprob <- calc_ltsurv(convert_wks2yrs(timevec), lifetable)
+  }
   # Cycle through each element
-  adjsurv <- slx <- sprob <- rep(NA, N)
-  adjsurv[1] <- survprob[1]
-  for (i in 2:N) {
+  adjsurv <- slx <- sprob <- rep(NA, tN)
+  adjsurv[1] <- survprob1[1]
+  for (i in 2:tN) {
     slx[i] <- ifelse(lxprob[i-1]==0, 1, lxprob[i]/lxprob[i-1])
-    sprob[i] <- ifelse(survprob[i-1]==0, 1, survprob[i]/survprob[i-1])
+    sprob[i] <- ifelse(survprob1[i-1]==0, 1, survprob1[i]/survprob1[i-1])
+    sprob[i] <- ifelse(s2exists,
+                       ifelse(survprob2[i-1]==0, sprob[i],
+                                 pmin(sprob[i], survprob2[i]/survprob2[i-1])),
+                        sprob[i])
     adjsurv[i] <- adjsurv[i-1] * pmin(slx[i], sprob[i])
   }
   return(adjsurv)

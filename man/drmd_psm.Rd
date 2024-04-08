@@ -5,10 +5,33 @@
 \title{Discretized Restricted Mean Duration calculation for Partitioned Survival Model
 Calculate restricted mean duration (RMD) in PF, PD and OS states under a Partitioned Survival Model structure.}
 \usage{
-drmd_psm(dpam, Ty = 10, discrate = 0, lifetable = NA, timestep = 1)
+drmd_psm(
+  ptdata,
+  dpam,
+  psmtype = "simple",
+  Ty = 10,
+  discrate = 0,
+  lifetable = NA,
+  timestep = 1
+)
 }
 \arguments{
+\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
+\itemize{
+\item ptid: patient identifier
+\item pfs.durn: duration of PFS from baseline
+\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+\item os.durn: duration of OS from baseline
+\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+}
+
+Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
+
 \item{dpam}{List of survival regressions for model endpoints. These must include time to progression (TTP) and pre-progression death (PPD).}
+
+\item{psmtype}{Either "simple" or "complex" PSM formulation}
 
 \item{Ty}{Time duration over which to calculate (defaults to 10 years). Assumes input is in years, and patient-level data is recorded in weeks.}
 
@@ -46,7 +69,7 @@ params <- list(
 drmd_psm(dpam=params)
 # Add a lifetable constraint
 ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-drmd_psm(dpam=params, lifetable=ltable)
+drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)
 }
 \seealso{
 \code{\link[=drmd_stm_cf]{drmd_stm_cf()}} \code{\link[=drmd_stm_cr]{drmd_stm_cr()}}
