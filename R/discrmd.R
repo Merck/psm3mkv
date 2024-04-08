@@ -141,7 +141,7 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Discount factor
   vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
   # Calculate RMDs
-  pf <- sum(con.spfs*vn) * timestep
+  pf <- sum(sttp*con.sppd*vn) * timestep
   pd <- sum(con.probpd*vn) * timestep
   # Return values
   return(list(pf=pf, pd=pd, os=pf+pd))
