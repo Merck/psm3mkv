@@ -301,6 +301,16 @@ All structures estimate fairly similar RMD estimates of being alive (range: `r r
 
 ### Comparing the results
 
+A summary of the STM-CF estimates of mean time in PF state and mean time alive is given in the table below.
+
+|Model | Mean time in PF (weeks) | Change (weeks) | Mean time alive (weeks) | Change (weeks) |
+|:---------------|:----------|:----------|:----------|:----------|
+| No lifetable constraint, integral methods | `r round(res1$pf[2],1)` | - | `r round(res1$os[2],1)` | - |
+| No lifetable constraint, discretized calculation | `r round(res2$pf[2],1)` | `r round(res2$pf[2]-res1$pf[2],1)` | `r round(res2$os[2],1)` | `r round(res2$os[2]-res1$os[2],1)` |
+| With lifetable constraint, discretized calculation | `r round(res3$pf[2],1)` | `r round(res3$pf[2]-res1$pf[2],1)` | `r round(res3$os[2],1)` | `r round(res3$os[2]-res1$os[2],1)` |
+
+In this fictional case, the application of a lifetable constraint had fairly sizeable effects on the results - although this was by design of this demonstration.
+
 A summary of the STM-CR estimates of mean time in PF state and mean time alive is given in the table below.
 
 |Model | Mean time in PF (weeks) | Change (weeks) | Mean time alive (weeks) | Change (weeks) |
@@ -309,7 +319,7 @@ A summary of the STM-CR estimates of mean time in PF state and mean time alive i
 | No lifetable constraint, discretized calculation | `r round(res2$pf[3],1)` | `r round(res2$pf[3]-res1$pf[3],1)` | `r round(res2$os[3],1)` | `r round(res2$os[3]-res1$os[3],1)` |
 | With lifetable constraint, discretized calculation | `r round(res3$pf[3],1)` | `r round(res3$pf[3]-res1$pf[3],1)` | `r round(res3$os[3],1)` | `r round(res3$os[3]-res1$os[3],1)` |
 
-In this fictional case, the application of a lifetable constraint had fairly sizeable effects on the results - although this was by design of this demonstration. The vignette focussed on the STM-CR model, although other model structures were fitted and estimated also. The package also allows application of discounting through the `discrate` optional call to `calc_allrnds()`.
+The application of a lifetable constraint had similar and fairly sizeable effects on the results here also.
 
 A summary of the PSM estimates of mean time in PF state and mean time alive is given in the table below.
 
@@ -321,6 +331,13 @@ A summary of the PSM estimates of mean time in PF state and mean time alive is g
 | With lifetable constraint, discretized calculation, complex PSM | `r round(res4$pf[1],1)` | `r round(res4$pf[1]-res1$pf[1],1)` | `r round(res4$os[1],1)` | `r round(res4$os[1]-res1$os[1],1)` |
 
 The change in the RMDs for the 'complex' PSM structure compared to the 'simple' PSM structure were `r round(res4$pf[1]-res3$pf[1], 1)`, `r round(res4$pd[1]-res3$pd[1], 1)` and `r round(res4$os[1]-res3$os[1], 1)` weeks respectively for time in PF state, PD state and time alive.
+
+### For further investigation
+
+* The effect of the lifetable constraint on the STMs was much greater - especially to time in the PF state - in the STMs rathe rather than the PSM.
+
+* The package also allows application of discounting through the `discrate` optional call to `calc_allrnds()`.
+
 
 ## References
 
