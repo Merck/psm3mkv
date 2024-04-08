@@ -24,8 +24,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/background-mortality.html">Background mortality</a>
     <a class="dropdown-item" href="../articles/example.html">Example use of psm3mkv</a>
+    <a class="dropdown-item" href="../articles/mortality-adjustments.html">Mortality adjustments</a>
   </div>
 </li>
 <li class="nav-item">
@@ -58,7 +58,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_haz_psm</span><span class="op">(</span><span class="va">timevar</span>, <span class="va">ptdata</span>, <span class="va">dpam</span>, <span class="va">type</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_haz_psm</span><span class="op">(</span><span class="va">timevar</span>, <span class="va">ptdata</span>, <span class="va">dpam</span>, <span class="va">psmtype</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -88,7 +88,7 @@
 </ul></dd>
 
 
-<dt>type</dt>
+<dt>psmtype</dt>
 <dd><p>Either "simple" or "complex" PSM formulation</p></dd>
 
 </dl></div>
@@ -112,7 +112,7 @@
 <span class="r-in"><span>  pps_cf <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
 <span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">calc_haz_psm</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span>, ptdata<span class="op">=</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, type<span class="op">=</span><span class="st">"simple"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">calc_haz_psm</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span>, ptdata<span class="op">=</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, psmtype<span class="op">=</span><span class="st">"simple"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adj</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adj$ttp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.04742078 0.04722152 0.04707233 0.04682576 0.04650723</span>
@@ -157,7 +157,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.044430336 0.047603965 0.050244788 0.052614795 0.054815057</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span><span class="fu">calc_haz_psm</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span>, ptdata<span class="op">=</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, type<span class="op">=</span><span class="st">"complex"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">calc_haz_psm</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span>, ptdata<span class="op">=</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, psmtype<span class="op">=</span><span class="st">"complex"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adj</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adj$ttp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00000000 0.05758869 0.05337416 0.05075486 0.04878425 0.04717919</span>

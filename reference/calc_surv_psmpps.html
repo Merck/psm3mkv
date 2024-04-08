@@ -24,8 +24,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/background-mortality.html">Background mortality</a>
     <a class="dropdown-item" href="../articles/example.html">Example use of psm3mkv</a>
+    <a class="dropdown-item" href="../articles/mortality-adjustments.html">Mortality adjustments</a>
   </div>
 </li>
 <li class="nav-item">
@@ -58,7 +58,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_surv_psmpps</span><span class="op">(</span><span class="va">totime</span>, fromtime <span class="op">=</span> <span class="fl">0</span>, <span class="va">ptdata</span>, <span class="va">dpam</span>, type <span class="op">=</span> <span class="st">"simple"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_surv_psmpps</span><span class="op">(</span><span class="va">totime</span>, fromtime <span class="op">=</span> <span class="fl">0</span>, <span class="va">ptdata</span>, <span class="va">dpam</span>, psmtype <span class="op">=</span> <span class="st">"simple"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,7 +79,7 @@
 <dd><p>List of fitted survival models for each endpoint</p></dd>
 
 
-<dt>type</dt>
+<dt>psmtype</dt>
 <dd><p>Either "simple" or "complex" PSM formulation</p></dd>
 
 </dl></div>

@@ -28,8 +28,8 @@ Calculate restricted mean duration (RMD) in PF, PD and OS states under a State T
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/background-mortality.html">Background mortality</a>
     <a class="dropdown-item" href="../articles/example.html">Example use of psm3mkv</a>
+    <a class="dropdown-item" href="../articles/mortality-adjustments.html">Mortality adjustments</a>
   </div>
 </li>
 <li class="nav-item">
@@ -118,25 +118,25 @@ Calculate restricted mean duration (RMD) in PF, PD and OS states under a State T
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">drmd_stm_cf</span><span class="op">(</span>dpam<span class="op">=</span><span class="va">params</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 18.00169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 18.96864</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10.51121</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10.87732</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $os</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 28.51291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 29.84596</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># Add a lifetable constraint</span></span></span>
 <span class="r-in"><span><span class="va">ltable</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>lttime<span class="op">=</span><span class="fl">0</span><span class="op">:</span><span class="fl">20</span>, lx<span class="op">=</span><span class="fl">1</span><span class="op">-</span><span class="va">lttime</span><span class="op">*</span><span class="fl">0.05</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">drmd_stm_cf</span><span class="op">(</span>dpam<span class="op">=</span><span class="va">params</span>, lifetable<span class="op">=</span><span class="va">ltable</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 18.00169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 18.96864</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10.51121</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10.87732</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $os</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 28.51291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 29.84596</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
