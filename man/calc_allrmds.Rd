@@ -5,7 +5,7 @@
 \title{Calculate restricted mean durations for each health state and all three models}
 \usage{
 calc_allrmds(
-  simdat,
+  ptdata,
   inclset = 0,
   dpam,
   psmtype = "simple",
@@ -18,7 +18,7 @@ calc_allrmds(
 )
 }
 \arguments{
-\item{simdat}{Dataset of patient level data. Must be a tibble with columns named:
+\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
 \itemize{
 \item ptid: patient identifier
 \item pfs.durn: duration of PFS from baseline
