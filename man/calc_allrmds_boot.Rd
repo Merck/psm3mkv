@@ -5,7 +5,7 @@
 \title{Wrapper to enable bootstrap sampling of restricted mean durations for each health state and all three models.}
 \usage{
 calc_allrmds_boot(
-  simdat,
+  ptdata,
   inclset = 0,
   dpam,
   cuttime = 0,
@@ -15,6 +15,17 @@ calc_allrmds_boot(
 )
 }
 \arguments{
+\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
+\itemize{
+\item ptid: patient identifier
+\item pfs.durn: duration of PFS from baseline
+\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+\item os.durn: duration of OS from baseline
+\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+}}
+
 \item{inclset}{Vector to indicate which patients to include in analysis}
 
 \item{dpam}{List of statistical fits to each endpoint required in PSM, STM-CF and STM-CR models.}

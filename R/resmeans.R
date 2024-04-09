@@ -562,7 +562,7 @@ calc_allrmds_boot <- function(ptdata,
                               Ty = 10,
                               lifetable = NA,
                               discrate = 0) {
-  if (inclset[1]==0) {inclset <- 1:length(simdat$ptid)}
+  if (inclset[1]==0) {inclset <- 1:length(ptdata$ptid)}
   mb <- calc_allrmds(ptdata = ptdata,
                      inclset = inclset,
                      dpam = dpam,
