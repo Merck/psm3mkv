@@ -554,7 +554,7 @@ calc_allrmds <- function(ptdata,
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
-#' calc_allrmds_boot(simdat=bosonc, dpam=params)
+#' calc_allrmds_boot(ptdata=bosonc, dpam=params)
 calc_allrmds_boot <- function(ptdata,
                               inclset = 0,
                               dpam,
