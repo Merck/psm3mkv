@@ -44,9 +44,9 @@ params <- list(
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
 drmd_stm_cr(dpam=params)
-# Add a lifetable constraint
-ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-drmd_stm_cr(dpam=params, lifetable=ltable)
+# Add a lifetable constraint (not run because it's slow)
+# ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+# drmd_stm_cr(dpam=params, lifetable=ltable)
 }
 \seealso{
 \code{\link[=drmd_stm_cf]{drmd_stm_cf()}} \code{\link[=drmd_psm]{drmd_psm()}}

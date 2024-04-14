@@ -22,7 +22,6 @@ Imports:
     flexsurv,
     ggplot2,
     purrr,
-    remotes,
     rlang,
     SimplicialCubature,
     stats,
@@ -36,6 +35,7 @@ Suggests:
     ggsci,
     HMDHFDplus,
     knitr,
+    remotes,
     rmarkdown,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
