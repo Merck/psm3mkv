@@ -24,8 +24,8 @@ First we need to install and load the packages of interest (with thanks to @vbal
 # Install psm3mkv version 0.2 from github
 require("remotes")
 remotes::install_github("Merck/psm3mkv",
-                        ref="v0.2",
-                        build_vignettes=TRUE)
+                        ref="Nextrel",
+                        build_vignettes=FALSE)
 
 # First specify the packages of interest
 packages = c("psm3mkv", "dplyr", "boot", "ggsci", "flexsurv", "survival")
@@ -185,7 +185,7 @@ The Brier score is a measure of goodness of fit of a survival model at a particu
 The *psm3mkv* package allows examination of Integrated Brier Scores in the fit of Overall Survival by each of the model structures.
 
 ```{r brier}
-calc_ibs(bosonc, params)
+# calc_ibs(bosonc, params)
 ```
 In this case, the IBS calculation involved integrating between times 1.18 and 52.70. The PSM had the least IBS and best fit (IBS=0.1771); the two STMs had slightly greater IBS values (0.1773 for CF and 0.1776 for CR).
 

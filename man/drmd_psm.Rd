@@ -66,7 +66,7 @@ params <- list(
   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
-drmd_psm(dpam=params)
+drmd_psm(ptdata=bosonc, dpam=params)
 # Add a lifetable constraint
 ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
 drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)

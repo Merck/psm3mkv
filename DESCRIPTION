@@ -22,7 +22,6 @@ Imports:
     flexsurv,
     ggplot2,
     purrr,
-    remotes,
     rlang,
     SimplicialCubature,
     stats,
@@ -36,6 +35,7 @@ Suggests:
     ggsci,
     HMDHFDplus,
     knitr,
+    remotes,
     rmarkdown,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
@@ -46,6 +46,7 @@ Collate:
     'basics.R'
     'brier.R'
     'datasets.R'
+    'discrmd.R'
     'fitting-spl.R'
     'fitting.R'
     'lhoods.R'
@@ -54,4 +55,3 @@ Collate:
     'probgraphs.R'
     'psm3mkv-package.R'
     'resmeans.R'
-    'discrmd.R'
