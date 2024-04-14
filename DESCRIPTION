@@ -32,10 +32,11 @@ Imports:
 Suggests:
     boot,
     covr,
+    devtools,
     ggsci,
     HMDHFDplus,
     knitr,
-    remotes,
+    pak,
     rmarkdown,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
