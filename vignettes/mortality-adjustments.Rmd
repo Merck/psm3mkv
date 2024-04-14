@@ -122,7 +122,7 @@ devtools::install_github("Merck/psm3mkv",
                         build_vignettes=FALSE)
 
 # First specify the packages of interest
-packages = c("psm3mkv", "dplyr", "flexsurv", "HMDHFDplus", "remotes")
+packages <- c("psm3mkv", "dplyr", "flexsurv", "HMDHFDplus", "remotes")
 
 # Now load or install & load all
 package.check <- lapply(
