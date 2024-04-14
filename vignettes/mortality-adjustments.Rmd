@@ -115,9 +115,10 @@ First we load the packages we need - all of which are suggested for or imported 
 
 ```{r packages, message=FALSE}
 # Install latest 'Nextrel' version from github, without vignettes
-require("remotes")
-remotes::install_github("Merck/psm3mkv",
-                        ref="Nextrel",
+require("devtools")
+require("pak")
+devtools::install_github("Merck/psm3mkv",
+                        ref="main",
                         build_vignettes=FALSE)
 
 # First specify the packages of interest

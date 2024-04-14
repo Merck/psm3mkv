@@ -21,14 +21,15 @@ This vignette walks through evaluating the partitioned survival model (PSM) and 
 First we need to install and load the packages of interest (with thanks to @vbaliga for [this helpful code](https://vbaliga.github.io/posts/2019-04-28-verify-that-r-packages-are-installed-and-loaded/)).
 
 ```{r packages, message=FALSE}
-# Install psm3mkv version 0.2 from github
-require("remotes")
-remotes::install_github("Merck/psm3mkv",
-                        ref="Nextrel",
+# Install the latest release of psm3mkv from github
+require("devtools")
+require("pak")
+devtools::install_github("Merck/psm3mkv",
+                        ref="main",
                         build_vignettes=FALSE)
 
 # First specify the packages of interest
-packages = c("psm3mkv", "dplyr", "boot", "ggsci", "flexsurv", "survival")
+packages <- c("psm3mkv", "dplyr", "boot", "ggsci", "flexsurv", "survival")
 
 # Now load or install & load all
 package.check <- lapply(
