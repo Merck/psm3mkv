@@ -204,6 +204,14 @@ pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
 #' Graph the PSM hazard functions
 #' @description Graph the PSM hazard functions
 #' @inheritParams pickout_psmhaz
+#' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
+#' - ptid: patient identifier
+#' - pfs.durn: duration of PFS from baseline
+#' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - os.durn: duration of OS from baseline
+#' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
 #' @inherit pickout_psmhaz return
 #' @importFrom rlang .data
 #' @export

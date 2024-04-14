@@ -5,7 +5,7 @@
 \title{Wrapper to enable bootstrap sampling of restricted mean durations for each health state and all three models.}
 \usage{
 calc_allrmds_boot(
-  simdat,
+  ptdata,
   inclset = 0,
   dpam,
   cuttime = 0,
@@ -15,7 +15,7 @@ calc_allrmds_boot(
 )
 }
 \arguments{
-\item{simdat}{Dataset of patient level data. Must be a tibble with columns named:
+\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
 \itemize{
 \item ptid: patient identifier
 \item pfs.durn: duration of PFS from baseline
@@ -56,5 +56,5 @@ params <- list(
   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
-calc_allrmds_boot(simdat=bosonc, dpam=params)
+calc_allrmds_boot(ptdata=bosonc, dpam=params)
 }

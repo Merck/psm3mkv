@@ -5,9 +5,10 @@
 \title{Calculate restricted mean durations for each health state and all three models}
 \usage{
 calc_allrmds(
-  simdat,
+  ptdata,
   inclset = 0,
   dpam,
+  psmtype = "simple",
   cuttime = 0,
   Ty = 10,
   lifetable = NA,
@@ -17,7 +18,7 @@ calc_allrmds(
 )
 }
 \arguments{
-\item{simdat}{Dataset of patient level data. Must be a tibble with columns named:
+\item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
 \itemize{
 \item ptid: patient identifier
 \item pfs.durn: duration of PFS from baseline
@@ -31,6 +32,8 @@ calc_allrmds(
 \item{inclset}{Vector to indicate which patients to include in analysis}
 
 \item{dpam}{List of statistical fits to each endpoint required in PSM, STM-CF and STM-CR models.}
+
+\item{psmtype}{Either "simple" or "complex" PSM formulation}
 
 \item{cuttime}{Time cutoff - this is nonzero for two-piece models.}
 

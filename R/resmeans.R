@@ -431,7 +431,7 @@ calc_rmd_first <- function(ds, cuttime) {
 
 #' Calculate restricted mean durations for each health state and all three models
 #' @description Calculate restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
-#' @param simdat Dataset of patient level data. Must be a tibble with columns named:
+#' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
 #' - ptid: patient identifier
 #' - pfs.durn: duration of PFS from baseline
 #' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
@@ -471,7 +471,7 @@ calc_rmd_first <- function(ds, cuttime) {
 #' calc_allrmds(bosonc, dpam=params)
 #' # RMD using discretized ("disc") method, no lifetable constraint
 #' calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
-calc_allrmds <- function(simdat,
+calc_allrmds <- function(ptdata,
                          inclset = 0,
                          dpam,
                          psmtype = "simple",
@@ -481,14 +481,16 @@ calc_allrmds <- function(simdat,
                          discrate = 0,
                          rmdmethod = "int",
                          timestep = 1) {
+  # Set-up variables
+  
   # Check calculations valid
   chvalid <- is.na(dpam[1])==FALSE
   if (chvalid==FALSE) stop("No validly fitted endpoints")
   # For a bootstrap sample, refit all distributions
   if (inclset[1]!=0) {
-    dpam <- fit_ends_mods_given(simdat[inclset,], dpam, cuttime)
+    dpam <- fit_ends_mods_given(ptdata[inclset,], dpam, cuttime)
   } else {
-    ds <- create_extrafields(simdat, cuttime)
+    ds <- create_extrafields(ptdata, cuttime)
   }
   # Two piece adjustment if cutime>0
   if (cuttime>0) {
@@ -510,7 +512,7 @@ calc_allrmds <- function(simdat,
     pd_stmcr <- prmd_pd_stm_cr(dpam, Ty=adjTy, starting=starting, discrate=discrate)
   } else if (rmdmethod=="disc") {
     if (cuttime>0) {stop("Cannot calculate discretized RMD for two-piece models")}
-    psm_drmd <- drmd_psm(ptdata=bosonc, dpam, psmtype=psmtype, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
+    psm_drmd <- drmd_psm(ptdata=ptdata, dpam, psmtype=psmtype, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
     stmcf_drmd <- drmd_stm_cf(dpam, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
     stmcr_drmd <- drmd_stm_cr(dpam, Ty=Ty, discrate=discrate, lifetable=lifetable, timestep=timestep)
     pf_psm <- psm_drmd$pf
@@ -552,16 +554,16 @@ calc_allrmds <- function(simdat,
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
-#' calc_allrmds_boot(simdat=bosonc, dpam=params)
-calc_allrmds_boot <- function(simdat,
+#' calc_allrmds_boot(ptdata=bosonc, dpam=params)
+calc_allrmds_boot <- function(ptdata,
                               inclset = 0,
                               dpam,
                               cuttime = 0,
                               Ty = 10,
                               lifetable = NA,
                               discrate = 0) {
-  if (inclset[1]==0) {inclset <- 1:length(simdat$ptid)}
-  mb <- calc_allrmds(simdat = simdat,
+  if (inclset[1]==0) {inclset <- 1:length(ptdata$ptid)}
+  mb <- calc_allrmds(ptdata = ptdata,
                      inclset = inclset,
                      dpam = dpam,
                      cuttime = cuttime,
