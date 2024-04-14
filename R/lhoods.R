@@ -35,23 +35,18 @@
 #' convert_fit2spec(fits$pfs[[3]]$result)
 convert_fit2spec <- function(fitsurv) {
   # Declare local variables
-  par.dist <- type <- spl.gamma <- spl.knots <- NULL
-  spl.scale <- spec <- pars <- NULL
+  par.dist <- type <- spec <- NULL
   # Pick out distribution/splines
   par.dist <- fitsurv$dlist$name
   if (par.dist=="survspline") {
     type <- "spl"
-    spl.gamma <- fitsurv$coefficients
-    spl.knots <- fitsurv$aux$knots
-    spl.scale <- fitsurv$aux$scale
-    spec <- list(gamma=spl.gamma,
-                 knots=spl.knots,
-                 k=length(spl.knots)-2,
-                 scale=spl.scale)
+    spec <- list(gamma = fitsurv$coefficients,
+                 knots = fitsurv$aux$knots,
+                 k = length(fitsurv$aux$knots)-2,
+                 scale = fitsurv$aux$scale)
   } else {
     type <- "par"
-    pars <- fitsurv$res[,1]
-    spec <- list(dist=par.dist, pars=pars)
+    spec <- list(dist=par.dist, pars=fitsurv$res[,1])
   }
   return(list(type=type, spec=spec))
 }
