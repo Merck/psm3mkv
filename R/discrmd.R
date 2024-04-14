@@ -166,9 +166,9 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' drmd_stm_cr(dpam=params)
-#' # Add a lifetable constraint
-#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-#' drmd_stm_cr(dpam=params, lifetable=ltable)
+#' # Add a lifetable constraint (not run because it's slow)
+#' # ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+#' # drmd_stm_cr(dpam=params, lifetable=ltable)
 drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
   Tw <- tvec <- ppd.ts <- ttp.ts <- sppd <- sttp <- sos <- NULL
