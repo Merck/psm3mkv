@@ -96,12 +96,17 @@ downloaded as follows.
 
 ``` r
 # Install version 0.2 from Github as follows, with the vignette
-remotes::install_github("Merck/psm3mkv",
+pak::install_github("Merck/psm3mkv",
     ref="v0.2",
-    build_vignettes=TRUE)
+    build_vignettes=FALSE)
 ```
 
-There may be more recent patch releases available setting `ref="main"`.
+We set `build_vignettes=FALSE` because the vignettes can take a long
+time to generate and because they are available on the package
+[webpage](https://merck.github.io/psm3mkv/).
+
+There may be more recent patch releases available than version 0.2 by
+setting `ref="main"`, but these may not be as stable.
 
 ## Licensing
 
