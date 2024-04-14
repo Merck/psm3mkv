@@ -6,7 +6,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
@@ -59,9 +59,10 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_allrmds</span><span class="op">(</span></span>
-<span>  <span class="va">simdat</span>,</span>
+<span>  <span class="va">ptdata</span>,</span>
 <span>  inclset <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  <span class="va">dpam</span>,</span>
+<span>  psmtype <span class="op">=</span> <span class="st">"simple"</span>,</span>
 <span>  cuttime <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  Ty <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  lifetable <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -73,7 +74,7 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>simdat</dt>
+    <dl><dt>ptdata</dt>
 <dd><p>Dataset of patient level data. Must be a tibble with columns named:</p><ul><li><p>ptid: patient identifier</p></li>
 <li><p>pfs.durn: duration of PFS from baseline</p></li>
 <li><p>pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)</p></li>
@@ -90,6 +91,10 @@
 
 <dt>dpam</dt>
 <dd><p>List of statistical fits to each endpoint required in PSM, STM-CF and STM-CR models.</p></dd>
+
+
+<dt>psmtype</dt>
+<dd><p>Either "simple" or "complex" PSM formulation</p></dd>
 
 
 <dt>cuttime</dt>
@@ -168,7 +173,28 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># RMD using discretized ("disc") method, no lifetable constraint</span></span></span>
 <span class="r-in"><span><span class="fu">calc_allrmds</span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, rmdmethod<span class="op">=</span><span class="st">"disc"</span>, timestep<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in calc_allrmds(bosonc, dpam = params, rmdmethod = "disc", timestep = 1):</span> object 'bosonc' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cutadj</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cutadj$pfarea</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cutadj$pfsurv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cutadj$osarea</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cutadj$ossurv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      pf    pd    os model </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  18.4  8.82  27.2 PSM   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  19.0 10.9   29.8 STM-CF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  19.0 11.1   30.0 STM-CR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -176,7 +202,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Dominic Muston, Merck &amp; Co., Inc.. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
+  <p></p><p>Developed by Dominic Muston, Merck &amp; Co., Inc.. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
 </div>
 
 <div class="pkgdown-footer-right">

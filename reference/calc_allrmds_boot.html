@@ -6,7 +6,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
@@ -59,7 +59,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_allrmds_boot</span><span class="op">(</span></span>
-<span>  <span class="va">simdat</span>,</span>
+<span>  <span class="va">ptdata</span>,</span>
 <span>  inclset <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  <span class="va">dpam</span>,</span>
 <span>  cuttime <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -71,7 +71,7 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>simdat</dt>
+    <dl><dt>ptdata</dt>
 <dd><p>Dataset of patient level data. Must be a tibble with columns named:</p><ul><li><p>ptid: patient identifier</p></li>
 <li><p>pfs.durn: duration of PFS from baseline</p></li>
 <li><p>pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)</p></li>
@@ -126,7 +126,7 @@
 <span class="r-in"><span>  pps_cf <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
 <span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">calc_allrmds_boot</span><span class="op">(</span>simdat<span class="op">=</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">calc_allrmds_boot</span><span class="op">(</span>ptdata<span class="op">=</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 22.02965 18.97163 18.97163  5.41287 10.53941 11.05169 27.44252 29.51104</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [9] 30.02332</span>
 </code></pre></div>
@@ -136,7 +136,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Dominic Muston, Merck &amp; Co., Inc.. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
+  <p></p><p>Developed by Dominic Muston, Merck &amp; Co., Inc.. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
 </div>
 
 <div class="pkgdown-footer-right">
