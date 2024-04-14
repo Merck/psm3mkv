@@ -102,14 +102,15 @@ cost-effectiveness models is provided by Woods et al.[2]</p>
 thanks to <span class="citation">@vbaliga</span> for <a href="https://vbaliga.github.io/posts/2019-04-28-verify-that-r-packages-are-installed-and-loaded/" class="external-link">this
 helpful code</a>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install psm3mkv version 0.2 from github</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv"</span>,</span>
-<span>                        ref<span class="op">=</span><span class="st">"Nextrel"</span>,</span>
+<code class="sourceCode R"><span><span class="co"># Install the latest release of psm3mkv from github</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">"devtools"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://pak.r-lib.org/" class="external-link">"pak"</a></span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv"</span>,</span>
+<span>                        ref<span class="op">=</span><span class="st">"main"</span>,</span>
 <span>                        build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="color: #00BBBB;">R CMD build</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; * checking for file ‘/tmp/RtmpI0sC73/remotes1de768654be4/Merck-psm3mkv-a526bc1/DESCRIPTION’ ... OK</span></span>
+<span><span class="co">#&gt; * checking for file ‘/tmp/Rtmpuin19E/remotes1ead4ea0286c/Merck-psm3mkv-5b57c05/DESCRIPTION’ ... OK</span></span>
 <span><span class="co">#&gt; * preparing ‘psm3mkv’:</span></span>
 <span><span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span></span>
 <span><span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span></span>
@@ -117,7 +118,7 @@ helpful code</a>).</p>
 <span><span class="co">#&gt; * building ‘psm3mkv_0.2.1.tar.gz’</span></span>
 <span></span>
 <span><span class="co"># First specify the packages of interest</span></span>
-<span><span class="va">packages</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"psm3mkv"</span>, <span class="st">"dplyr"</span>, <span class="st">"boot"</span>, <span class="st">"ggsci"</span>, <span class="st">"flexsurv"</span>, <span class="st">"survival"</span><span class="op">)</span></span>
+<span><span class="va">packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"psm3mkv"</span>, <span class="st">"dplyr"</span>, <span class="st">"boot"</span>, <span class="st">"ggsci"</span>, <span class="st">"flexsurv"</span>, <span class="st">"survival"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Now load or install &amp; load all</span></span>
 <span><span class="va">package.check</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
