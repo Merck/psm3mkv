@@ -18,29 +18,13 @@ knitr::opts_chunk$set(
 
 This vignette walks through evaluating the partitioned survival model (PSM) and state transition model structures (either clock reset, STM-CR, or clock forward types, STM-CF) to a dataset derived from the *bosms3* dataset that comes with the [flexsurv::flexsurv-package()].[1] A review of PSMs and STMs in oncology cost-effectiveness models is provided by Woods et al.[2]
 
-First we need to install and load the packages of interest (with thanks to @vbaliga for [this helpful code](https://vbaliga.github.io/posts/2019-04-28-verify-that-r-packages-are-installed-and-loaded/)).
+First we need to load the packages of interest. If you haven't installed *psm3mkv* yet, please see the [installation instructions](https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation) to install it and the other packages required to run the code below.
 
 ```{r packages, message=FALSE}
-# Install the latest release of psm3mkv from github
-require("devtools")
-require("pak")
-devtools::install_github("Merck/psm3mkv",
-                        ref="main",
-                        build_vignettes=FALSE)
-
-# First specify the packages of interest
-packages <- c("psm3mkv", "dplyr", "boot", "ggsci", "flexsurv", "survival")
-
-# Now load or install & load all
-package.check <- lapply(
-  packages,
-  FUN = function(x) {
-    if (!require(x, character.only = TRUE)) {
-      install.packages(x, dependencies = TRUE)
-      library(x, character.only = TRUE)
-    }
-  }
-)
+library("boot")
+library("ggsci")
+library("psm3mkv")
+library("purrr")
 ```
 
 ## Obtaining a suitable dataset
@@ -155,7 +139,7 @@ Let us count how many parameters we are using in each model.
 
 ```{r count_params}
 # Pull out number of parameters used for each endpoint
-count_npar <- purrr::map_vec(1:6, ~params[[.x]]$npars)
+count_npar <- map_vec(1:6, ~params[[.x]]$npars)
 
 # PSM uses PFS (3) and OS (4) endpoints
 sum(count_npar[c(3,4)])
