@@ -97,7 +97,7 @@ downloaded as follows.
 ``` r
 # Install version 0.2.1 from Github as follows, with the vignette
 pak::install_github("Merck/psm3mkv",
-    ref="v0.2",
+    ref="v0.2.1",
     build_vignettes=FALSE)
 ```
 
