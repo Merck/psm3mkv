@@ -82,7 +82,7 @@ Version 0.2.1 of *psm3mkv* is the latest minor release, and may be downloaded as
 ``` r
 # Install version 0.2.1 from Github as follows, with the vignette
 pak::install_github("Merck/psm3mkv",
-    ref="v0.2",
+    ref="v0.2.1",
     build_vignettes=FALSE)
 ```
 
