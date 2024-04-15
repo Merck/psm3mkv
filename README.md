@@ -91,11 +91,11 @@ The package requires version 4.1 of R (due to use of the [native
 pipe](https://www.r-bloggers.com/2021/05/the-new-r-pipe/)). Please
 ensure R is updated first.
 
-Version 0.2 of *psm3mkv* is the latest minor release, and may be
+Version 0.2.1 of *psm3mkv* is the latest minor release, and may be
 downloaded as follows.
 
 ``` r
-# Install version 0.2 from Github as follows, with the vignette
+# Install version 0.2.1 from Github as follows, with the vignette
 pak::install_github("Merck/psm3mkv",
     ref="v0.2",
     build_vignettes=FALSE)
