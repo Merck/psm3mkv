@@ -77,18 +77,37 @@ A second vignette, `vignette("background-mortality")` illustrates how, after fit
 
 The package requires version 4.1 of R (due to use of the [native pipe](https://www.r-bloggers.com/2021/05/the-new-r-pipe/)). Please ensure R is updated first.
 
-Version 0.2.1 of *psm3mkv* is the latest minor release, and may be downloaded as follows.
+### Latest stable release
+
+Install the latest stable release from GitHub:
 
 ``` r
-# Install version 0.2.1 from Github as follows, with the vignette
-pak::install_github("Merck/psm3mkv",
-    ref="v0.2.1",
-    build_vignettes=FALSE)
+# install.packages("pak")
+pak::pak("Merck/psm3mkv@*release")
 ```
 
-We set `build_vignettes=FALSE` because the vignettes can take a long time to generate and because they are available on the package [webpage](https://merck.github.io/psm3mkv/).
+Note that `pak::pak()` does not build the vignettes by default when installing a
+package from GitHub, which is ideal because the vignettes can take a long time
+to generate. You can conveniently view them on the package
+[webpage](https://merck.github.io/psm3mkv/).
 
-There may be more recent patch releases available than version 0.2 by setting `ref="main"`, but these may not be as stable.
+### Development version
+
+Install the latest development version from GitHub (this may not be as stable):
+
+``` r
+pak::pak("Merck/psm3mkv@main")
+```
+
+### Additional dependencies
+
+Running the vignettes requires additional dependencies, which are all either
+imported by or suggested by *psm3mkv*. Thus you can ensure they are all
+installed by specifying `dependencies = TRUE`.
+
+``` r
+pak::pak("Merck/psm3mkv@*release", dependencies = TRUE)
+```
 
 ## Licensing
 
