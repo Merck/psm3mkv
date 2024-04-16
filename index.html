@@ -125,14 +125,29 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>The package requires version 4.1 of R (due to use of the <a href="https://www.r-bloggers.com/2021/05/the-new-r-pipe/" class="external-link">native pipe</a>). Please ensure R is updated first.</p>
-<p>Version 0.2.1 of <em>psm3mkv</em> is the latest minor release, and may be downloaded as follows.</p>
+<div class="section level3">
+<h3 id="latest-stable-release">Latest stable release<a class="anchor" aria-label="anchor" href="#latest-stable-release"></a>
+</h3>
+<p>Install the latest stable release from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install version 0.2.1 from Github as follows, with the vignette</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Merck/psm3mkv"</span>,</span>
-<span>    ref<span class="op">=</span><span class="st">"v0.2.1"</span>,</span>
-<span>    build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>We set <code>build_vignettes=FALSE</code> because the vignettes can take a long time to generate and because they are available on the package <a href="https://merck.github.io/psm3mkv/">webpage</a>.</p>
-<p>There may be more recent patch releases available than version 0.2 by setting <code>ref="main"</code>, but these may not be as stable.</p>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv@*release"</span><span class="op">)</span></span></code></pre></div>
+<p>Note that <code><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak::pak()</a></code> does not build the vignettes by default when installing a package from GitHub, which is ideal because the vignettes can take a long time to generate. You can conveniently view them on the package <a href="https://merck.github.io/psm3mkv/">webpage</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
+</h3>
+<p>Install the latest development version from GitHub (this may not be as stable):</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv@main"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="additional-dependencies">Additional dependencies<a class="anchor" aria-label="anchor" href="#additional-dependencies"></a>
+</h3>
+<p>Running the vignettes requires additional dependencies, which are all either imported by or suggested by <em>psm3mkv</em>. Thus you can ensure they are all installed by specifying <code>dependencies = TRUE</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv@*release"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="licensing">Licensing<a class="anchor" aria-label="anchor" href="#licensing"></a>
