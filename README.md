@@ -1,6 +1,3 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # psm3mkv: A package to evaluate the fit and efficiency of three state oncology cost-effectiveness model structures <img src="man/figures/logo.png" align="right" width="120"/>
 
 <!-- badges: start -->
