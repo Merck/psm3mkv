@@ -49,6 +49,7 @@ List of values and data relating to the likelihood for this model:
 Calculate likelihood values and other summary output for a simple three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by \link{calc_likes}.x three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by \link{calc_likes}. Unlike \link{calc_likes_psm_complex}, this likelihood function assumes a progression hazard can be derived from the PFS hazard function and the ratio of progression to PFS events from PF patients.
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 # Pick out best distribution according to min AIC
@@ -61,6 +62,7 @@ params <- list(
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
   )
 calc_likes_psm_simple(bosonc, dpam=params)
+}
 }
 \seealso{
 \code{\link[=calc_likes]{calc_likes()}}, \code{\link[=calc_likes_psm_complex]{calc_likes_psm_complex()}}, \code{\link[=calc_likes_stm_cf]{calc_likes_stm_cf()}}, \code{\link[=calc_likes_stm_cr]{calc_likes_stm_cr()}}

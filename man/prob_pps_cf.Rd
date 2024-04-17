@@ -20,6 +20,7 @@ Vector of the mean probabilities of post-progression survival at each PPS time, 
 Calculates probability of post progression survival at a given time from progression (vectorized). This probability is from the state transition clock forward model, according to the given statistical distributions and parameters.
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 # Pick out best distribution according to min AIC
@@ -32,4 +33,5 @@ params <- list(
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
 prob_pps_cf(0:100, 0:100, params)
+}
 }

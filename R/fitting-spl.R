@@ -95,9 +95,11 @@ fit_mods_spl <- function(durn1, durn2=NA, evflag,
 #' @export
 #' @seealso Parametric modeling is handled by [fit_ends_mods_par()]
 #' @examples
+#' \donttest{
 #' # Create dataset in suitable form using bos dataset from the flexsurv package
 #' bosonc <- create_dummydata("flexbosms")
 #' fit_ends_mods_spl(bosonc, expvar=bosonc$ttp.durn)
+#' }
 fit_ends_mods_spl <- function(simdat,
                               knot_set=1:3,
                               scale_set=c("hazard", "odds", "normal"),
@@ -166,9 +168,11 @@ fit_ends_mods_spl <- function(simdat,
 #' @return List of the single survival regression with the best fit.
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' find_bestfit_spl(fits$ttp, "aic")
+#' }
 find_bestfit_spl <- function(reglist, crit="aic") {
   # Declare local variables
   noreg <- valid <- remain <- NULL
