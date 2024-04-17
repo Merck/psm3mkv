@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +92,8 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Pick out best distribution according to min AIC</span></span></span>
 <span class="r-in"><span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
@@ -103,11 +104,14 @@
 <span class="r-in"><span>  pps_cf <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span></span>
 <span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># calc_surv_psmpps(totime=1:10,</span></span></span>
-<span class="r-in"><span><span class="co">#   fromtime=rep(1,10),</span></span></span>
-<span class="r-in"><span><span class="co">#   ptdata=bosonc,</span></span></span>
-<span class="r-in"><span><span class="co">#   dpam=params,</span></span></span>
-<span class="r-in"><span><span class="co">#   type="simple")</span></span></span>
+<span class="r-in"><span><span class="fu">calc_surv_psmpps</span><span class="op">(</span>totime<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span></span>
+<span class="r-in"><span>  fromtime<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">10</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  ptdata<span class="op">=</span><span class="va">bosonc</span>,</span></span>
+<span class="r-in"><span>  dpam<span class="op">=</span><span class="va">params</span>,</span></span>
+<span class="r-in"><span>  psmtype<span class="op">=</span><span class="st">"simple"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1.0000000 0.9995962 0.9833657 0.9541989 0.9190001 0.8807816 0.8411186</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.8009357 0.7607707 0.7209705</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
