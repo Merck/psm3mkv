@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,38 +98,15 @@ or clock forward types, STM-CF) to a dataset derived from the
 <em>bosms3</em> dataset that comes with the
 [flexsurv::flexsurv-package()].[1] A review of PSMs and STMs in oncology
 cost-effectiveness models is provided by Woods et al.[2]</p>
-<p>First we need to install and load the packages of interest (with
-thanks to <span class="citation">@vbaliga</span> for <a href="https://vbaliga.github.io/posts/2019-04-28-verify-that-r-packages-are-installed-and-loaded/" class="external-link">this
-helpful code</a>).</p>
+<p>First we need to load the packages of interest. If you haven’t
+installed <em>psm3mkv</em> yet, please see the <a href="https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation" class="external-link">installation
+instructions</a> to install it and the other packages required to run
+the code below.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install the latest release of psm3mkv from github</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">"devtools"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://pak.r-lib.org/" class="external-link">"pak"</a></span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv"</span>,</span>
-<span>                        ref<span class="op">=</span><span class="st">"main"</span>,</span>
-<span>                        build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; lme4 (1.1-35.2 -&gt; 1.1-35.3) [CRAN]</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="color: #00BBBB;">R CMD build</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; * checking for file ‘/tmp/RtmpSdxS2K/remotes1df52469ff70/Merck-psm3mkv-0f96d8e/DESCRIPTION’ ... OK</span></span>
-<span><span class="co">#&gt; * preparing ‘psm3mkv’:</span></span>
-<span><span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span></span>
-<span><span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span></span>
-<span><span class="co">#&gt; * checking for empty or unneeded directories</span></span>
-<span><span class="co">#&gt; * building ‘psm3mkv_0.2.1.tar.gz’</span></span>
-<span></span>
-<span><span class="co"># First specify the packages of interest</span></span>
-<span><span class="va">packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"psm3mkv"</span>, <span class="st">"dplyr"</span>, <span class="st">"boot"</span>, <span class="st">"ggsci"</span>, <span class="st">"flexsurv"</span>, <span class="st">"survival"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Now load or install &amp; load all</span></span>
-<span><span class="va">package.check</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
-<span>  <span class="va">packages</span>,</span>
-<span>  FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va">x</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">x</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>      <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">x</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"boot"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://nanx.me/ggsci/" class="external-link">"ggsci"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://merck.github.io/psm3mkv/">"psm3mkv"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://purrr.tidyverse.org/" class="external-link">"purrr"</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="obtaining-a-suitable-dataset">Obtaining a suitable dataset<a class="anchor" aria-label="anchor" href="#obtaining-a-suitable-dataset"></a>
@@ -367,7 +344,7 @@ merely illustrates the options available to the modeler.</p>
 <p>Let us count how many parameters we are using in each model.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Pull out number of parameters used for each endpoint</span></span>
-<span><span class="va">count_npar</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_vec</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">~</span><span class="va">params</span><span class="op">[[</span><span class="va">.x</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">npars</span><span class="op">)</span></span>
+<span><span class="va">count_npar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_vec</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">~</span><span class="va">params</span><span class="op">[[</span><span class="va">.x</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">npars</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># PSM uses PFS (3) and OS (4) endpoints</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
@@ -513,7 +490,7 @@ case.</p>
 states.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for PF state</span></span>
-<span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pf</span> <span class="op">+</span> <span class="fu">scale_color_npg</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pf</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_pf-1.png" width="700"></p>
@@ -521,7 +498,7 @@ states.</p>
 and appear to fit well visually to the observed PF data.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for PD state</span></span>
-<span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pd</span> <span class="op">+</span> <span class="fu">scale_color_npg</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pd</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_pd-1.png" width="700"></p>
@@ -533,7 +510,7 @@ was observed. The highest probabilities are from the STM-CF model.</p>
 either PF or PD state).</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for OS</span></span>
-<span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">os</span> <span class="op">+</span> <span class="fu">scale_color_npg</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">os</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_os-1.png" width="700"></p>
@@ -551,7 +528,7 @@ STM-CF estimate is derived based on the average, across patients, of
 patients’ expected PPS-CF survival relative to their TTP timepoint.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Probabilities of PPS</span></span>
-<span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pps</span> <span class="op">+</span> <span class="fu">scale_color_npg</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pps</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 85 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_pps-1.png" width="700"></p>
