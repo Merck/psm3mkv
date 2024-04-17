@@ -45,6 +45,7 @@ Numeric vector of restricted mean durations - PF for each model (PSM, STM-CF, ST
 Wrapper function to \link{calc_allrmds} to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 # Pick out best distribution according to min AIC
@@ -57,4 +58,5 @@ params <- list(
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
 calc_allrmds_boot(ptdata=bosonc, dpam=params)
+}
 }

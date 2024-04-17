@@ -38,10 +38,10 @@
 #' @param starting Vector of membership probabilities at time zero.
 #' @param discrate Discount rate (%) per year
 #' @return Numeric value in same time unit as patient-level data (weeks).
-#' @include basics.R
 #' @seealso Used safely as [prmd_pf_stm] by [calc_allrmds]
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -55,6 +55,7 @@
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pf_stm(dpam=params)
+#' }
 rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- NULL
@@ -80,7 +81,6 @@ rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
 #' Safely calculate restricted mean duration in progression-free for state transition models
 #' @description Calculates the mean duration in the progression-free state for both the state transition clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pf_stm]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pf_stm]
-#' @include basics.R
 #' @return Numeric value in same time unit as patient-level data (weeks).
 prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 
@@ -89,10 +89,10 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso [rmd_pd_stm_cr]
-#' @include basics.R
 #' @export
 #' @seealso Used safely as [prmd_pd_stm_cr] by [calc_allrmds]
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -106,6 +106,7 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pd_stm_cr(dpam=params)
+#' }
 rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
@@ -147,17 +148,16 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
 #' @description Calculates the mean duration in the progressed disease state for the clock reset state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pd_stm_cr]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pd_stm_cr]
 #' @return Numeric value in same time unit as patient-level data (weeks).
-#' @include basics.R
 prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 
 #' Restricted mean duration in progressed disease state for clock forward state transition model
 #' @description Calculates the mean duration in the progressed disease state for the clock forward state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
-#' @include basics.R
 #' @seealso Used safely as [prmd_pd_stm_cf] by [calc_allrmds]
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -172,6 +172,7 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pd_stm_cf(dpam=params)
+#' }
 rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
@@ -212,7 +213,6 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
 #' @description Calculates the mean duration in the progressed disease state for the clock forward state transition model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pd_stm_cf]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pd_stm_cf]
 #' @return Numeric value in same time unit as patient-level data (weeks).
-#' @include basics.R
 prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 
 #' Restricted mean duration in progression free state for the partitioned survival model
@@ -220,9 +220,9 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pf_psm] by [calc_allrmds]
-#' @include basics.R
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -237,6 +237,7 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pf_psm(dpam=params)
+#' }
 rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- pfs.ts <- rmd <- NULL
@@ -262,17 +263,16 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
 #' @description Calculates the mean duration in the progression free state for the partitioned survival model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_pf_psm]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_pf_psm]
 #' @return Numeric value in same time unit as patient-level data (weeks).
-#' @include basics.R
 prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 
 #' Restricted mean duration for overall survival in the partitioned survival model
 #' @description Calculates the mean duration alive (i.e. in either progression free or progressed disease states) for the partitioned survival model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over.
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
-#' @include basics.R
 #' @seealso Used safely as [prmd_os_psm] by [calc_allrmds]
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -286,6 +286,7 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_os_psm(params)
+#' }
 rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- os.ts  <- NULL
@@ -310,7 +311,6 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
 #' @description Calculates the mean duration alive (i.e. in either progression free or progressed disease states) for the partitioned survival model. Requires a carefully formatted list of fitted survival regressions for necessary endpoints, and the time duration to calculate over. Wrapper with 'possibly' of [rmd_os_psm]. This function is called by [calc_allrmds].
 #' @param ... Pass-through to [rmd_os_psm]
 #' @return Numeric value in same time unit as patient-level data (weeks).
-#' @include basics.R
 prmd_os_psm <- purrr::possibly(rmd_os_psm, otherwise=NA_real_)
 
 #' Fit survival models to each endpoint, given type and spec
@@ -451,10 +451,10 @@ calc_rmd_first <- function(ds, cuttime) {
 #' @return List of detailed numeric results
 #' - cutadj indicates the survival function and area under the curves for PFS and OS up to the cutpoint
 #' - results provides results of the restricted means calculations, by model and state.
-#' @include basics.R
 #' @seealso Restricted means are provided by [rmd_pf_psm()], [rmd_os_psm()], [rmd_pf_stm()], [rmd_pd_stm_cf()] and [rmd_pd_stm_cr()]. The function [calc_allrmds_boot] provides a version for bootstrapping.
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -471,6 +471,7 @@ calc_rmd_first <- function(ds, cuttime) {
 #' calc_allrmds(bosonc, dpam=params)
 #' # RMD using discretized ("disc") method, no lifetable constraint
 #' calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
+#' }
 calc_allrmds <- function(ptdata,
                          inclset = 0,
                          dpam,
@@ -540,9 +541,9 @@ calc_allrmds <- function(ptdata,
 #' @description Wrapper function to [calc_allrmds] to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
 #' @inheritParams calc_allrmds
 #' @return Numeric vector of restricted mean durations - PF for each model (PSM, STM-CF, STM-CR), then PD, then OS.
-#' @include basics.R
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -555,6 +556,7 @@ calc_allrmds <- function(ptdata,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' calc_allrmds_boot(ptdata=bosonc, dpam=params)
+#' }
 calc_allrmds_boot <- function(ptdata,
                               inclset = 0,
                               dpam,

@@ -41,6 +41,7 @@ Four datasets and graphics as a list
 Graph the observed and fitted state membership probabilities for PF, PD, OS and PPS.
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_par(bosonc)
 # Pick out best distribution according to min AIC
@@ -55,4 +56,5 @@ params <- list(
 # Create graphics
 gs <- graph_survs(ptdata=bosonc, dpam=params)
 gs$graph$pd
+}
 }

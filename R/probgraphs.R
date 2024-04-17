@@ -42,6 +42,7 @@
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -54,6 +55,7 @@
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pf_psm(0:100, params)
+#' }
 prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
   pfs.ts <- survprob <- NULL
@@ -72,6 +74,7 @@ prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -84,6 +87,7 @@ prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pf_stm(0:100, params)
+#' }
 prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
   ppd.ts <- s1 <- NULL
@@ -105,6 +109,7 @@ prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -117,6 +122,7 @@ prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_os_psm(0:100, params)
+#' }
 prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
   # Declare local variables
   os.ts <- survprob <- NULL
@@ -134,6 +140,7 @@ prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -146,6 +153,7 @@ prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pps_cr(0:100, params)
+#' }
 prob_pps_cr <- function(time, dpam) {
   # Declare local variables
   pps.ts <- NULL
@@ -162,6 +170,7 @@ prob_pps_cr <- function(time, dpam) {
 #' @return Vector of the mean probabilities of post-progression survival at each PPS time, averaged over TTP times.
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -174,6 +183,7 @@ prob_pps_cr <- function(time, dpam) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pps_cf(0:100, 0:100, params)
+#' }
 prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
   # Declare local variables
   pps.ts <- pps.type <- pps.spec <- NULL
@@ -205,6 +215,7 @@ prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -217,6 +228,7 @@ prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pd_psm(0:100, params)
+#' }
 prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
   os <- pf <- NULL
@@ -234,6 +246,7 @@ prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -246,6 +259,7 @@ prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pd_stm_cr(0:100, params)
+#' }
 prob_pd_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
   ttp.ts <- ppd.ts <- pps.ts <- NULL
@@ -281,6 +295,7 @@ prob_pd_stm_cr <- Vectorize(prob_pd_stm_cr, "time")
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -293,6 +308,7 @@ prob_pd_stm_cr <- Vectorize(prob_pd_stm_cr, "time")
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pd_stm_cf(0:100, params)
+#' }
 prob_pd_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
   ttp.ts <- ppd.ts <- pps.ts <- NULL
@@ -329,6 +345,7 @@ prob_pd_stm_cf <- Vectorize(prob_pd_stm_cf, "time")
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -341,6 +358,7 @@ prob_pd_stm_cf <- Vectorize(prob_pd_stm_cf, "time")
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_os_stm_cr(0:100, params)
+#' }
 prob_os_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
   pf <- pd <- NULL
@@ -358,6 +376,7 @@ prob_os_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
 #' @return Numeric value
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -370,6 +389,7 @@ prob_os_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' prob_os_stm_cf(0:100, params)
+#' }
 prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
   pf <- pd <- NULL
@@ -404,6 +424,7 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' @export
 #' @importFrom rlang .data
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_par(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -418,6 +439,7 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' # Create graphics
 #' gs <- graph_survs(ptdata=bosonc, dpam=params)
 #' gs$graph$pd
+#' }
 graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   cat("Creating KM \n")
   # Declare local variables
