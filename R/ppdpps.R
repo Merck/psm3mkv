@@ -45,6 +45,7 @@
 #' @return List of pre, the pre-progression hazard, and post, the post-progression hazard
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -58,6 +59,7 @@
 #'   )
 #' calc_haz_psm(0:10, ptdata=bosonc, dpam=params, psmtype="simple")
 #' calc_haz_psm(0:10, ptdata=bosonc, dpam=params, psmtype="complex")
+#' }
 calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
   # Declare local variables
   pfs.ts <- pfs.type <- pfs.spec <- NULL
@@ -131,6 +133,7 @@ calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
 #' @return Vector of PPS survival function values
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -142,11 +145,12 @@ calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
 #'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
-#' # calc_surv_psmpps(totime=1:10,
-#' #   fromtime=rep(1,10),
-#' #   ptdata=bosonc,
-#' #   dpam=params,
-#' #   type="simple")
+#' calc_surv_psmpps(totime=1:10,
+#'   fromtime=rep(1,10),
+#'   ptdata=bosonc,
+#'   dpam=params,
+#'   psmtype="simple")
+#' }
 calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, psmtype="simple") {
   # Declare local variables
   cumH <- NULL

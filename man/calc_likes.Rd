@@ -62,6 +62,7 @@ The contribution of each patient group to the calculation of log-likelihood for 
 Calculate likelihood values and other summary output for the following three state models structures: partitioned survival, clock forward state transition, and clock reset state transition. The function requires appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used).
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 # Pick out best distribution according to min AIC
@@ -74,6 +75,7 @@ params <- list(
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
   )
 calc_likes(bosonc, dpam=params)
+}
 }
 \seealso{
 This function calls \code{\link[=calc_likes_psm_simple]{calc_likes_psm_simple()}}, \code{\link[=calc_likes_psm_complex]{calc_likes_psm_complex()}}, \code{\link[=calc_likes_stm_cf]{calc_likes_stm_cf()}}, and \code{\link[=calc_likes_stm_cr]{calc_likes_stm_cr()}}.

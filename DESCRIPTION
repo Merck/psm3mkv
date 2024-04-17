@@ -1,6 +1,6 @@
 Package: psm3mkv
 Title: Fit and Evaluate Three-State Partitioned Survival Analysis and Markov Models to Progression-Free and Overall Survival Data
-Version: 0.2.1.9001
+Version: 0.2.1.9002
 Authors@R: c(
     person("Dominic", "Muston", , "dominic.muston@merck.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4876-7940")),

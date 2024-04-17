@@ -43,9 +43,11 @@ Also, the given cuttime.
 Fits multiple survival regressions, according to the distributions stipulated, to the multiple endpoints required in fitting partitioned survival analysis, clock forward and clock reset semi-markov models.
 }
 \examples{
+\donttest{
 # Create dataset in suitable form using bos dataset from the flexsurv package
 bosonc <- create_dummydata("flexbosms")
 fit_ends_mods_spl(bosonc, expvar=bosonc$ttp.durn)
+}
 }
 \seealso{
 Parametric modeling is handled by \code{\link[=fit_ends_mods_par]{fit_ends_mods_par()}}

@@ -18,7 +18,9 @@ List of the single survival regression with the best fit.
 When there are multiple spline models fitted to the same endpoint and dataset, it is necessary to identify the preferred model. This function reviews the fitted regressions and selects that with the minimum Akaike or Bayesian Information Criterion (AIC, BIC), depending on user choice.
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 find_bestfit_spl(fits$ttp, "aic")
+}
 }
