@@ -58,6 +58,7 @@ List of detailed numeric results
 Calculate restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
 }
 \examples{
+\donttest{
 # Create dataset and fit survival models (splines)
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
@@ -74,6 +75,7 @@ params <- list(
 calc_allrmds(bosonc, dpam=params)
 # RMD using discretized ("disc") method, no lifetable constraint
 calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
+}
 }
 \seealso{
 Restricted means are provided by \code{\link[=rmd_pf_psm]{rmd_pf_psm()}}, \code{\link[=rmd_os_psm]{rmd_os_psm()}}, \code{\link[=rmd_pf_stm]{rmd_pf_stm()}}, \code{\link[=rmd_pd_stm_cf]{rmd_pd_stm_cf()}} and \code{\link[=rmd_pd_stm_cr]{rmd_pd_stm_cr()}}. The function \link{calc_allrmds_boot} provides a version for bootstrapping.

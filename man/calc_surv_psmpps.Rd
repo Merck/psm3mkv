@@ -24,6 +24,7 @@ Vector of PPS survival function values
 Derive the post-progression survival (PPS) function under the simple or complex PSM formulation.
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 # Pick out best distribution according to min AIC
@@ -35,9 +36,10 @@ params <- list(
   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
   )
-# calc_surv_psmpps(totime=1:10,
-#   fromtime=rep(1,10),
-#   ptdata=bosonc,
-#   dpam=params,
-#   type="simple")
+calc_surv_psmpps(totime=1:10,
+  fromtime=rep(1,10),
+  ptdata=bosonc,
+  dpam=params,
+  psmtype="simple")
+}
 }

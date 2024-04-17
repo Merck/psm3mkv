@@ -20,6 +20,7 @@ Numeric value
 Calculates membership probability of having progressed disease at a particular time (vectorized), given the partitioned survival model with certain statistical distributions and parameters.
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 # Pick out best distribution according to min AIC
@@ -32,4 +33,5 @@ params <- list(
   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 )
 prob_pd_psm(0:100, params)
+}
 }

@@ -41,6 +41,7 @@
 #' @seealso Used safely as [prmd_pf_stm] by [calc_allrmds]
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -54,6 +55,7 @@
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pf_stm(dpam=params)
+#' }
 rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- NULL
@@ -90,6 +92,7 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' @export
 #' @seealso Used safely as [prmd_pd_stm_cr] by [calc_allrmds]
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -103,6 +106,7 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_pd_stm_cr(dpam=params)
+#' }
 rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
@@ -153,6 +157,7 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' @seealso Used safely as [prmd_pd_stm_cf] by [calc_allrmds]
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -167,6 +172,7 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pd_stm_cf(dpam=params)
+#' }
 rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
@@ -216,6 +222,7 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' @seealso Used safely as [prmd_pf_psm] by [calc_allrmds]
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -230,6 +237,7 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' )
 #' # Find mean(s)
 #' rmd_pf_psm(dpam=params)
+#' }
 rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- pfs.ts <- rmd <- NULL
@@ -264,6 +272,7 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #' @seealso Used safely as [prmd_os_psm] by [calc_allrmds]
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -277,6 +286,7 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' rmd_os_psm(params)
+#' }
 rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- os.ts  <- NULL
@@ -444,6 +454,7 @@ calc_rmd_first <- function(ds, cuttime) {
 #' @seealso Restricted means are provided by [rmd_pf_psm()], [rmd_os_psm()], [rmd_pf_stm()], [rmd_pd_stm_cf()] and [rmd_pd_stm_cr()]. The function [calc_allrmds_boot] provides a version for bootstrapping.
 #' @export
 #' @examples
+#' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
@@ -460,6 +471,7 @@ calc_rmd_first <- function(ds, cuttime) {
 #' calc_allrmds(bosonc, dpam=params)
 #' # RMD using discretized ("disc") method, no lifetable constraint
 #' calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
+#' }
 calc_allrmds <- function(ptdata,
                          inclset = 0,
                          dpam,
@@ -531,6 +543,7 @@ calc_allrmds <- function(ptdata,
 #' @return Numeric vector of restricted mean durations - PF for each model (PSM, STM-CF, STM-CR), then PD, then OS.
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -543,6 +556,7 @@ calc_allrmds <- function(ptdata,
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #' )
 #' calc_allrmds_boot(ptdata=bosonc, dpam=params)
+#' }
 calc_allrmds_boot <- function(ptdata,
                               inclset = 0,
                               dpam,

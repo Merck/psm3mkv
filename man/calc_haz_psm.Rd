@@ -41,6 +41,7 @@ List of pre, the pre-progression hazard, and post, the post-progression hazard
 Derive the hazards of death pre- and post-progression under either simple or complex PSM formulations.
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 # Pick out best distribution according to min AIC
@@ -54,4 +55,5 @@ params <- list(
   )
 calc_haz_psm(0:10, ptdata=bosonc, dpam=params, psmtype="simple")
 calc_haz_psm(0:10, ptdata=bosonc, dpam=params, psmtype="complex")
+}
 }

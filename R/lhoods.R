@@ -30,9 +30,11 @@
 #' @export
 #' @seealso [flexsurv::flexsurvspline()]
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' convert_fit2spec(fits$pfs[[3]]$result)
+#' }
 convert_fit2spec <- function(fitsurv) {
   # Declare local variables
   par.dist <- type <- spec <- NULL
@@ -84,6 +86,7 @@ convert_fit2spec <- function(fitsurv) {
 #' @importFrom rlang .data
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -96,6 +99,7 @@ convert_fit2spec <- function(fitsurv) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
 #' calc_likes_psm_simple(bosonc, dpam=params)
+#' }
 calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- pfs.durn <- NULL
@@ -382,6 +386,7 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 #' @export
 #' @importFrom rlang .data
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -394,6 +399,7 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
 #' calc_likes_stm_cr(bosonc, dpam=params)
+#' }
 calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
@@ -494,6 +500,7 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #' @seealso This function calls [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cf()], and [calc_likes_stm_cr()].
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -506,6 +513,7 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
 #' calc_likes(bosonc, dpam=params)
+#' }
 calc_likes <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   methodnames <- list1 <- list2 <- list3 <- list4 <- methno <- NULL
