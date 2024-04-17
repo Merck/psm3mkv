@@ -1,6 +1,6 @@
 Package: psm3mkv
 Title: Fit and Evaluate Three-State Partitioned Survival Analysis and Markov Models to Progression-Free and Overall Survival Data
-Version: 0.2.1.9000
+Version: 0.2.1.9001
 Authors@R: c(
     person("Dominic", "Muston", , "dominic.muston@merck.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4876-7940")),
@@ -41,16 +41,3 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
-Collate: 
-    'basics.R'
-    'brier.R'
-    'datasets.R'
-    'discrmd.R'
-    'fitting-spl.R'
-    'fitting.R'
-    'lhoods.R'
-    'ltablesurv.R'
-    'ppdpps.R'
-    'probgraphs.R'
-    'psm3mkv-package.R'
-    'resmeans.R'
