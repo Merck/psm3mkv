@@ -111,29 +111,13 @@ The adjustment to RMD estimates can then proceed as with the STMs, with hazards 
 
 ### Set-up
 
-First we load the packages we need - all of which are suggested for or imported to *psm3mkv*. With thanks again to @vbaliga for [this helpful code](https://vbaliga.github.io/posts/2019-04-28-verify-that-r-packages-are-installed-and-loaded/)).
+First we load the packages we need - all of which are suggested for or imported to *psm3mkv*. If you haven't installed *psm3mkv* yet, please see the [installation instructions](https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation) to install it and the other packages required to run the code below.
 
 ```{r packages, message=FALSE}
-# Install latest 'Nextrel' version from github, without vignettes
-require("devtools")
-require("pak")
-devtools::install_github("Merck/psm3mkv",
-                        ref="main",
-                        build_vignettes=FALSE)
-
-# First specify the packages of interest
-packages <- c("psm3mkv", "dplyr", "flexsurv", "HMDHFDplus", "remotes")
-
-# Now load or install & load all
-package.check <- lapply(
-  packages,
-  FUN = function(x) {
-    if (!require(x, character.only = TRUE)) {
-      install.packages(x, dependencies = TRUE)
-      library(x, character.only = TRUE)
-    }
-  }
-)
+library("dplyr")
+library("HMDHFDplus")
+library("psm3mkv")
+library("tibble")
 ```
 
 ### Creating the life table
@@ -145,7 +129,7 @@ In order to apply constraints to background mortality, we need some background m
 baseage <- 51.0
 
 # Mortality data - England & Wales, Female, 2019
-mort <- HMDHFDplus::readHMDweb(CNTRY="GBRTENW",
+mort <- readHMDweb(CNTRY="GBRTENW",
                         item="fltper_1x1",
                         username="",
                         password=""
@@ -156,16 +140,16 @@ mort <- HMDHFDplus::readHMDweb(CNTRY="GBRTENW",
               filter(Timey>=0)
 
 # The table needs to end with lx=0
-mort <- dplyr::add_row(mort, Age=111, lx=0, Timey=60)
+mort <- add_row(mort, Age=111, lx=0, Timey=60)
 ```
 
 You will see that the above code cannot run without a login for the [Human Mortality Database](www.mortality.org). Alternatively, we could just make up a mortality table.
 
 ```{r ltable2}
-mort <- tibble::tibble(
+mort <- tibble(
   Timey = 0:30,
   lx = 10000 * exp(-0.03 * Timey^1.1),
-  dx = lx - dplyr::lead(lx),
+  dx = lx - lead(lx),
   qx = dx/lx
   )
 ```
@@ -186,7 +170,7 @@ for (i in 2:length(mort$lx)) {
 mort$adjlx[mort$adjlx<0] <- 0
 
 # Create and view lifetable
-ltable <- tibble::tibble(lttime=mort$Timey, lx=mort$adjlx)
+ltable <- tibble(lttime=mort$Timey, lx=mort$adjlx)
 head(ltable)
 ```
 
@@ -201,7 +185,7 @@ bosonc <- create_dummydata("flexbosms")
 # We'll make the durations a lot longer
 # so that they will be definitely constrained by the lifetable
 bosonc <- bosonc |>
-  dplyr:: mutate(
+  mutate(
     pfs.durn = 20 * pfs.durn,
     os.durn = 20 * os.durn,
     ttp.durn = 20 * ttp.durn
@@ -242,9 +226,9 @@ thoz <- 10
 proj1 <- calc_allrmds(bosonc, dpam=params, Ty=thoz)
 
 # Present the results
-res1 <- proj1$results |> dplyr::mutate(method="int", lxadj="no", psmmeth="simple")
-res1 |> dplyr::mutate(
-  dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+res1 <- proj1$results |> mutate(method="int", lxadj="no", psmmeth="simple")
+res1 |> mutate(
+  across(c(pf, pd, os), ~ num(.x, digits = 1)))
 ```
 
 Next we derive a projection using a discretization approximation, still without any lifetable constraints.
@@ -255,9 +239,9 @@ proj2 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, rmdmethod="disc")
 
 # Present the results
 res2 <- proj2$results |>
-  dplyr::mutate(method="disc", lxadj="no", psmmeth="simple")
-res2 |> dplyr::mutate(
-  dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+  mutate(method="disc", lxadj="no", psmmeth="simple")
+res2 |> mutate(
+  across(c(pf, pd, os), ~ num(.x, digits = 1)))
 ```
 
 Discretization has proven fairly accurate. The STM-CR estimate of mean time alive has reduced by just `r round(res1$os[3]-res2$os[3],1)` weeks for example, from `r round(res1$os[3],1)` to `r round(res2$os[3],1)` weeks.
@@ -270,9 +254,9 @@ proj3 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, rmdmethod="disc", lifetable=
 
 # Present the results
 res3 <- proj3$results |>
-  dplyr::mutate(method="disc", lxadj="yes", psmmeth="simple")
-res3 |> dplyr::mutate(
-    dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+  mutate(method="disc", lxadj="yes", psmmeth="simple")
+res3 |> mutate(
+    across(c(pf, pd, os), ~ num(.x, digits = 1)))
 
 # Proportion of time alive spent in PF
 proppf3 <- res3$pf/res3$os
@@ -290,9 +274,9 @@ proj4 <- calc_allrmds(bosonc, dpam=params, Ty=thoz, psmtype="complex", rmdmethod
 
 # Present the results
 res4 <- proj4$results |>
-  dplyr::mutate(method="disc", lxadj="yes", psmmeth="complex")
-res4 |> dplyr::mutate(
-    dplyr::across(c(pf, pd, os), ~ tibble::num(.x, digits = 1)))
+  mutate(method="disc", lxadj="yes", psmmeth="complex")
+res4 |> mutate(
+    across(c(pf, pd, os), ~ num(.x, digits = 1)))
 
 # Proportion of time alive spent in PF
 proppf4 <- res4$pf/res4$os
