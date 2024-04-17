@@ -1,6 +1,8 @@
 # Tests for discrmd.R
 # -------------------
 
+skip_on_cran()
+
 # Create dataset
 bosonc <- create_dummydata("flexbosms")
 
