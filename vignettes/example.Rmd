@@ -1,6 +1,7 @@
 ---
 title: "Example use of psm3mkv"
 output: rmarkdown::html_vignette
+bibliography: psm3mkv.bib
 vignette: >
   %\VignetteIndexEntry{Example use of psm3mkv}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,9 +17,9 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This vignette walks through evaluating the partitioned survival model (PSM) and state transition model structures (either clock reset, STM-CR, or clock forward types, STM-CF) to a dataset derived from the *bosms3* dataset that comes with the [flexsurv::flexsurv-package()].[1] A review of PSMs and STMs in oncology cost-effectiveness models is provided by Woods et al.[2]
+This vignette walks through evaluating the partitioned survival model (PSM) and state transition model structures (either clock reset, STM-CR, or clock forward types, STM-CF) to a dataset derived from the `bosms3` dataset that comes with the flexsurv package [@jackson2016flexsurv]. A review of PSMs and STMs in oncology cost-effectiveness models is provided by @woods2020partitioned.
 
-First we need to load the packages of interest. If you haven't installed *psm3mkv* yet, please see the [installation instructions](https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation) to install it and the other packages required to run the code below.
+First we need to load the packages of interest. If you haven't installed psm3mkv yet, please see the [installation instructions](https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation) to install it and the other packages required to run the code below.
 
 ```{r packages, message=FALSE}
 library("boot")
@@ -29,7 +30,7 @@ library("purrr")
 
 ## Obtaining a suitable dataset
 
-First we create a suitable patient-level dataset using *create_dummydata()*. Here we load data derived from the *bosms3* dataset with the *flexsurv* package.[2]
+First we create a suitable patient-level dataset using `create_dummydata()`. Here we load data derived from the `bosms3` dataset with the flexsurv package [@jackson2016flexsurv].
 
 ```{r dataset}
 # Create and review the dummy dataset
@@ -44,29 +45,31 @@ The dataset contains TTP, PFS and OS data for `r length(bosonc$ptid)` patients.
 
 The three cost-effectiveness model structures we are considering rely on modeling not only of PFS, TTP and OS, but additionally three other endpoints:
 
-* pre-progression death (PPD),
-* post progression survival as a function of time from baseline (known as 'clock forward', PPS-CF), and
-* post-progression survival as a function of time from progression (known as 'clock reset', PPS-CR).
+- Pre-progression death (PPD).
+- Post progression survival as a function of time from baseline (known as 'clock forward', PPS-CF).
+- Post-progression survival as a function of time from progression (known as 'clock reset', PPS-CR).
 
 Once we have a suitable dataset, we will fit statistical models to these six endpoints.
 
 ### Parametric distributions
 
-Let us start by considering parametric distributions. This uses the function *fit_ends_mods_par()*, so called because it cycles through fitting endpoints and models. The original dataset contained only three of these endpoints, the other three endpoints are calculated within the function.
+Let us start by considering parametric distributions. This uses the function `fit_ends_mods_par()`, so called because it cycles through fitting endpoints and models. The original dataset contained only three of these endpoints, the other three endpoints are calculated within the function.
 
 ```{r fit_ends_mods_par}
 # Create a vector of distributions of interest (flexsurv notation)
 alldists <- c("exp", "weibullPH", "llogis", "lnorm", "gamma", "gompertz", "gengamma")
 
 # Fit all distributions to all endpoints (except gengamma to PPD and TTP)
-allfits_par <- fit_ends_mods_par(bosonc,
-                            cuttime=0,
-                            ppd.dist=alldists[1:6],
-                            ttp.dist=alldists[1:6],
-                            pfs.dist=alldists,
-                            os.dist=alldists,
-                            pps_cf.dist=alldists,
-                            pps_cr.dist=alldists)
+allfits_par <- fit_ends_mods_par(
+  bosonc,
+  cuttime = 0,
+  ppd.dist = alldists[1:6],
+  ttp.dist = alldists[1:6],
+  pfs.dist = alldists,
+  os.dist = alldists,
+  pps_cf.dist = alldists,
+  pps_cr.dist = alldists
+)
 
 # Example 1 - PFS endpoint, distribution 2 (weibullPH)
 allfits_par$pfs[[2]]$result
@@ -76,7 +79,7 @@ allfits_par$pps_cf[[3]]$result$res
 allfits_par$pps_cr[[3]]$result$res
 ```
 
-We have fitted multiple parametric distributions to each endpoint. We only need to retain the best-fitting distribution, which we select using *find_bestfit_par()* on the basis of the distribution having the lowest Akaike Information Criterion (AIC).
+We have fitted multiple parametric distributions to each endpoint. We only need to retain the best-fitting distribution, which we select using `find_bestfit_par()` on the basis of the distribution having the lowest Akaike Information Criterion (AIC).
 
 ```{r find_bestfit_par}
 # Pick out best distribution according to min AIC
@@ -93,7 +96,7 @@ fitpar.pfs
 
 ### Royston-Parmar splines models
 
-An alternative approach to parametric modeling is the use of Royston-Parmar splines.[3] We can follow a similar approach, again using *flexsurv* [2] to identify the best-fitting spline distributions. To the six endpoints, we fit 9 spline models: 1, 2 or 3 (internal) knots with either odds, hazard or normal scales. This uses *fit_ends_mods_spl()*.
+An alternative approach to parametric modeling is the use of Royston-Parmar splines [@royston2002flexible]. We can follow a similar approach, again using flexsurv [@jackson2016flexsurv] to identify the best-fitting spline distributions. To the six endpoints, we fit 9 spline models: 1, 2 or 3 (internal) knots with either odds, hazard or normal scales. This uses `fit_ends_mods_spl()`.
 
 ```{r fit_ends_mods_spl}
 # Fit 1-3 knot splines with all 3 scales (odds, hazard, normal) to each endpoint
@@ -105,7 +108,7 @@ allfits_spl$pfs[[2]]$result$aux$scale # Scale
 allfits_spl$pfs[[2]]$result$aux$knots # Knot locations (log time)
 ```
 
-We have fitted multiple splines to each endpoint. We only need to retain the best-fitting distribution, which we select on the basis of the distribution having the lowest Akaike Information Criterion (AIC). We use *find_bestfit_spl()* for this.
+We have fitted multiple splines to each endpoint. We only need to retain the best-fitting distribution, which we select on the basis of the distribution having the lowest Akaike Information Criterion (AIC). We use `find_bestfit_spl()` for this.
 
 ```{r find_bestfit_spl}
 # Pick out best distribution according to min AIC
@@ -126,31 +129,31 @@ Finally, we select our preferred curves for each endpoint. These may or may not 
 
 ```{r bring_together_fits}
 # Bring together our preferred fits for each endpoint in a list
-params <- list(ppd = fitpar.ppd$fit,
-               ttp = fitpar.ttp$fit,
-               pfs = fitspl.pfs$fit,
-               os = fitspl.os$fit,
-               pps_cf = allfits_par$pps_cf[[2]]$result,
-               pps_cr = allfits_spl$pps_cr[[2]]$result
-               )
+params <- list(
+  ppd = fitpar.ppd$fit,
+  ttp = fitpar.ttp$fit,
+  pfs = fitspl.pfs$fit,
+  os = fitspl.os$fit,
+  pps_cf = allfits_par$pps_cf[[2]]$result,
+  pps_cr = allfits_spl$pps_cr[[2]]$result
+)
 ```
 
 Let us count how many parameters we are using in each model.
 
 ```{r count_params}
 # Pull out number of parameters used for each endpoint
-count_npar <- map_vec(1:6, ~params[[.x]]$npars)
+count_npar <- map_vec(1:6, ~ params[[.x]]$npars)
 
 # PSM uses PFS (3) and OS (4) endpoints
-sum(count_npar[c(3,4)])
+sum(count_npar[c(3, 4)])
 
 # STM_CF uses PPD (1), TTP (2) and PPS_CF (5) endpoints
-sum(count_npar[c(1,2,5)])
+sum(count_npar[c(1, 2, 5)])
 
 # STM_CR uses PPD (1), TTP (2) and PPS_CR (6) endpoints
-sum(count_npar[c(1,2,6)])
+sum(count_npar[c(1, 2, 6)])
 ```
-
 
 ## Comparing likelihood values for the three model structures
 
@@ -165,22 +168,23 @@ In this case, the model structures could be fitted to 203 of the 204 patients. A
 
 ## Other measures of goodness of fit
 
-The Brier score is a measure of goodness of fit of a survival model at a particular point in time to a set of patient time-to-event data. Originally developed for measuring the performance of weather forecasting, this metric has since been used in other applications. An extension of the Brier score is the integral of the Brier score, which is an 'area under the curve' measure of concordance of the survival model to a given set of patient time-to-event data. The integral is taken between the minimum and maximum event or censoring times in the dataset. Calculations are provided in the *SurvMetrics* R package, which can be slow to run (about 1 minute in this example).[4]
+The Brier score is a measure of goodness of fit of a survival model at a particular point in time to a set of patient time-to-event data. Originally developed for measuring the performance of weather forecasting, this metric has since been used in other applications. An extension of the Brier score is the integral of the Brier score, which is an 'area under the curve' measure of concordance of the survival model to a given set of patient time-to-event data. The integral is taken between the minimum and maximum event or censoring times in the dataset. Calculations are provided in the R package SurvMetrics, which can be slow to run (about 1 minute in this example, @hanpu2021predictive).
 
-The *psm3mkv* package allows examination of Integrated Brier Scores in the fit of Overall Survival by each of the model structures.
+The psm3mkv package allows examination of Integrated Brier Scores in the fit of Overall Survival by each of the model structures.
 
 ```{r brier}
 # calc_ibs(bosonc, params)
 ```
-In this case, the IBS calculation involved integrating between times 1.18 and 52.70. The PSM had the least IBS and best fit (IBS=0.1771); the two STMs had slightly greater IBS values (0.1773 for CF and 0.1776 for CR).
+
+In this case, the IBS calculation involved integrating between times 1.18 and 52.70. The PSM had the least IBS and best fit (IBS = 0.1771); the two STMs had slightly greater IBS values (0.1773 for CF and 0.1776 for CR).
 
 ## Comparing the implied (restricted) mean durations
 
-In order to understand the degree of structural uncertainty (sensitivity to the choice of model structure), we calculate the (restricted) mean durations in progression-free (PF) and progressed disease (PD) states by model type. To do this, we call the *calc_allrmds()* function with the dataset and statistical distributions we wish to consider for each endpoint. The function also allows specification of the patient subset to use (*inclset*, important for bootstrapping later) and the time horizon. The units for the time horizon are `r round(365.25/7, 2)` times shorter than the units for the output because - the time horizon can be considered to be in units of years, whereas the output is in units of weeks.
+In order to understand the degree of structural uncertainty (sensitivity to the choice of model structure), we calculate the (restricted) mean durations in progression-free (PF) and progressed disease (PD) states by model type. To do this, we call the `calc_allrmds()` function with the dataset and statistical distributions we wish to consider for each endpoint. The function also allows specification of the patient subset to use (`inclset`, important for bootstrapping later) and the time horizon. The units for the time horizon are `r round(365.25/7, 2)` times shorter than the units for the output because - the time horizon can be considered to be in units of years, whereas the output is in units of weeks.
 
 ```{r calc_allrmds}
 # Call the RMD functions
-rmd_all <- calc_allrmds(bosonc, dpam=params)
+rmd_all <- calc_allrmds(bosonc, dpam = params)
 
 # Then review the mean duration in PF, PD and total alive (OS)
 rmd_all$results
@@ -192,15 +196,17 @@ The above output can be bootstrapped to generate standard errors. Here we use ju
 
 ```{r boot, include=FALSE}
 # Bootstrap to calculate SE over R bootstrap samples
-bootlys <- boot(data = bosonc,
-                statistic = calc_allrmds_boot,
-                R = 10,         # Number of simulations
-                cuttime = 0,
-                Ty = 10,
-                dpam = params
-                )
+bootlys <- boot(
+  data = bosonc,
+  statistic = calc_allrmds_boot,
+  R = 10, # Number of simulations
+  cuttime = 0,
+  Ty = 10,
+  dpam = params
+)
 bootlys
 ```
+
 Note that the percentiles information reported indicates that in a small number of samples, the restricted mean duration in PD was restricted to be negative in the PSM. This indicates an inconsistency between the statistical models used in this case for modeling PFS and OS, and may be an additional reason why STMs may be preferred in this case.
 
 ## Visual inspection of model fits
@@ -245,11 +251,3 @@ ptdgraphs$graph$pps + scale_color_npg()
 ```
 
 ## References
-
-1. Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M, Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State Models. Available at: https://cran.r-project.org/package=flexsurv.
-
-2. Woods BS, Sideris E, Palmer S, Latimer N, Soares M. Partitioned Survival and State Transition Models for Healthcare Decision Making in Oncology: Where Are We Now? Value in Health 23(12):1613-21; 2020. [DOI: 10.1016/j.jval.2020.08.2094](https://doi.org/10.1016/j.jval.2020.08.2094)
-
-3. Royston P and Parmar M. Flexible parametric proportional-hazards and proportional-odds models for censored survival data, with application to prognostic modelling and estimation of treatment effects. Statistics in Medicine 21(1):2175-2197; 2002. [DOI: 10.1002/sim.1203](https://doi.org/10.1002/sim.1203)
-
-4. Hanpu Z. Predictive Evaluation Metrics in Survival Analysis. Vignette to the *SurvMetrics* R package. July 2021. Available from: https://cran.r-project.org/package=SurvMetrics/vignettes/SurvMetrics-vignette.html
