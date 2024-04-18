@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Fits and evaluates three-state partitioned survival analyses (PartSAs) and markov models (clock forward or clock reset) to Progression-Free Survival (PFS) and Overall Survival (OS) patient-level data. This data is typically collected in clinical trials in oncology. These model structures are typically considered in cost-effectiveness modeling in advanced/metastatic cancer indications.
+Fits and evaluates three-state partitioned survival analyses (PartSAs) and Markov models (clock forward or clock reset) to Progression-Free Survival (PFS) and Overall Survival (OS) patient-level data. This data is typically collected in clinical trials in oncology. These model structures are typically considered in cost-effectiveness modeling in advanced/metastatic cancer indications.
 }
 \seealso{
 Useful links:
@@ -24,7 +24,7 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item Merck & Co., Inc. [copyright holder, funder]
+  \item Merck & Co., Inc., Rahway, NJ, USA and its affiliates [copyright holder, funder]
 }
 
 }
