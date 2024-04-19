@@ -8,3 +8,4 @@
 ^LICENSES_THIRD_PARTY\.md$
 ^README\.Rmd$
 ^cran-comments\.md$
+^inst/logo/logo\.R$
