@@ -95,11 +95,10 @@
 <p>This vignette walks through evaluating the partitioned survival model
 (PSM) and state transition model structures (either clock reset, STM-CR,
 or clock forward types, STM-CF) to a dataset derived from the
-<em>bosms3</em> dataset that comes with the
-[flexsurv::flexsurv-package()].[1] A review of PSMs and STMs in oncology
-cost-effectiveness models is provided by Woods et al.[2]</p>
+<code>bosms3</code> dataset that comes with the flexsurv package <span class="citation">(Jackson 2016)</span>. A review of PSMs and STMs in
+oncology cost-effectiveness models is provided by <span class="citation">Woods et al. (2020)</span>.</p>
 <p>First we need to load the packages of interest. If you haven’t
-installed <em>psm3mkv</em> yet, please see the <a href="https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation" class="external-link">installation
+installed psm3mkv yet, please see the <a href="https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation" class="external-link">installation
 instructions</a> to install it and the other packages required to run
 the code below.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -112,8 +111,8 @@ the code below.</p>
 <h2 id="obtaining-a-suitable-dataset">Obtaining a suitable dataset<a class="anchor" aria-label="anchor" href="#obtaining-a-suitable-dataset"></a>
 </h2>
 <p>First we create a suitable patient-level dataset using
-<em>create_dummydata()</em>. Here we load data derived from the
-<em>bosms3</em> dataset with the <em>flexsurv</em> package.[2]</p>
+<code><a href="../reference/create_dummydata.html">create_dummydata()</a></code>. Here we load data derived from the
+<code>bosms3</code> dataset with the flexsurv package <span class="citation">(Jackson 2016)</span>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create and review the dummy dataset</span></span>
 <span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span>
@@ -151,10 +150,10 @@ the code below.</p>
 on modeling not only of PFS, TTP and OS, but additionally three other
 endpoints:</p>
 <ul>
-<li>pre-progression death (PPD),</li>
-<li>post progression survival as a function of time from baseline (known
-as ‘clock forward’, PPS-CF), and</li>
-<li>post-progression survival as a function of time from progression
+<li>Pre-progression death (PPD).</li>
+<li>Post progression survival as a function of time from baseline (known
+as ‘clock forward’, PPS-CF).</li>
+<li>Post-progression survival as a function of time from progression
 (known as ‘clock reset’, PPS-CR).</li>
 </ul>
 <p>Once we have a suitable dataset, we will fit statistical models to
@@ -163,7 +162,7 @@ these six endpoints.</p>
 <h3 id="parametric-distributions">Parametric distributions<a class="anchor" aria-label="anchor" href="#parametric-distributions"></a>
 </h3>
 <p>Let us start by considering parametric distributions. This uses the
-function <em>fit_ends_mods_par()</em>, so called because it cycles
+function <code><a href="../reference/fit_ends_mods_par.html">fit_ends_mods_par()</a></code>, so called because it cycles
 through fitting endpoints and models. The original dataset contained
 only three of these endpoints, the other three endpoints are calculated
 within the function.</p>
@@ -172,14 +171,16 @@ within the function.</p>
 <span><span class="va">alldists</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exp"</span>, <span class="st">"weibullPH"</span>, <span class="st">"llogis"</span>, <span class="st">"lnorm"</span>, <span class="st">"gamma"</span>, <span class="st">"gompertz"</span>, <span class="st">"gengamma"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fit all distributions to all endpoints (except gengamma to PPD and TTP)</span></span>
-<span><span class="va">allfits_par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_ends_mods_par.html">fit_ends_mods_par</a></span><span class="op">(</span><span class="va">bosonc</span>,</span>
-<span>                            cuttime<span class="op">=</span><span class="fl">0</span>,</span>
-<span>                            ppd.dist<span class="op">=</span><span class="va">alldists</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
-<span>                            ttp.dist<span class="op">=</span><span class="va">alldists</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
-<span>                            pfs.dist<span class="op">=</span><span class="va">alldists</span>,</span>
-<span>                            os.dist<span class="op">=</span><span class="va">alldists</span>,</span>
-<span>                            pps_cf.dist<span class="op">=</span><span class="va">alldists</span>,</span>
-<span>                            pps_cr.dist<span class="op">=</span><span class="va">alldists</span><span class="op">)</span></span>
+<span><span class="va">allfits_par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_ends_mods_par.html">fit_ends_mods_par</a></span><span class="op">(</span></span>
+<span>  <span class="va">bosonc</span>,</span>
+<span>  cuttime <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  ppd.dist <span class="op">=</span> <span class="va">alldists</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
+<span>  ttp.dist <span class="op">=</span> <span class="va">alldists</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
+<span>  pfs.dist <span class="op">=</span> <span class="va">alldists</span>,</span>
+<span>  os.dist <span class="op">=</span> <span class="va">alldists</span>,</span>
+<span>  pps_cf.dist <span class="op">=</span> <span class="va">alldists</span>,</span>
+<span>  pps_cr.dist <span class="op">=</span> <span class="va">alldists</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Example 1 - PFS endpoint, distribution 2 (weibullPH)</span></span>
 <span><span class="va">allfits_par</span><span class="op">$</span><span class="va">pfs</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span></span>
@@ -207,8 +208,8 @@ within the function.</p>
 <span><span class="co">#&gt; scale 11.031674 8.769443 13.877487 1.2917274</span></span></code></pre></div>
 <p>We have fitted multiple parametric distributions to each endpoint. We
 only need to retain the best-fitting distribution, which we select using
-<em>find_bestfit_par()</em> on the basis of the distribution having the
-lowest Akaike Information Criterion (AIC).</p>
+<code><a href="../reference/find_bestfit_par.html">find_bestfit_par()</a></code> on the basis of the distribution having
+the lowest Akaike Information Criterion (AIC).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Pick out best distribution according to min AIC</span></span>
 <span><span class="va">fitpar.ppd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits_par</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span></span>
@@ -250,11 +251,12 @@ lowest Akaike Information Criterion (AIC).</p>
 <h3 id="royston-parmar-splines-models">Royston-Parmar splines models<a class="anchor" aria-label="anchor" href="#royston-parmar-splines-models"></a>
 </h3>
 <p>An alternative approach to parametric modeling is the use of
-Royston-Parmar splines.[3] We can follow a similar approach, again using
-<em>flexsurv</em> [2] to identify the best-fitting spline distributions.
-To the six endpoints, we fit 9 spline models: 1, 2 or 3 (internal) knots
-with either odds, hazard or normal scales. This uses
-<em>fit_ends_mods_spl()</em>.</p>
+Royston-Parmar splines <span class="citation">(Royston and Parmar
+2002)</span>. We can follow a similar approach, again using flexsurv
+<span class="citation">(Jackson 2016)</span> to identify the
+best-fitting spline distributions. To the six endpoints, we fit 9 spline
+models: 1, 2 or 3 (internal) knots with either odds, hazard or normal
+scales. This uses <code><a href="../reference/fit_ends_mods_spl.html">fit_ends_mods_spl()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fit 1-3 knot splines with all 3 scales (odds, hazard, normal) to each endpoint</span></span>
 <span><span class="va">allfits_spl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span>
@@ -282,7 +284,7 @@ with either odds, hazard or normal scales. This uses
 <p>We have fitted multiple splines to each endpoint. We only need to
 retain the best-fitting distribution, which we select on the basis of
 the distribution having the lowest Akaike Information Criterion (AIC).
-We use <em>find_bestfit_spl()</em> for this.</p>
+We use <code><a href="../reference/find_bestfit_spl.html">find_bestfit_spl()</a></code> for this.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Pick out best distribution according to min AIC</span></span>
 <span><span class="va">fitspl.ppd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_spl.html">find_bestfit_spl</a></span><span class="op">(</span><span class="va">allfits_spl</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span></span>
@@ -334,28 +336,29 @@ carefully. Our example does not use the best fits in each case but
 merely illustrates the options available to the modeler.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Bring together our preferred fits for each endpoint in a list</span></span>
-<span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ppd <span class="op">=</span> <span class="va">fitpar.ppd</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               ttp <span class="op">=</span> <span class="va">fitpar.ttp</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               pfs <span class="op">=</span> <span class="va">fitspl.pfs</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               os <span class="op">=</span> <span class="va">fitspl.os</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               pps_cf <span class="op">=</span> <span class="va">allfits_par</span><span class="op">$</span><span class="va">pps_cf</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span>,</span>
-<span>               pps_cr <span class="op">=</span> <span class="va">allfits_spl</span><span class="op">$</span><span class="va">pps_cr</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span></span>
-<span>               <span class="op">)</span></span></code></pre></div>
+<span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  ppd <span class="op">=</span> <span class="va">fitpar.ppd</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  ttp <span class="op">=</span> <span class="va">fitpar.ttp</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  pfs <span class="op">=</span> <span class="va">fitspl.pfs</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  os <span class="op">=</span> <span class="va">fitspl.os</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  pps_cf <span class="op">=</span> <span class="va">allfits_par</span><span class="op">$</span><span class="va">pps_cf</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span>,</span>
+<span>  pps_cr <span class="op">=</span> <span class="va">allfits_spl</span><span class="op">$</span><span class="va">pps_cr</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Let us count how many parameters we are using in each model.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Pull out number of parameters used for each endpoint</span></span>
-<span><span class="va">count_npar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_vec</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">~</span><span class="va">params</span><span class="op">[[</span><span class="va">.x</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">npars</span><span class="op">)</span></span>
+<span><span class="va">count_npar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_vec</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">~</span> <span class="va">params</span><span class="op">[[</span><span class="va">.x</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">npars</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># PSM uses PFS (3) and OS (4) endpoints</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 6</span></span>
 <span></span>
 <span><span class="co"># STM_CF uses PPD (1), TTP (2) and PPS_CF (5) endpoints</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 6</span></span>
 <span></span>
 <span><span class="co"># STM_CR uses PPD (1), TTP (2) and PPS_CR (6) endpoints</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">6</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">6</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7</span></span></code></pre></div>
 </div>
 </div>
@@ -421,18 +424,16 @@ extension of the Brier score is the integral of the Brier score, which
 is an ‘area under the curve’ measure of concordance of the survival
 model to a given set of patient time-to-event data. The integral is
 taken between the minimum and maximum event or censoring times in the
-dataset. Calculations are provided in the <em>SurvMetrics</em> R
-package, which can be slow to run (about 1 minute in this
-example).[4]</p>
-<p>The <em>psm3mkv</em> package allows examination of Integrated Brier
-Scores in the fit of Overall Survival by each of the model
-structures.</p>
+dataset. Calculations are provided in the R package SurvMetrics, which
+can be slow to run (about 1 minute in this example, <span class="citation">Zhu (2021)</span>).</p>
+<p>The psm3mkv package allows examination of Integrated Brier Scores in
+the fit of Overall Survival by each of the model structures.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calc_ibs(bosonc, params)</span></span></code></pre></div>
 <p>In this case, the IBS calculation involved integrating between times
-1.18 and 52.70. The PSM had the least IBS and best fit (IBS=0.1771); the
-two STMs had slightly greater IBS values (0.1773 for CF and 0.1776 for
-CR).</p>
+1.18 and 52.70. The PSM had the least IBS and best fit (IBS = 0.1771);
+the two STMs had slightly greater IBS values (0.1773 for CF and 0.1776
+for CR).</p>
 </div>
 <div class="section level2">
 <h2 id="comparing-the-implied-restricted-mean-durations">Comparing the implied (restricted) mean durations<a class="anchor" aria-label="anchor" href="#comparing-the-implied-restricted-mean-durations"></a>
@@ -441,16 +442,16 @@ CR).</p>
 (sensitivity to the choice of model structure), we calculate the
 (restricted) mean durations in progression-free (PF) and progressed
 disease (PD) states by model type. To do this, we call the
-<em>calc_allrmds()</em> function with the dataset and statistical
+<code><a href="../reference/calc_allrmds.html">calc_allrmds()</a></code> function with the dataset and statistical
 distributions we wish to consider for each endpoint. The function also
-allows specification of the patient subset to use (<em>inclset</em>,
+allows specification of the patient subset to use (<code>inclset</code>,
 important for bootstrapping later) and the time horizon. The units for
 the time horizon are 52.18 times shorter than the units for the output
 because - the time horizon can be considered to be in units of years,
 whereas the output is in units of weeks.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Call the RMD functions</span></span>
-<span><span class="va">rmd_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span><span class="op">)</span></span>
+<span><span class="va">rmd_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam <span class="op">=</span> <span class="va">params</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Then review the mean duration in PF, PD and total alive (OS)</span></span>
 <span><span class="va">rmd_all</span><span class="op">$</span><span class="va">results</span></span>
@@ -533,26 +534,33 @@ patients’ expected PPS-CF survival relative to their TTP timepoint.</p>
 <span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_pps-1.png" width="700"></p>
 </div>
-<div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<ol style="list-style-type: decimal">
-<li><p>Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M,
-Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State
-Models. Available at: <a href="https://cran.r-project.org/package=flexsurv" class="external-link uri">https://cran.r-project.org/package=flexsurv</a>.</p></li>
-<li><p>Woods BS, Sideris E, Palmer S, Latimer N, Soares M. Partitioned
-Survival and State Transition Models for Healthcare Decision Making in
-Oncology: Where Are We Now? Value in Health 23(12):1613-21; 2020. <a href="https://doi.org/10.1016/j.jval.2020.08.2094" class="external-link">DOI:
-10.1016/j.jval.2020.08.2094</a></p></li>
-<li><p>Royston P and Parmar M. Flexible parametric proportional-hazards
-and proportional-odds models for censored survival data, with
-application to prognostic modelling and estimation of treatment effects.
-Statistics in Medicine 21(1):2175-2197; 2002. <a href="https://doi.org/10.1002/sim.1203" class="external-link">DOI:
-10.1002/sim.1203</a></p></li>
-<li><p>Hanpu Z. Predictive Evaluation Metrics in Survival Analysis.
-Vignette to the <em>SurvMetrics</em> R package. July 2021. Available
-from: <a href="https://cran.r-project.org/package=SurvMetrics/vignettes/SurvMetrics-vignette.html" class="external-link uri">https://cran.r-project.org/package=SurvMetrics/vignettes/SurvMetrics-vignette.html</a></p></li>
-</ol>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-jackson2016flexsurv" class="csl-entry">
+Jackson, Christopher. 2016. <span>“<span class="nocase">flexsurv</span>:
+A Platform for Parametric Survival Modeling in <span>R</span>.”</span>
+<em>Journal of Statistical Software</em> 70 (8): 1–33.
+</div>
+<div id="ref-royston2002flexible" class="csl-entry">
+Royston, Patrick, and Mahesh KB Parmar. 2002. <span>“Flexible Parametric
+Proportional-Hazards and Proportional-Odds Models for Censored Survival
+Data, with Application to Prognostic Modelling and Estimation of
+Treatment Effects.”</span> <em>Statistics in Medicine</em> 21 (15):
+2175–97.
+</div>
+<div id="ref-woods2020partitioned" class="csl-entry">
+Woods, Beth S, Eleftherios Sideris, Stephen Palmer, Nick Latimer, and
+Marta Soares. 2020. <span>“Partitioned Survival and State Transition
+Models for Healthcare Decision Making in Oncology: Where Are We
+Now?”</span> <em>Value in Health</em> 23 (12): 1613–21.
+</div>
+<div id="ref-hanpu2021predictive" class="csl-entry">
+Zhu, Hanpu. 2021. <span>“Predictive Evaluation Metrics in Survival
+Analysis.”</span> <a href="https://cran.r-project.org/package=SurvMetrics/vignettes/SurvMetrics-vignette.html" class="external-link uri">https://cran.r-project.org/package=SurvMetrics/vignettes/SurvMetrics-vignette.html</a>.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -562,7 +570,7 @@ from: <a href="https://cran.r-project.org/package=SurvMetrics/vignettes/SurvMetr
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Dominic Muston, Merck &amp; Co., Inc.. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
+<p>Developed by Dominic Muston, Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
 </div>
 
 <div class="pkgdown-footer-right">

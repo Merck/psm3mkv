@@ -95,7 +95,9 @@
 <p>This is the second in a series of vignettes illustrating methods for
 evaluating the fit and efficiency of three state oncology
 cost-effectiveness model structures, as described in an accompanying
-journal article.[1] The package is heavily dependent on <a href="https://cran.r-project.org/package=flexsurv" class="external-link">flexsurv</a>).[2]</p>
+journal article <span class="citation">(Muston 2024)</span>. The package
+is heavily dependent on flexsurv <span class="citation">(Jackson
+2016)</span>.</p>
 <p>After fitting models, as described in
 <code><a href="../articles/example.html">vignette("example")</a></code>, estimates of Restricted Mean Durations
 (RMDs) in health states can be calculated after constraining for
@@ -142,11 +144,14 @@ hazard.</p>
 S^{adj}(t) = \min \left[ S(t), S_{gen}(t) \right]
 \]</span></p>
 <p>This is a simple approach, and has been used at least one NICE
-technology appraisal:</p>
-<p><em>“Patient longevity is always the lesser of values generated from
-the disease-specific survival curve (after adjustment for treatment and
+technology appraisal <span class="citation">(National Institute for
+Health and Care Excellence 2022)</span>:</p>
+<blockquote>
+<p>“Patient longevity is always the lesser of values generated from the
+disease-specific survival curve (after adjustment for treatment and
 functional status) and the survival curve for the general population
-according to age and sex.”[3]</em></p>
+according to age and sex.”</p>
+</blockquote>
 <p>However, this approach does not ensure that the hazard is at least as
 great as the hazard of background mortality.</p>
 </div>
@@ -154,15 +159,16 @@ great as the hazard of background mortality.</p>
 <h3 id="approach-2---constraining-the-hazard-function">Approach 2 - Constraining the hazard function<a class="anchor" aria-label="anchor" href="#approach-2---constraining-the-hazard-function"></a>
 </h3>
 <p>A more rigorous adjustment would be that the hazard of background
-mortality acts as a constraint to the unadjusted hazard.[4]</p>
+mortality acts as a constraint to the unadjusted hazard <span class="citation">(Sweeting et al. 2023)</span>.</p>
 <p><span class="math display">\[
 h^{adj}(t) = \max \left[ h(t), h_{gen}(t) \right]
 \]</span> <span class="math display">\[
 \implies S^{adj}(t) = \exp \left[ - \int_0^t h^{adj}(u) du \right]
-\]</span> In either case, we must assume that the original dataset was
-NOT subject to background mortality. Although unlikely to be true, this
-is a common, pragmatic assumption in cost-effectiveness models as long
-as background mortality is relatively insignificant during trial
+\]</span></p>
+<p>In either case, we must assume that the original dataset was NOT
+subject to background mortality. Although unlikely to be true, this is a
+common, pragmatic assumption in cost-effectiveness models as long as
+background mortality is relatively insignificant during trial
 follow-up.</p>
 </div>
 <div class="section level3">
@@ -175,7 +181,7 @@ to background mortality, then it would be better to model that dataset
 using excess hazard methods rather than to seek to make adjustments to
 extrapolations after the fact. Further discussion of survival
 extrapolation incorporating general population mortality is provided by
-Sweeting et al.[4]</p>
+<span class="citation">Sweeting et al. (2023)</span>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -211,7 +217,8 @@ time into timesteps rather than follow the integral formulas described
 above for continuous time. As long as timesteps are reasonably short,
 restricted mean duration results should remain reasonably accurate.
 Derided as a “kludge”, half-cycle corrections are nevertheless
-recommended.[5] The package provides discretized calculations.</p>
+recommended <span class="citation">(Naimark, Kabboul, and Krahn
+2013)</span>. The package provides discretized calculations.</p>
 </div>
 <div class="section level2">
 <h2 id="application-to-partitioned-survival-models-psm">Application to Partitioned Survival Models (PSM)<a class="anchor" aria-label="anchor" href="#application-to-partitioned-survival-models-psm"></a>
@@ -269,18 +276,19 @@ Lifetables are constructed by time in years.</p>
 <span><span class="va">baseage</span> <span class="op">&lt;-</span> <span class="fl">51.0</span></span>
 <span></span>
 <span><span class="co"># Mortality data - England &amp; Wales, Female, 2019</span></span>
-<span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/HMDHFDplus/man/readHMDweb.html" class="external-link">readHMDweb</a></span><span class="op">(</span>CNTRY<span class="op">=</span><span class="st">"GBRTENW"</span>,</span>
-<span>                        item<span class="op">=</span><span class="st">"fltper_1x1"</span>,</span>
-<span>                        username<span class="op">=</span><span class="st">""</span>,</span>
-<span>                        password<span class="op">=</span><span class="st">""</span></span>
-<span>                        <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Year</span><span class="op">==</span><span class="fl">2019</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Age</span>, <span class="va">lx</span>, <span class="va">dx</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Timey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="va">Age</span><span class="op">-</span><span class="va">baseage</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Timey</span><span class="op">&gt;=</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/HMDHFDplus/man/readHMDweb.html" class="external-link">readHMDweb</a></span><span class="op">(</span></span>
+<span>  CNTRY <span class="op">=</span> <span class="st">"GBRTENW"</span>,</span>
+<span>  item <span class="op">=</span> <span class="st">"fltper_1x1"</span>,</span>
+<span>  username <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  password <span class="op">=</span> <span class="st">""</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2019</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Age</span>, <span class="va">lx</span>, <span class="va">dx</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Timey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="va">Age</span> <span class="op">-</span> <span class="va">baseage</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Timey</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The table needs to end with lx=0</span></span>
-<span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span><span class="va">mort</span>, Age<span class="op">=</span><span class="fl">111</span>, lx<span class="op">=</span><span class="fl">0</span>, Timey<span class="op">=</span><span class="fl">60</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span><span class="va">mort</span>, Age <span class="op">=</span> <span class="fl">111</span>, lx <span class="op">=</span> <span class="fl">0</span>, Timey <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span></code></pre></div>
 <p>You will see that the above code cannot run without a login for the
 <a href="www.mortality.org">Human Mortality Database</a>. Alternatively,
 we could just make up a mortality table.</p>
@@ -289,8 +297,8 @@ we could just make up a mortality table.</p>
 <span>  Timey <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">30</span>,</span>
 <span>  lx <span class="op">=</span> <span class="fl">10000</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.03</span> <span class="op">*</span> <span class="va">Timey</span><span class="op">^</span><span class="fl">1.1</span><span class="op">)</span>,</span>
 <span>  dx <span class="op">=</span> <span class="va">lx</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lead</a></span><span class="op">(</span><span class="va">lx</span><span class="op">)</span>,</span>
-<span>  qx <span class="op">=</span> <span class="va">dx</span><span class="op">/</span><span class="va">lx</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  qx <span class="op">=</span> <span class="va">dx</span> <span class="op">/</span> <span class="va">lx</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>However we do it, once we have the mortality data, we can apply the
 SMR (<span class="math inline">\(R\)</span>) and derive a lifetable from
 time zero as required.</p>
@@ -301,14 +309,14 @@ time zero as required.</p>
 <span><span class="co"># Recalculate the lifetable with the SMR applied</span></span>
 <span><span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">$</span><span class="va">lx</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">mort</span><span class="op">$</span><span class="va">lx</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">SMR</span> <span class="op">*</span> <span class="va">mort</span><span class="op">$</span><span class="va">qx</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">i</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">SMR</span> <span class="op">*</span> <span class="va">mort</span><span class="op">$</span><span class="va">qx</span><span class="op">[</span><span class="va">i</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Ensure lx&gt;=0</span></span>
-<span><span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">&lt;</span><span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span><span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">[</span><span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span></span>
 <span><span class="co"># Create and view lifetable</span></span>
-<span><span class="va">ltable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>lttime<span class="op">=</span><span class="va">mort</span><span class="op">$</span><span class="va">Timey</span>, lx<span class="op">=</span><span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">)</span></span>
+<span><span class="va">ltable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>lttime <span class="op">=</span> <span class="va">mort</span><span class="op">$</span><span class="va">Timey</span>, lx <span class="op">=</span> <span class="va">mort</span><span class="op">$</span><span class="va">adjlx</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ltable</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
 <span><span class="co">#&gt;   lttime     lx</span></span>
@@ -352,13 +360,14 @@ approximately 52.18 weeks per year.</p>
 <span><span class="va">fit.pps_cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Bring together our preferred fits for each endpoint in a list</span></span>
-<span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ppd <span class="op">=</span> <span class="va">fit.ppd</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               ttp <span class="op">=</span> <span class="va">fit.ttp</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               pfs <span class="op">=</span> <span class="va">fit.pfs</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               os <span class="op">=</span> <span class="va">fit.os</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               pps_cf <span class="op">=</span> <span class="va">fit.pps_cf</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>               pps_cr <span class="op">=</span> <span class="va">fit.pps_cr</span><span class="op">$</span><span class="va">fit</span></span>
-<span>               <span class="op">)</span></span></code></pre></div>
+<span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  ppd <span class="op">=</span> <span class="va">fit.ppd</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  ttp <span class="op">=</span> <span class="va">fit.ttp</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  pfs <span class="op">=</span> <span class="va">fit.pfs</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  os <span class="op">=</span> <span class="va">fit.os</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  pps_cf <span class="op">=</span> <span class="va">fit.pps_cf</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  pps_cr <span class="op">=</span> <span class="va">fit.pps_cr</span><span class="op">$</span><span class="va">fit</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="making-the-projections">Making the projections<a class="anchor" aria-label="anchor" href="#making-the-projections"></a>
@@ -373,12 +382,13 @@ lifetable constraints.</p>
 <span><span class="va">thoz</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span></span>
 <span><span class="co"># Run the calculations</span></span>
-<span><span class="va">proj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span><span class="op">)</span></span>
+<span><span class="va">proj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam <span class="op">=</span> <span class="va">params</span>, Ty <span class="op">=</span> <span class="va">thoz</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Present the results</span></span>
-<span><span class="va">res1</span> <span class="op">&lt;-</span> <span class="va">proj1</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"int"</span>, lxadj<span class="op">=</span><span class="st">"no"</span>, psmmeth<span class="op">=</span><span class="st">"simple"</span><span class="op">)</span></span>
+<span><span class="va">res1</span> <span class="op">&lt;-</span> <span class="va">proj1</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"int"</span>, lxadj <span class="op">=</span> <span class="st">"no"</span>, psmmeth <span class="op">=</span> <span class="st">"simple"</span><span class="op">)</span></span>
 <span><span class="va">res1</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
 <span><span class="co">#&gt;          pf        pd        os model  method lxadj psmmeth</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
@@ -389,13 +399,14 @@ lifetable constraints.</p>
 still without any lifetable constraints.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the calculation</span></span>
-<span><span class="va">proj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, rmdmethod<span class="op">=</span><span class="st">"disc"</span><span class="op">)</span></span>
+<span><span class="va">proj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam <span class="op">=</span> <span class="va">params</span>, Ty <span class="op">=</span> <span class="va">thoz</span>, rmdmethod <span class="op">=</span> <span class="st">"disc"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Present the results</span></span>
 <span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="va">proj2</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"disc"</span>, lxadj<span class="op">=</span><span class="st">"no"</span>, psmmeth<span class="op">=</span><span class="st">"simple"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"disc"</span>, lxadj <span class="op">=</span> <span class="st">"no"</span>, psmmeth <span class="op">=</span> <span class="st">"simple"</span><span class="op">)</span></span>
 <span><span class="va">res2</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
 <span><span class="co">#&gt;          pf        pd        os model  method lxadj psmmeth</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
@@ -409,13 +420,14 @@ to 394 weeks.</p>
 lifetable constraints.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the calculations</span></span>
-<span><span class="va">proj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, rmdmethod<span class="op">=</span><span class="st">"disc"</span>, lifetable<span class="op">=</span><span class="va">ltable</span><span class="op">)</span></span>
+<span><span class="va">proj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam <span class="op">=</span> <span class="va">params</span>, Ty <span class="op">=</span> <span class="va">thoz</span>, rmdmethod <span class="op">=</span> <span class="st">"disc"</span>, lifetable <span class="op">=</span> <span class="va">ltable</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Present the results</span></span>
 <span><span class="va">res3</span> <span class="op">&lt;-</span> <span class="va">proj3</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"disc"</span>, lxadj<span class="op">=</span><span class="st">"yes"</span>, psmmeth<span class="op">=</span><span class="st">"simple"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"disc"</span>, lxadj <span class="op">=</span> <span class="st">"yes"</span>, psmmeth <span class="op">=</span> <span class="st">"simple"</span><span class="op">)</span></span>
 <span><span class="va">res3</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
 <span><span class="co">#&gt;          pf        pd        os model  method lxadj psmmeth</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
@@ -424,7 +436,7 @@ lifetable constraints.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.4     111.2     341.6 STM-CR disc   yes   simple</span></span>
 <span></span>
 <span><span class="co"># Proportion of time alive spent in PF</span></span>
-<span><span class="va">proppf3</span> <span class="op">&lt;-</span> <span class="va">res3</span><span class="op">$</span><span class="va">pf</span><span class="op">/</span><span class="va">res3</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
+<span><span class="va">proppf3</span> <span class="op">&lt;-</span> <span class="va">res3</span><span class="op">$</span><span class="va">pf</span> <span class="op">/</span> <span class="va">res3</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
 <p>There is now a large difference between the STM-CR compared to the
 STM-CF and PSM structures. All structures estimate fairly similar RMD
 estimates of being alive (range: 338.4 to 366.1 weeks). The estimate of
@@ -443,13 +455,14 @@ than the default ‘simple’ affects RMD estimates from the PSM
 structure.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the calculations</span></span>
-<span><span class="va">proj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span>, Ty<span class="op">=</span><span class="va">thoz</span>, psmtype<span class="op">=</span><span class="st">"complex"</span>, rmdmethod<span class="op">=</span><span class="st">"disc"</span>, lifetable<span class="op">=</span><span class="va">ltable</span><span class="op">)</span></span>
+<span><span class="va">proj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam <span class="op">=</span> <span class="va">params</span>, Ty <span class="op">=</span> <span class="va">thoz</span>, psmtype <span class="op">=</span> <span class="st">"complex"</span>, rmdmethod <span class="op">=</span> <span class="st">"disc"</span>, lifetable <span class="op">=</span> <span class="va">ltable</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Present the results</span></span>
 <span><span class="va">res4</span> <span class="op">&lt;-</span> <span class="va">proj4</span><span class="op">$</span><span class="va">results</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"disc"</span>, lxadj<span class="op">=</span><span class="st">"yes"</span>, psmmeth<span class="op">=</span><span class="st">"complex"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"disc"</span>, lxadj <span class="op">=</span> <span class="st">"yes"</span>, psmmeth <span class="op">=</span> <span class="st">"complex"</span><span class="op">)</span></span>
 <span><span class="va">res4</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">pd</span>, <span class="va">os</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/num.html" class="external-link">num</a></span><span class="op">(</span><span class="va">.x</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
 <span><span class="co">#&gt;          pf        pd        os model  method lxadj psmmeth</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
@@ -458,7 +471,7 @@ structure.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.4     111.2     341.6 STM-CR disc   yes   complex</span></span>
 <span></span>
 <span><span class="co"># Proportion of time alive spent in PF</span></span>
-<span><span class="va">proppf4</span> <span class="op">&lt;-</span> <span class="va">res4</span><span class="op">$</span><span class="va">pf</span><span class="op">/</span><span class="va">res4</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
+<span><span class="va">proppf4</span> <span class="op">&lt;-</span> <span class="va">res4</span><span class="op">$</span><span class="va">pf</span> <span class="op">/</span> <span class="va">res4</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
 <p>All structures estimate fairly similar RMD estimates of being alive
 (range: 338.4 to 366.1 weeks). The proportion of that time in the PF
 rather than PD state varied again considerably by model structure (PSM:
@@ -614,37 +627,47 @@ time in PF state, PD state and time alive.</p>
 <h3 id="for-further-investigation">For further investigation<a class="anchor" aria-label="anchor" href="#for-further-investigation"></a>
 </h3>
 <ul>
-<li><p>The effect of the lifetable constraint on the STMs was much
-greater - especially to time in the PF state - in the STMs rathe rather
-than the PSM.</p></li>
-<li><p>The package also allows application of discounting through the
-<code>discrate</code> optional call to
-<code>calc_allrnds()</code>.</p></li>
+<li>The effect of the lifetable constraint on the STMs was much greater
+- especially to time in the PF state - in the STMs rather than the
+PSM.</li>
+<li>The package also allows application of discounting through the
+<code>discrate</code> optional call to <code>calc_allrnds()</code>.</li>
 </ul>
 </div>
 </div>
-<div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<ol style="list-style-type: decimal">
-<li><p>Muston D. Informing structural assumptions for three state
-oncology cost-effectiveness models through model efficiency and fit. In
-review.</p></li>
-<li><p>Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M,
-Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State
-Models. Available at: <a href="https://cran.r-project.org/package=flexsurv" class="external-link uri">https://cran.r-project.org/package=flexsurv</a>.</p></li>
-<li><p>National Institute for Health and Care Excellence.
-Avalglucosidase alfa for treating Pompe disease. Technology appraisal
-guidance [TA821]. August 24, 2022. Available from: <a href="https://www.nice.org.uk/guidance/ta821/documents/committee-papers" class="external-link">https://www.nice.org.uk/guidance/ta821/documents/committee-papers</a></p></li>
-<li><p>Sweeting et al. Survival Extrapolation Incorporating General
-Population Mortality Using Excess Hazard and Cure Models: A Tutorial.
-Med Decis Making 2023 Aug;43(6):737-748. <a href="https://doi.org/10.1177/0272989X231184247" class="external-link">DOI:
-10.1177/0272989X231184247</a></p></li>
-<li><p>Naimark DMJ, Kabboul NN, Krahn MD. The half-cycle correction
-revisited: redemption of a kludge. Medical Decision Making 2013;
-33(7):961-70. <a href="https://doi.org/10.1177/0272989X13501558" class="external-link">DOI:
-10.1177/0272989X13501558</a>.</p></li>
-</ol>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-jackson2016flexsurv" class="csl-entry">
+Jackson, Christopher. 2016. <span>“<span class="nocase">flexsurv</span>:
+A Platform for Parametric Survival Modeling in <span>R</span>.”</span>
+<em>Journal of Statistical Software</em> 70 (8): 1–33.
+</div>
+<div id="ref-muston2024informing" class="csl-entry">
+Muston, Dominic. 2024. <span>“Informing Structural Assumptions for Three
+State Oncology Cost-Effectiveness Models Through Model Efficiency and
+Fit.”</span>
+</div>
+<div id="ref-naimark2013half" class="csl-entry">
+Naimark, David MJ, Nader N Kabboul, and Murray D Krahn. 2013. <span>“The
+Half-Cycle Correction Revisited: Redemption of a Kludge.”</span>
+<em>Medical Decision Making</em> 33 (7): 961–70.
+</div>
+<div id="ref-nice2022" class="csl-entry">
+National Institute for Health and Care Excellence. 2022.
+<span>“Avalglucosidase Alfa for Treating <span>Pompe</span>
+Disease.”</span> Technology appraisal guidance TA821. London, UK:
+National Institute for Health; Care Excellence. <a href="https://www.nice.org.uk/guidance/ta821/documents/committee-papers" class="external-link">https://www.nice.org.uk/guidance/ta821/documents/committee-papers</a>.
+</div>
+<div id="ref-sweeting2023survival" class="csl-entry">
+Sweeting, Michael J, Mark J Rutherford, Dan Jackson, Sangyu Lee,
+Nicholas R Latimer, Robert Hettle, and Paul C Lambert. 2023.
+<span>“Survival Extrapolation Incorporating General Population Mortality
+Using Excess Hazard and Cure Models: A Tutorial.”</span> <em>Medical
+Decision Making</em> 43 (6): 737–48.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -654,7 +677,7 @@ revisited: redemption of a kludge. Medical Decision Making 2013;
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Dominic Muston, Merck &amp; Co., Inc.. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
+<p>Developed by Dominic Muston, Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
 </div>
 
 <div class="pkgdown-footer-right">

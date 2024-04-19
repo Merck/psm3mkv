@@ -52,26 +52,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.1" id="psm3mkv-021">psm3mkv 0.2.1<a class="anchor" aria-label="anchor" href="#psm3mkv-021"></a></h2>
-</div>
+<h2 class="pkg-version" data-toc-text="0.2.2" id="psm3mkv-022">psm3mkv 0.2.2<a class="anchor" aria-label="anchor" href="#psm3mkv-022"></a></h2>
+<ul><li>Fix all <code>R CMD check</code> notes.</li>
+</ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.1" id="id_14-apr-2024---version-021">14 Apr 2024 - Version 0.2.1<a class="anchor" aria-label="anchor" href="#id_14-apr-2024---version-021"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.1" id="psm3mkv-021-14-apr-2024">psm3mkv 0.2.1 (14 Apr 2024)<a class="anchor" aria-label="anchor" href="#psm3mkv-021-14-apr-2024"></a></h2>
 <p>Constraining calculations of restricted mean durations and the accompanying <code>vignette("background-mortality")</code> has been reworked. The calculations using integral/continuous methods was not reliable. Instead, <code>calc_allrmds</code> now has a <code>rmdmethod="disc"</code> option to allow for discretized calculations for a given timestep (defaulting at one week). There is a new collection of functions in <code>discrmd.R</code> to provide for this, as well as <code><a href="../reference/constrain_survprob.html">constrain_survprob()</a></code> function, which constrains a vector of survival estimates at given times such that the underlying hazard is at least as great as in an accompanying lifetable.</p>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2" id="id_26-jan-2024---version-02">26 Jan 2024 - Version 0.2<a class="anchor" aria-label="anchor" href="#id_26-jan-2024---version-02"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="psm3mkv-020-26-jan-2024">psm3mkv 0.2.0 (26 Jan 2024)<a class="anchor" aria-label="anchor" href="#psm3mkv-020-26-jan-2024"></a></h2>
 <p>This version provides additional functionality to the calculation of restricted mean durations in <code>calc_allrmds</code>. These estimates may now be constrained by a lifetable (see <code>calc_ltsurv</code>) and discounting may now be applied. A vignette describing how to use this functionality is provided: <code>vignette("background-mortality")</code>.</p>
 <p>There are also some changes to _pkgdown.yml to avoid the theming changes imposed in the 0.6.0 release of bslib 0.6.0, with thanks to <a href="https://github.com/nanxstats" class="external-link">@nanxstats</a>.</p>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1" id="id_5-jan-2024---version-011">5 Jan 2024 - Version 0.1.1<a class="anchor" aria-label="anchor" href="#id_5-jan-2024---version-011"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1" id="psm3mkv-011-5-jan-2024">psm3mkv 0.1.1 (5 Jan 2024)<a class="anchor" aria-label="anchor" href="#psm3mkv-011-5-jan-2024"></a></h2>
 <div class="section level3">
 <h3 id="added-psm-analysis-functions-experimental-0-1-1">Added PSM analysis functions (experimental)<a class="anchor" aria-label="anchor" href="#added-psm-analysis-functions-experimental-0-1-1"></a></h3>
-<p>I’ve merged some experimental functions into the main branch following the version 0.1 release package. These functions provide analyses of the constraints on mortality hazards and therefore survival implied by a PSM. They are: <code><a href="../reference/calc_haz_psm.html">calc_haz_psm()</a></code>, <code><a href="../reference/calc_surv_psmpps.html">calc_surv_psmpps()</a></code>, <code>pickout_psmhaz</code>, <code><a href="../reference/graph_psm_hazards.html">graph_psm_hazards()</a></code>, and <code><a href="../reference/graph_psm_survs.html">graph_psm_survs()</a></code>.</p>
+<p>Merged some experimental functions into the main branch following the version 0.1 release package. These functions provide analyses of the constraints on mortality hazards and therefore survival implied by a PSM. They are: <code><a href="../reference/calc_haz_psm.html">calc_haz_psm()</a></code>, <code><a href="../reference/calc_surv_psmpps.html">calc_surv_psmpps()</a></code>, <code>pickout_psmhaz</code>, <code><a href="../reference/graph_psm_hazards.html">graph_psm_hazards()</a></code>, and <code><a href="../reference/graph_psm_survs.html">graph_psm_survs()</a></code>.</p>
 </div>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1" id="id_1-jan-2024---version-01">1 Jan 2024 - Version 0.1<a class="anchor" aria-label="anchor" href="#id_1-jan-2024---version-01"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="psm3mkv-010-1-jan-2024">psm3mkv 0.1.0 (1 Jan 2024)<a class="anchor" aria-label="anchor" href="#psm3mkv-010-1-jan-2024"></a></h2>
 <p>This is the initial release of the package, rather belatedly. The code dates to October 2023.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -79,7 +80,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Dominic Muston, Merck &amp; Co., Inc.. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
+  <p></p><p>Developed by Dominic Muston, Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
 </div>
 
 <div class="pkgdown-footer-right">
