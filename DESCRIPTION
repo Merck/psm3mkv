@@ -4,10 +4,10 @@ Version: 0.2.1.9002
 Authors@R: c(
     person("Dominic", "Muston", , "dominic.muston@merck.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4876-7940")),
-    person("Merck & Co., Inc.", role = c("cph", "fnd"))
+    person("Merck & Co., Inc., Rahway, NJ, USA and its affiliates", role = c("cph", "fnd"))
     )
 Description: Fits and evaluates three-state partitioned survival analyses
-    (PartSAs) and markov models (clock forward or clock reset) to
+    (PartSAs) and Markov models (clock forward or clock reset) to
     Progression-Free Survival (PFS) and Overall Survival (OS)
     patient-level data. This data is typically collected in clinical trials
     in oncology. These model structures are typically considered in
