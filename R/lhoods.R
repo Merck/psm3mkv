@@ -293,6 +293,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 #' @importFrom rlang .data
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -305,6 +306,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 #'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
 #'   )
 #' calc_likes_stm_cf(bosonc, dpam=params)
+#' }
 calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL

@@ -7,7 +7,7 @@
 coverage](https://codecov.io/gh/Merck/psm3mkv/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Merck/psm3mkv?branch=main)
 <!-- badges: end -->
 
-The goal of *psm3mkv* is to evaluate the efficiency and fit of certain
+The goal of psm3mkv is to evaluate the efficiency and fit of certain
 three state model structures to data typical from an oncology clinical
 trial. The package evaluates the following structures:
 
@@ -19,7 +19,7 @@ trial. The package evaluates the following structures:
 
 The state transition models differ from each other in that the
 transition from progressive disease to death is a function of time from
-baseline in the STM-CF and time from progression in the STM-CR.\[1,2\]
+baseline in the STM-CF and time from progression in the STM-CR [1, 2].
 
 The package requires a patient-level dataset of time to progression
 (TTP), progression-free survival (PFS) and overall survival (OS).
@@ -28,16 +28,14 @@ Given this, the package enables:
 
 - Fitting a range of models to endpoints relevant each model type:
 
-  - One piece parametric (distributions according to
-    [flexsurv](https://cran.r-project.org/package=flexsurv)).
+  - One piece parametric (distributions according to flexsurv.
 
   - Royston-Parmar splines (1-3 internal knots, hazard/odds/normal
-    scales, again as per
-    [flexsurv](https://cran.r-project.org/package=flexsurv))\[3\].
+    scales, again as per flexsurv) [3].
 
   - Two piece parametric (given a time cutoff).
 
-- Selecting the ‘best fit’ survival models for each endpoint (using the
+- Selecting the "best fit" survival models for each endpoint (using the
   Akaike Information Criterion, Bayesian Information Criterion or other
   user preference).
 
@@ -84,9 +82,8 @@ background lifetable.
 
 ## Installation
 
-The package requires version 4.1 of R (due to use of the [native
-pipe](https://www.r-bloggers.com/2021/05/the-new-r-pipe/)). Please
-ensure R is updated first.
+The package requires version R >= 4.1.0 due to use of the native pipe.
+Please ensure R is updated first.
 
 ### Latest stable release
 
@@ -100,7 +97,7 @@ pak::pak("Merck/psm3mkv@*release")
 Note that `pak::pak()` does not build the vignettes by default when
 installing a package from GitHub, which is ideal because the vignettes
 can take a long time to generate. You can conveniently view them on the
-package [webpage](https://merck.github.io/psm3mkv/).
+package [documentation website](https://merck.github.io/psm3mkv/).
 
 ### Development version
 
@@ -123,7 +120,7 @@ pak::pak("Merck/psm3mkv@*release", dependencies = TRUE)
 
 ## Licensing
 
-Copyright (c) 2023 Merck & Co., Inc., Rahway, NJ, USA and its
+Copyright (c) 2024 Merck & Co., Inc., Rahway, NJ, USA and its
 affiliates. All rights reserved.
 
 This file is part of the psm3mkv program.
@@ -146,18 +143,15 @@ different licenses.
 
 ## References
 
-1.  Jackson C, Metcalfe P, Amdahl J, Warkentin MT, Sweeting M,
-    Kunzmann K. flexsurv: Flexible Parametric Survival and Multi-State
-    Models. Available at: <https://cran.r-project.org/package=flexsurv>.
+1. Jackson, Christopher. 2016. "flexsurv: A Platform for Parametric
+   Survival Modeling in R." _Journal of Statistical Software_ 70 (8): 1--33.
 
-2.  Woods BS, Sideris E, Palmer S, Latimer N, Soares M. Partitioned
-    Survival and State Transition Models for Healthcare Decision Making
-    in Oncology: Where Are We Now? Value in Health 23(12):1613-21; 2020.
-    [DOI:
-    10.1016/j.jval.2020.08.2094](https://doi.org/10.1016/j.jval.2020.08.2094)
+2. Woods, Beth S, Eleftherios Sideris, Stephen Palmer, Nick Latimer,
+   and Marta Soares. 2020. "Partitioned Survival and State Transition Models
+   for Healthcare Decision Making in Oncology: Where Are We Now?"
+   _Value in Health_ 23 (12): 1613--1621.
 
-3.  Royston P and Parmar M. Flexible parametric proportional-hazards and
-    proportional-odds models for censored survival data, with
-    application to prognostic modelling and estimation of treatment
-    effects. Statistics in Medicine 21(1):2175-2197; 2002. [DOI:
-    10.1002/sim.1203](https://doi.org/10.1002/sim.1203)
+3. Royston, Patrick, and Mahesh KB Parmar. 2002. "Flexible Parametric
+   Proportional-Hazards and Proportional-Odds Models for Censored Survival
+   Data, with Application to Prognostic Modelling and Estimation of
+   Treatment Effects." _Statistics in Medicine_ 21 (15): 2175--2197.
