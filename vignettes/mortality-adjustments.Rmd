@@ -33,7 +33,7 @@ $$
 S_{gen}(t) = 1 - R \left(1 - \frac{l_{x_0 + t}}{l_{x_0}} \right)
 $$
 
-where $x_0$ is the mean age of the study population at baseline, and
+where $x_0$ is the mean age of the study population at baseline, $R$ is a [Standardized Mortality Ratio](https://en.wikipedia.org/wiki/Standardized_mortality_ratio), and
 $l_x$ is an appropriate lifetable.
 
 We can also derive the average background mortality hazard for $t$ in the range $[t_1, t_2)$.
@@ -110,7 +110,7 @@ The adjustment to RMD estimates can then proceed as with the STMs, with hazards 
 
 ### Set-up
 
-First we load the packages we need - all of which are suggested for or imported to *psm3mkv*. If you haven't installed *psm3mkv* yet, please see the [installation instructions](https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation) to install it and the other packages required to run the code below.
+First we load the packages we need - all of which are suggested for or imported to *psm3mkv*. If you haven't installed *psm3mkv* yet, please see the [installation instructions](https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation) to install it with its dependencies. Of these, we will making further use of @pack_dplyr, @pack_HMDHFDplus and @pack_tibble.
 
 ```{r packages, message=FALSE}
 library("dplyr")

@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 This vignette walks through evaluating the partitioned survival model (PSM) and state transition model structures (either clock reset, STM-CR, or clock forward types, STM-CF) to a dataset derived from the `bosms3` dataset that comes with the flexsurv package [@jackson2016flexsurv]. A review of PSMs and STMs in oncology cost-effectiveness models is provided by @woods2020partitioned.
 
-First we need to load the packages of interest. If you haven't installed psm3mkv yet, please see the [installation instructions](https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation) to install it and the other packages required to run the code below.
+First we need to load the packages of interest. If you haven't installed psm3mkv yet, please see the [installation instructions](https://github.com/Merck/psm3mkv?tab=readme-ov-file#installation) to install it with all its dependencies. We will also be using @pack_boot, @pack_ggsci and @pack_purrr.
 
 ```{r packages, message=FALSE}
 library("boot")
