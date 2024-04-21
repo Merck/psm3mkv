@@ -440,14 +440,12 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' gs$graph$pd
 #' }
 graph_survs <- function(ptdata, dpam, cuttime=0){
-  # Was tpoints=100
   cat("Creating KM \n")
   # Declare local variables
-  ds <- pfsfit <- osfit <- ppsfit <- pfs <- os <- time <- NULL
-  km_pf <- km <- psm <- stm_cr <- stm_cf <- NULL
-  km_pd <- km_os <- km_pps <- stm_cr_pps <- stm_cf_pps <- Time <- pf <- NULL
-  rnding <- timevar <- kmpfs <- kmos <- kmpps <- timeos <- gdata <- NULL
-  pfdata <- osdata <- ppsdata <- cut_pf <- cut_os <- starting <- NULL
+  ds <- dspps <- pfsfit <- osfit <- ppsfit <- NULL
+  rnding <- kmpfs <- kmos <- kmpps <- kmdata <- gdata <- NULL
+  time <- surv <- km_os <- km_pf <- endp <- NULL
+  timecut <- cut_pf <- cut_os <- starting <- NULL
   # Calculations
   ds <- create_extrafields(ptdata, cuttime)
   dspps <- ds |> dplyr::filter(.data$pps.durn>0, .data$ttp.flag==1) 
@@ -505,8 +503,8 @@ graph_survs <- function(ptdata, dpam, cuttime=0){
     ) |>
     # Reshape into a long dataframe
     tidyr::pivot_longer(
-      cols=c(starts_with("km"), starts_with("psm"), starts_with("stm")),
-      names_to="surv"
+      cols = !time,
+      names_to = "surv"
     )
   # Pull out method and endpoint variables
   methep <- stringr::str_split(gdata$surv, "_", simplify=TRUE)
@@ -527,6 +525,8 @@ graph_survs <- function(ptdata, dpam, cuttime=0){
   # Internal function to draw graphic
   cat("Drawing plots \n")
   draw_2pgraphic <- function(graphds, xlabel="Time from baseline") {
+    # Declare local variables
+    endp <- Time <- Probability <- Method <- NULL
     # Reshape long by method
     longds <- graphds |>
       tidyr::pivot_longer(
