@@ -32,16 +32,6 @@ The value of the survival function, a numeric value.
 \description{
 Calculate the value of the survival function, given the statistical distribution and its parameters.
 }
-\examples{
-calc_surv(time=1:5,
-    type="spl",
-    spec=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
-    )
-calc_surv(time=1:5,
-    type="par",
-    spec=list(dist="lnorm", pars=c(3,1))
-    )
-}
 \seealso{
 \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}
 }

@@ -21,23 +21,6 @@ Numeric value in same time unit as patient-level data (weeks).
 \description{
 Calculates the mean duration in the progression-free state for both the state transition clock forward and clock reset models. Requires a carefully formatted list of fitted survival regressions for the necessary endpoints, and the time duration to calculate over.
 }
-\examples{
-\donttest{
-# Create dataset and fit survival models (splines)
-bosonc <- create_dummydata("flexbosms")
-fits <- fit_ends_mods_spl(bosonc)
-# Pick out best distribution according to min AIC
-params <- list(
-  ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-  ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-  pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-  os = find_bestfit_spl(fits$os, "aic")$fit,
-  pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-  pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-)
-rmd_pf_stm(dpam=params)
-}
-}
 \seealso{
 Used safely as \link{prmd_pf_stm} by \link{calc_allrmds}
 }

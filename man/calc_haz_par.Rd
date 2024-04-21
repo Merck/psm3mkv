@@ -27,10 +27,6 @@ The value of a hazard function, a numeric value.
 \description{
 Calculate the value of the hazard function, given the statistical distribution and its parameters.
 }
-\examples{
-calc_haz_par(10, "exp", 0.01)
-calc_haz_par(5, "lnorm", c(3, 1))
-}
 \seealso{
 \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}
 }

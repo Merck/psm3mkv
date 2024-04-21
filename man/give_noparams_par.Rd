@@ -15,9 +15,6 @@ a numeric value
 \description{
 Returns the number of parameters used by one or many statistical distributions, named as per flexsurv.
 }
-\examples{
-give_noparams_par("llogis")
-}
 \seealso{
 \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}
 }

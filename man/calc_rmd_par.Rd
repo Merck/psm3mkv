@@ -27,10 +27,6 @@ the restricted mean duration, a numeric value.
 \description{
 Calculates the restricted mean duration, given a parametric statistical distribution.
 }
-\examples{
-calc_rmd_par(20, "exp", 0.2)
-calc_rmd_par(10, "lnorm", c(3, 1))
-}
 \seealso{
 \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}
 }
