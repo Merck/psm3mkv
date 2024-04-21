@@ -166,18 +166,6 @@ ll_all
 
 In this case, the model structures could be fitted to 203 of the 204 patients. Among the 203 patients where models could be fitted, the STM-CR model has the greatest likelihood (best fitting) and also the lowest AIC (most efficient). (Since these are not nested models, and statistical distributions under the null hypothesis are not easily formed, we cannot readily derive a p-value for the statistical significance of this difference.)
 
-## Other measures of goodness of fit
-
-The Brier score is a measure of goodness of fit of a survival model at a particular point in time to a set of patient time-to-event data. Originally developed for measuring the performance of weather forecasting, this metric has since been used in other applications. An extension of the Brier score is the integral of the Brier score, which is an 'area under the curve' measure of concordance of the survival model to a given set of patient time-to-event data. The integral is taken between the minimum and maximum event or censoring times in the dataset. Calculations are provided in the R package SurvMetrics, which can be slow to run (about 1 minute in this example, @hanpu2021predictive).
-
-The psm3mkv package allows examination of Integrated Brier Scores in the fit of Overall Survival by each of the model structures.
-
-```{r brier}
-# calc_ibs(bosonc, params)
-```
-
-In this case, the IBS calculation involved integrating between times 1.18 and 52.70. The PSM had the least IBS and best fit (IBS = 0.1771); the two STMs had slightly greater IBS values (0.1773 for CF and 0.1776 for CR).
-
 ## Comparing the implied (restricted) mean durations
 
 In order to understand the degree of structural uncertainty (sensitivity to the choice of model structure), we calculate the (restricted) mean durations in progression-free (PF) and progressed disease (PD) states by model type. To do this, we call the `calc_allrmds()` function with the dataset and statistical distributions we wish to consider for each endpoint. The function also allows specification of the patient subset to use (`inclset`, important for bootstrapping later) and the time horizon. The units for the time horizon are `r round(365.25/7, 2)` times shorter than the units for the output because - the time horizon can be considered to be in units of years, whereas the output is in units of weeks.

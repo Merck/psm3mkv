@@ -191,7 +191,7 @@ bosonc <- bosonc |>
     ttp.durn = 20 * ttp.durn
   )
 
-# Fit Royston Parmar splines models to each endpoint
+# Fit parametric models to each endpoint
 allfits <- fit_ends_mods_par(bosonc)
 
 # Pick out best distributions according to min AIC

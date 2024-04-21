@@ -15,6 +15,7 @@ MIT / X11 License (or adaptations) (https://www.opensource.org/licenses/MIT)
   * dplyr - https://dplyr.tidyverse.org/LICENSE.html
   * ggplot2 - https://ggplot2.tidyverse.org/LICENSE.html
   * purrr - https://purrr.tidyverse.org/LICENSE.html
+  * stringr - https://stringr.tidyverse.org/LICENSE.html
   * tibble - https://tibble.tidyverse.org/LICENSE.html
   * tidyr - https://tidyr.tidyverse.org/LICENSE.html
 

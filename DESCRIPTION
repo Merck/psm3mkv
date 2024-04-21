@@ -8,10 +8,9 @@ Authors@R: c(
     )
 Description: Fits and evaluates three-state partitioned survival analyses
     (PartSAs) and Markov models (clock forward or clock reset) to
-    Progression-Free Survival (PFS) and Overall Survival (OS)
-    patient-level data. This data is typically collected in clinical trials
-    in oncology. These model structures are typically considered in
+    progression and overall survival data typically collected in oncology clinical trials. These model structures are typically considered in
     cost-effectiveness modeling in advanced/metastatic cancer indications.
+    Muston, D. Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit. Applied Health Economics and Health Policy, 2024. In press.
 License: GPL (>= 3)
 URL: https://merck.github.io/psm3mkv/, https://github.com/Merck/psm3mkv
 BugReports: https://github.com/Merck/psm3mkv/issues
@@ -26,7 +25,7 @@ Imports:
     SimplicialCubature,
     stats,
     survival,
-    SurvMetrics,
+    stringr,
     tibble,
     tidyr
 Suggests:

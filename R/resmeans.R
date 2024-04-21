@@ -39,23 +39,20 @@
 #' @param discrate Discount rate (%) per year
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pf_stm] by [calc_allrmds]
-#' @export
-#' @examples
-#' \donttest{
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' rmd_pf_stm(dpam=params)
-#' }
+# Examples
+# # Create dataset and fit survival models (splines)
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+# )
+# rmd_pf_stm(dpam=params)
 rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- NULL
@@ -89,24 +86,21 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso [rmd_pd_stm_cr]
-#' @export
 #' @seealso Used safely as [prmd_pd_stm_cr] by [calc_allrmds]
-#' @examples
-#' \donttest{
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' rmd_pd_stm_cr(dpam=params)
-#' }
+# Examples
+# # Create dataset and fit survival models (splines)
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+# )
+# rmd_pd_stm_cr(dpam=params)
 rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
@@ -155,24 +149,21 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pd_stm_cf] by [calc_allrmds]
-#' @export
-#' @examples
-#' \donttest{
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' # Find mean(s)
-#' rmd_pd_stm_cf(dpam=params)
-#' }
+# Examples
+# # Create dataset and fit survival models (splines)
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+# )
+# # Find mean(s)
+# rmd_pd_stm_cf(dpam=params)
 rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- ttp.ts <- ppd.ts <- pps.ts <- NULL
@@ -220,24 +211,21 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pf_psm] by [calc_allrmds]
-#' @export
-#' @examples
-#' \donttest{
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' # Find mean(s)
-#' rmd_pf_psm(dpam=params)
-#' }
+# Examples
+# # Create dataset and fit survival models (splines)
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+# )
+# # Find mean(s)
+# rmd_pf_psm(dpam=params)
 rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- pfs.ts <- rmd <- NULL
@@ -270,23 +258,20 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_os_psm] by [calc_allrmds]
-#' @export
-#' @examples
-#' \donttest{
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' rmd_os_psm(params)
-#' }
+# Examples
+# # Create dataset and fit survival models (splines)
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+# )
+# rmd_os_psm(params)
 rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
   Tw <- os.ts  <- NULL
