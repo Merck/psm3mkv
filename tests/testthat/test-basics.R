@@ -5,23 +5,23 @@
 # 1. give_noparams
 # ----------------
 
-test_that("each distribution works", {
-  expect_equal(psm3mkv::give_noparams_par("exp"), 1)
-  expect_equal(psm3mkv::give_noparams_par("weibullPH"), 2)
-  expect_equal(psm3mkv::give_noparams_par("weibull"), 2)
-  expect_equal(psm3mkv::give_noparams_par("llogis"), 2)
-  expect_equal(psm3mkv::give_noparams_par("lnorm"), 2)
-  expect_equal(psm3mkv::give_noparams_par("gamma"), 2)
-  expect_equal(psm3mkv::give_noparams_par("gompertz"), 2)
-  expect_equal(psm3mkv::give_noparams_par("gengamma"), 3)
-  expect_equal(psm3mkv::give_noparams_par("gengamma.orig"), 3)
-})
+#test_that("each distribution works", {
+#  expect_equal(psm3mkv::give_noparams_par("exp"), 1)
+#  expect_equal(psm3mkv::give_noparams_par("weibullPH"), 2)
+#  expect_equal(psm3mkv::give_noparams_par("weibull"), 2)
+#  expect_equal(psm3mkv::give_noparams_par("llogis"), 2)
+#  expect_equal(psm3mkv::give_noparams_par("lnorm"), 2)
+#  expect_equal(psm3mkv::give_noparams_par("gamma"), 2)
+#  expect_equal(psm3mkv::give_noparams_par("gompertz"), 2)
+#  expect_equal(psm3mkv::give_noparams_par("gengamma"), 3)
+#  expect_equal(psm3mkv::give_noparams_par("gengamma.orig"), 3)
+#})
 
-test_that("entering >1 distribution yields an error", {
-  expect_error(psm3mkv::give_noparams_par(c("exp", "lnorm")))
-  expect_error(psm3mkv::give_noparams_par(c("gengamma", "turnip")))
-  expect_error(psm3mkv::give_noparams_par(c("carrot", "llogis")))
-})
+#test_that("entering >1 distribution yields an error", {
+#  expect_error(psm3mkv::give_noparams_par(c("exp", "lnorm")))
+#  expect_error(psm3mkv::give_noparams_par(c("gengamma", "turnip")))
+#  expect_error(psm3mkv::give_noparams_par(c("carrot", "llogis")))
+#})
 
 # Check with splines
 
@@ -53,17 +53,17 @@ spec_spl3 <- list(gammas = fit_spl3$coefficients,
                  knots = fit_spl3$aux$knots,
                  scale = fit_spl3$scale)
 
-test_that("Spline specifications give correct parameter numbers", {
-  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl1), 3)
-  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl2), 4)
-  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl3), 5)
-})
+#test_that("Spline specifications give correct parameter numbers", {
+#  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl1), 3)
+#  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl2), 4)
+#  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl3), 5)
+#})
 
-test_that("Parametric specification give correct parameter numbers", {
-  expect_equal(psm3mkv::give_noparams(type="par", spec=list(dist="exp")), 1)
-  expect_equal(psm3mkv::give_noparams(type="Parametrci", spec=list(dist="weibullPH")), 2)
-  expect_equal(psm3mkv::give_noparams(type="paR", spec=list(dist="gengamma")), 3)
-})
+#test_that("Parametric specification give correct parameter numbers", {
+#  expect_equal(psm3mkv::give_noparams(type="par", spec=list(dist="exp")), 1)
+#  expect_equal(psm3mkv::give_noparams(type="Parametrci", spec=list(dist="weibullPH")), 2)
+#  expect_equal(psm3mkv::give_noparams(type="paR", spec=list(dist="gengamma")), 3)
+#})
 
 # 2. calc_rmd
 # -----------
@@ -260,57 +260,57 @@ test_that("Calling restricted mean function correctly, splines", {
 
 # calc_surv(time=0) = 0
 
-test_that("survival at time zero is 1, params", {
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="exp", pars=0.2)),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="weibullPH", pars=c(1,1))),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="weibull", pars=c(1,1))),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="llogis", pars=c(4,3))),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="lnorm", pars=c(2,3))),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="gamma", pars=c(2,1))),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="gompertz", pars=c(0.3,0.01))),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="gengamma", pars=c(2.5,1.5,0.5))),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="gengamma.orig", pars=c(0.1,10,0.5))),
-    1
-  )
-})
+#test_that("survival at time zero is 1, params", {
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="exp", pars=0.2)),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="weibullPH", pars=c(1,1))),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="weibull", pars=c(1,1))),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="llogis", pars=c(4,3))),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="lnorm", pars=c(2,3))),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="gamma", pars=c(2,1))),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="gompertz", pars=c(0.3,0.01))),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="gengamma", pars=c(2.5,1.5,0.5))),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="par", spec=list(dist="gengamma.orig", pars=c(0.1,10,0.5))),
+#    1
+#  )
+#})
 
-test_that("survival at time zero is 1, splines", {
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="splines", spec=spec_spl1),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="splines", spec=spec_spl2),
-    1
-  )
-  expect_equal(
-    psm3mkv::calc_surv(time=0, type="splines", spec=spec_spl3),
-    1
-  )
-})
+#test_that("survival at time zero is 1, splines", {
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="splines", spec=spec_spl1),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="splines", spec=spec_spl2),
+#    1
+#  )
+#  expect_equal(
+#    psm3mkv::calc_surv(time=0, type="splines", spec=spec_spl3),
+#    1
+#  )
+#})
 

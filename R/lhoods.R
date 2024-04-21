@@ -27,14 +27,11 @@
 #' - `type` is "spl" for splines model or "par" for parametric model
 #' - `spec` contains distribution (`dist`) and coefficients (`coefs`) if `type=="par"`
 #' - `spec` contains gamma values (`gamma`), knot locations (log scale, `knots`) and scale (`scale`) for Royston-Parmar splines model, if `type=="spl"`
-#' @export
 #' @seealso [flexsurv::flexsurvspline()]
-#' @examples
-#' \donttest{
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' convert_fit2spec(fits$pfs[[3]]$result)
-#' }
+# Examples
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# convert_fit2spec(fits$pfs[[3]]$result)
 convert_fit2spec <- function(fitsurv) {
   # Declare local variables
   par.dist <- type <- spec <- NULL
@@ -84,22 +81,20 @@ convert_fit2spec <- function(fitsurv) {
 #' - `BIC`: Bayesian Information Criterion value for this model
 #' @seealso [calc_likes()], [calc_likes_psm_complex()], [calc_likes_stm_cf()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
-#' @export
-#' @examples
-#' \donttest{
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#'   )
-#' calc_likes_psm_simple(bosonc, dpam=params)
-#' }
+# Examples
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#   )
+# calc_likes_psm_simple(bosonc, dpam=params)
+# }
 calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- pfs.durn <- NULL
@@ -186,20 +181,19 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
-#' @export
-#' @examples
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_par(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_par(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_par(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_par(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
-#'   )
-#' calc_likes_psm_complex(bosonc, dpam=params)
+# Examples
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_par(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_par(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_par(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
+#   os = find_bestfit_par(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
+#   )
+# calc_likes_psm_complex(bosonc, dpam=params)
 calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
@@ -291,22 +285,19 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
-#' @export
-#' @examples
-#' \donttest{
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#'   )
-#' calc_likes_stm_cf(bosonc, dpam=params)
-#' }
+# Examples
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#   )
+# calc_likes_stm_cf(bosonc, dpam=params)
 calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
@@ -385,23 +376,20 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_stm_cf()], [calc_likes_psm_simple()], [calc_likes_psm_complex()]
-#' @export
 #' @importFrom rlang .data
-#' @examples
-#' \donttest{
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#'   )
-#' calc_likes_stm_cr(bosonc, dpam=params)
-#' }
+# Examples
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#   )
+# calc_likes_stm_cr(bosonc, dpam=params)
 calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
   ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL

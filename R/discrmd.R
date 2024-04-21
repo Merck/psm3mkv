@@ -45,26 +45,23 @@
 #' - pd: RMD in PD state
 #' - os: RMD in either alive state
 #' @seealso [drmd_stm_cf()] [drmd_stm_cr()]
-#' @export
-#' @examples
-#' \donttest{
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' drmd_psm(ptdata=bosonc, dpam=params)
-#' # Add a lifetable constraint
-#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-#' drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)
-#' }
+# Examples
+# # Create dataset and fit survival models (splines)
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+# )
+# drmd_psm(ptdata=bosonc, dpam=params)
+# # Add a lifetable constraint
+# ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+# drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)
 drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
   Tw <- tvec <- pfprob <- osprob <- adjosprob <- adjfac <- adjprob <- vn <- NULL
@@ -96,26 +93,23 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Forward structure.
 #' @inherit drmd_psm params return
 #' @seealso [drmd_psm()] [drmd_stm_cr()]
-#' @export
-#' @examples
-#' \donttest{
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' drmd_stm_cf(dpam=params)
-#' # Add a lifetable constraint
-#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-#' drmd_stm_cf(dpam=params, lifetable=ltable)
-#' }
+# Examples
+# # Create dataset and fit survival models (splines)
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+# )
+# drmd_stm_cf(dpam=params)
+# # Add a lifetable constraint
+# ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+# drmd_stm_cf(dpam=params, lifetable=ltable)
 drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
   Tw <- tvec <- ppd.ts <- ttp.ts <- pps.ts <- NULsppd <- sttp <- sos <- NULL
@@ -155,26 +149,23 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Reset structure.
 #' @inherit drmd_psm params return
 #' @seealso [drmd_stm_cf()] [drmd_psm()]
-#' @export
-#' @examples
-#' \donttest{
-#' # Create dataset and fit survival models (splines)
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-#' )
-#' drmd_stm_cr(dpam=params)
-#' # Add a lifetable constraint
-#' ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-#' drmd_stm_cr(dpam=params, lifetable=ltable)
-#' }
+# Examples
+# # Create dataset and fit survival models (splines)
+# bosonc <- create_dummydata("flexbosms")
+# fits <- fit_ends_mods_spl(bosonc)
+# # Pick out best distribution according to min AIC
+# params <- list(
+#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
+#   os = find_bestfit_spl(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+# )
+# drmd_stm_cr(dpam=params)
+# # Add a lifetable constraint
+# ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+# drmd_stm_cr(dpam=params, lifetable=ltable)
 drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
   Tw <- tvec <- ppd.ts <- ttp.ts <- sppd <- sttp <- sos <- NULL

@@ -48,20 +48,6 @@ List of values and data relating to the likelihood for this model:
 \description{
 Calculate likelihood values and other summary output for a more complex three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by \code{\link[=calc_likes]{calc_likes()}}. Unlike \code{\link[=calc_likes_psm_simple]{calc_likes_psm_simple()}}, this likelihood function requires fitting to TTP.
 }
-\examples{
-bosonc <- create_dummydata("flexbosms")
-fits <- fit_ends_mods_par(bosonc)
-# Pick out best distribution according to min AIC
-params <- list(
-  ppd = find_bestfit_par(fits$ppd, "aic")$fit,
-  ttp = find_bestfit_par(fits$ttp, "aic")$fit,
-  pfs = find_bestfit_par(fits$pfs, "aic")$fit,
-  os = find_bestfit_par(fits$os, "aic")$fit,
-  pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
-  pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
-  )
-calc_likes_psm_complex(bosonc, dpam=params)
-}
 \seealso{
 \code{\link[=calc_likes]{calc_likes()}}, \code{\link[=calc_likes_psm_simple]{calc_likes_psm_simple()}}, \code{\link[=calc_likes_psm_complex]{calc_likes_psm_complex()}}, \code{\link[=calc_likes_stm_cr]{calc_likes_stm_cr()}}
 }

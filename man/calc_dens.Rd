@@ -32,13 +32,3 @@ The value of a hazard function, a numeric value.
 \description{
 Calculate the value of the density function, given specification as either parametric or Royston-Parmar splines model
 }
-\examples{
-calc_dens(time=1:5,
-    type="spl",
-    spec=list(gamma=c(0.1,0.2,0.1), knots=c(-5,2,4), scale="normal")
-    )
-calc_dens(time=1:5,
-    type="par",
-    spec=list(dist="lnorm", pars=c(3,1))
-    )
-}
