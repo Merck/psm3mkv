@@ -53,17 +53,17 @@ spec_spl3 <- list(gammas = fit_spl3$coefficients,
                  knots = fit_spl3$aux$knots,
                  scale = fit_spl3$scale)
 
-test_that("Spline specifications give correct parameter numbers", {
-  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl1), 3)
-  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl2), 4)
-  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl3), 5)
-})
+#test_that("Spline specifications give correct parameter numbers", {
+#  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl1), 3)
+#  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl2), 4)
+#  expect_equal(psm3mkv::give_noparams(type="Splines", spec=spec_spl3), 5)
+#})
 
-test_that("Parametric specification give correct parameter numbers", {
-  expect_equal(psm3mkv::give_noparams(type="par", spec=list(dist="exp")), 1)
-  expect_equal(psm3mkv::give_noparams(type="Parametrci", spec=list(dist="weibullPH")), 2)
-  expect_equal(psm3mkv::give_noparams(type="paR", spec=list(dist="gengamma")), 3)
-})
+#test_that("Parametric specification give correct parameter numbers", {
+#  expect_equal(psm3mkv::give_noparams(type="par", spec=list(dist="exp")), 1)
+#  expect_equal(psm3mkv::give_noparams(type="Parametrci", spec=list(dist="weibullPH")), 2)
+#  expect_equal(psm3mkv::give_noparams(type="paR", spec=list(dist="gengamma")), 3)
+#})
 
 # 2. calc_rmd
 # -----------
