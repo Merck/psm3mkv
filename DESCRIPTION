@@ -26,7 +26,6 @@ Imports:
     SimplicialCubature,
     stats,
     survival,
-    SurvMetrics,
     tibble,
     tidyr
 Suggests:
