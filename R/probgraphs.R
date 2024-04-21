@@ -419,7 +419,6 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' - post-progression survival clock forward (PPS-CF) and
 #' - post-progression survival clock reset (PPS-CR).
 #' @param cuttime is the cut-off time for a two-piece model (default 0, indicating a one-piece model)
-#' @param tpoints indicates how many timepoints should be included in the graphics (default 100)
 #' @return Four datasets and graphics as a list
 #' @export
 #' @importFrom rlang .data
@@ -440,7 +439,8 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' gs <- graph_survs(ptdata=bosonc, dpam=params)
 #' gs$graph$pd
 #' }
-graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
+graph_survs <- function(ptdata, dpam, cuttime=0){
+  # Was tpoints=100
   cat("Creating KM \n")
   # Declare local variables
   ds <- pfsfit <- osfit <- ppsfit <- pfs <- os <- time <- NULL
@@ -450,6 +450,7 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
   pfdata <- osdata <- ppsdata <- cut_pf <- cut_os <- starting <- NULL
   # Calculations
   ds <- create_extrafields(ptdata, cuttime)
+  dspps <- ds |> dplyr::filter(.data$pps.durn>0, .data$ttp.flag==1) 
   # Fit K-M before cutpoint
   pfsfit <- survival::survfit(
               survival::Surv(pfs.odurn, pfs.flag) ~ 1,
@@ -459,128 +460,92 @@ graph_survs <- function(ptdata, dpam, cuttime=0, tpoints=100){
               data=ds)
   ppsfit <- survival::survfit(
               survival::Surv(pps.odurn, pps.flag) ~ 1,
-              data=ds)
-  # Predict PFS and OS at all time values
-  rnding <- max(pfsfit$time, osfit$time)/tpoints
-  timevar <- sort(unique(ceiling(c(0, pfsfit$time, osfit$time)/rnding)*rnding))
-  kmpfs <- summary(pfsfit, timevar)
-  kmos <- summary(osfit, timevar)
-  kmpps <- summary(ppsfit, timevar)
-  timeos <- ceiling(max(kmos$time)):ceiling(max(kmos$time)/(1-min(kmos$surv)))
-  # Join in a dataframe
-  pfdata <- data.frame(time=kmpfs$time, pfs=kmpfs$surv)
-  osdata <- data.frame(time=c(kmos$time, timeos),
-                       os=c(kmos$surv, rep(NA, length(timeos))))
-  ppsdata <- data.frame(time=kmpps$time, km_pps=kmpps$surv)
+              data=dspps)
+  # Obtain KM survivals at a single set of times
+  kmtime <- sort(unique(c(pfsfit$time, osfit$time, ppsfit$time)))
+  kmpfs <- summary(pfsfit, kmtime)
+  kmos <- summary(osfit, kmtime)
+  kmpps <- summary(ppsfit, kmtime)
+  # Organize into a wide dataframe
+  kmdata <- data.frame(
+    time = c(kmpfs$time, kmos$time, kmpps$time),
+    surv = c(kmpfs$surv, kmos$surv, kmpps$surv),
+    epoint = c(rep("pf", length(kmpfs$time)), rep("os", length(kmos$time)), rep("pps", length(kmpps$time)))
+  ) |>
+    tidyr::pivot_wider(
+      id_cols=time,
+      names_prefix="km_",
+      names_from="epoint",
+      values_from=surv
+      ) |>
+    tibble::add_row(time=0, km_pf=1, km_os=1, km_pps=1) |>
+    dplyr::mutate(km_pd = km_os-km_pf) |>
+    dplyr::arrange(time)
   # Derive KM probabilities at cutpoint
-  cut_pf <- min(pfdata$pfs[pfdata$time<=cuttime])
-  cut_os <- min(osdata$os[osdata$time<=cuttime])
+  timecut <- max(kmdata$time[kmdata$time<=cuttime])
+  cut_pf <- min(kmdata$km_pf[kmdata$time<=timecut])
+  cut_os <- min(kmdata$km_os[kmdata$time<=timecut])
   starting <- c(cut_pf, cut_os-cut_pf, 1-cut_os)
-  # Create KM dataset
-  gdata <- osdata |>
-    dplyr::left_join(pfdata, by="time") |>
-    dplyr::left_join(ppsdata, by="time") |>
-    dplyr::mutate(
-      km_os = dplyr::if_else(is.na(.data$pfs), NA, .data$os),
-      km_pf = dplyr::if_else(is.na(.data$pfs), NA, .data$pfs),
-      km_pd = .data$km_os-.data$km_pf
-    ) |>
-    dplyr::select(-pfs, -os)
-  # Parametric fits, censored function
+  # Calculate fitted survival values
   cat("Calculating fitted curves \n")
-  gdata <- gdata |>
+  gdata <- kmdata |>
     dplyr::mutate(
       timeplus = pmax(0, .data$time-cuttime),
       psm_pf = prob_pf_psm(.data$timeplus, dpam, starting),
       psm_os = prob_os_psm(.data$timeplus, dpam, starting),
       psm_pd = .data$psm_os-.data$psm_pf,
-      stm_cf_pf = prob_pf_stm(.data$timeplus, dpam, starting),
-      stm_cr_pf = .data$stm_cf_pf,
-      stm_cf_pd = prob_pd_stm_cf(.data$timeplus, dpam, starting),
-      stm_cr_pd = prob_pd_stm_cr(.data$timeplus, dpam, starting),
-      stm_cf_os = .data$stm_cf_pf + .data$stm_cf_pd,
-      stm_cr_os = .data$stm_cr_pf + .data$stm_cr_pd,
-      stm_cr_pps = prob_pps_cr(.data$time, dpam),
-      stm_cf_pps = prob_pps_cf(ttptimes=ds$ttp.durn, ppstimes=.data$time, dpam=dpam)
+      stmcf_pf = prob_pf_stm(.data$timeplus, dpam, starting),
+      stmcr_pf = .data$stmcf_pf,
+      stmcf_pd = prob_pd_stm_cf(.data$timeplus, dpam, starting),
+      stmcr_pd = prob_pd_stm_cr(.data$timeplus, dpam, starting),
+      stmcf_os = .data$stmcf_pf + .data$stmcf_pd,
+      stmcr_os = .data$stmcr_pf + .data$stmcr_pd,
+      stmcr_pps = prob_pps_cr(.data$time, dpam),
+      stmcf_pps = prob_pps_cf(ttptimes=ds$ttp.durn, ppstimes=.data$time, dpam=dpam)
     ) |>
-    dplyr::rename(Time=time)
-  # Dataset for PF outcome
-  cat("Rearranging datasets \n")
-  pfdata <- gdata |>
-    dplyr::rename(km = km_pf) |>
-    dplyr::mutate(
-      psm = ifelse(.data$Time < cuttime, NA, .data$psm_pf),
-      stm_cr = ifelse(.data$Time < cuttime, NA, .data$stm_cr_pf),
-      stm_cf = ifelse(.data$Time < cuttime, NA, .data$stm_cf_pf)
+    # Reshape into a long dataframe
+    tidyr::pivot_longer(
+      cols=c(starts_with("km"), starts_with("psm"), starts_with("stm")),
+      names_to="surv"
+    )
+  # Pull out method and endpoint variables
+  methep <- stringr::str_split(gdata$surv, "_", simplify=TRUE)
+  gdata$method <- methep[,1]
+  gdata$endp <- methep[,2]
+  # Relabel stmcf and stmcr
+  gdata$method[gdata$method=="stmcf"] <- "stm_cf"
+  gdata$method[gdata$method=="stmcr"] <- "stm_cr"
+  # Reshape wide by Method
+  gdata <- gdata |>
+    tidyr::pivot_wider(
+      id_cols=c(time, endp),
+      names_from="method",
+      values_from="value"
     ) |>
-    tidyr::pivot_longer(cols=c(km, psm, stm_cr, stm_cf),
-                 names_to="Method", values_to="Probability")
-  # Dataset for PD outcome
-  pddata <- gdata |>
-    dplyr::rename(km = km_pd) |>
-    dplyr::mutate(
-      psm = ifelse(.data$Time < cuttime, NA, .data$psm_pd),
-      stm_cr = ifelse(.data$Time < cuttime, NA, .data$stm_cr_pd),
-      stm_cf = ifelse(.data$Time < cuttime, NA, .data$stm_cf_pd)
-    ) |>
-    tidyr::pivot_longer(cols=c(km, psm, stm_cr, stm_cf),
-                 names_to="Method", values_to="Probability")
-  # Dataset for OS outcome
-  osdata <- gdata |>
-    dplyr::rename(km = km_os) |>
-    dplyr::mutate(
-      psm = ifelse(.data$Time < cuttime, NA, .data$psm_os),
-      stm_cr = ifelse(.data$Time < cuttime, NA, .data$stm_cr_os),
-      stm_cf = ifelse(.data$Time < cuttime, NA, .data$stm_cf_os)
-    ) |>
-    tidyr::pivot_longer(cols=c(km, psm, stm_cr, stm_cf),
-                 names_to="Method", values_to="Probability")
-  # Dataset for PPS outcome
-  ppsdata <- gdata |>
-    dplyr::rename(
-      km = km_pps,
-      stm_cr = stm_cr_pps,
-      stm_cf = stm_cf_pps
-    ) |>
-    dplyr::mutate(
-      psm = NA,
-    ) |>
-    dplyr::select(Time, km, psm, stm_cr, stm_cf) |>
-    tidyr::pivot_longer(cols=c(km, psm, stm_cr, stm_cf),
-                 names_to="Method", values_to="Probability")
-  # Dataset for PSM graphic
-  psmdata <- gdata |>
-    dplyr::mutate(
-      pf = ifelse(.data$Time < cuttime, NA, .data$psm_pf),
-      os = ifelse(.data$Time < cuttime, NA, .data$psm_os)
-    ) |>
-    dplyr::select(Time, pf, os) |>
-    tidyr::pivot_longer(cols=c(pf, os),
-                        names_to="Endpoint", values_to="Probability")
-  # Summarise datasets to a list
-  datalist <- list(
-    pf=pfdata,
-    pd=pddata,
-    os=osdata,
-    pps=ppsdata
-  )
+    # Rename variables to: Time
+    dplyr::rename(Time = time)
   # Internal function to draw graphic
   cat("Drawing plots \n")
-  draw_2pgraphic <- function(ds, xlabel="Time from baseline") {
-    # Declare local variable
-    Time <- Probability <- Method <- NULL
+  draw_2pgraphic <- function(graphds, xlabel="Time from baseline") {
+    # Reshape long by method
+    longds <- graphds |>
+      tidyr::pivot_longer(
+                  cols=c("km", "psm", "stm_cf", "stm_cr"),
+                  names_to="Method",
+                  values_to="Probability"
+                  ) |>
+      dplyr::select(-endp)
     # Draw graphic
-    ggplot2::ggplot(ds, ggplot2::aes(Time, Probability)) +
+    ggplot2::ggplot(longds, ggplot2::aes(Time, Probability)) +
       ggplot2::geom_line(ggplot2::aes(color = Method)) +
       ggplot2::xlab(xlabel)
   }
   # Draw graphics
   graphlist <- list(
-    pf = draw_2pgraphic(pfdata),
-    pd = draw_2pgraphic(pddata),
-    os = draw_2pgraphic(osdata),
-    psm = draw_2pgraphic(psmdata),
-    pps = draw_2pgraphic(ppsdata, xlabel="Time from progression")
+    pf = draw_2pgraphic(gdata[gdata$endp=="pf",]),
+    pd = draw_2pgraphic(gdata[gdata$endp=="pd",]),
+    os = draw_2pgraphic(gdata[gdata$endp=="os",]),
+    pps = draw_2pgraphic(gdata[gdata$endp=="pps",], xlabel="Time from progression")
   )
-  return(list(data=datalist, graph=graphlist))
+  return(list(data=gdata, graph=graphlist))
 }
