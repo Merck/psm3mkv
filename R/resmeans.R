@@ -39,7 +39,6 @@
 #' @param discrate Discount rate (%) per year
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pf_stm] by [calc_allrmds]
-#' @export
 #' @examples
 #' \donttest{
 #' # Create dataset and fit survival models (splines)
@@ -89,7 +88,6 @@ prmd_pf_stm <- purrr::possibly(rmd_pf_stm, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso [rmd_pd_stm_cr]
-#' @export
 #' @seealso Used safely as [prmd_pd_stm_cr] by [calc_allrmds]
 #' @examples
 #' \donttest{
@@ -155,7 +153,6 @@ prmd_pd_stm_cr <- purrr::possibly(rmd_pd_stm_cr, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pd_stm_cf] by [calc_allrmds]
-#' @export
 #' @examples
 #' \donttest{
 #' # Create dataset and fit survival models (splines)
@@ -220,7 +217,6 @@ prmd_pd_stm_cf <- purrr::possibly(rmd_pd_stm_cf, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_pf_psm] by [calc_allrmds]
-#' @export
 #' @examples
 #' \donttest{
 #' # Create dataset and fit survival models (splines)
@@ -270,7 +266,6 @@ prmd_pf_psm <- purrr::possibly(rmd_pf_psm, otherwise=NA_real_)
 #' @inheritParams rmd_pf_stm
 #' @return Numeric value in same time unit as patient-level data (weeks).
 #' @seealso Used safely as [prmd_os_psm] by [calc_allrmds]
-#' @export
 #' @examples
 #' \donttest{
 #' # Create dataset and fit survival models (splines)

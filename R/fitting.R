@@ -25,7 +25,6 @@
 #' @description Checks whether the Hessian matrix returned in a list after fitting a survival regression with flexsurvreg is positive-definite.
 #' @param fitlist is a list returned after running [flexsurv::flexsurvreg()] describing a fitted survival model
 #' @return logical: TRUE if Hessian matrix is positive definite, FALSE if not.
-#' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_par(bosonc)
