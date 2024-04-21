@@ -501,6 +501,7 @@ graph_survs <- function(ptdata, dpam, cuttime=0){
       stmcr_pps = prob_pps_cr(.data$time, dpam),
       stmcf_pps = prob_pps_cf(ttptimes=ds$ttp.durn, ppstimes=.data$time, dpam=dpam)
     ) |>
+    dplyr::select(-timeplus) |>
     # Reshape into a long dataframe
     tidyr::pivot_longer(
       cols = !time,
@@ -522,6 +523,10 @@ graph_survs <- function(ptdata, dpam, cuttime=0){
     ) |>
     # Rename variables to: Time
     dplyr::rename(Time = time)
+  # Set fitted values to NA before cuttime
+  gdata$psm[gdata$Time < cuttime] <- NA
+  gdata$stm_cr[gdata$Time < cuttime] <- NA
+  gdata$stm_cf[gdata$Time < cuttime] <- NA
   # Internal function to draw graphic
   cat("Drawing plots \n")
   draw_2pgraphic <- function(graphds, xlabel="Time from baseline") {

@@ -27,7 +27,6 @@
 #' - `type` is "spl" for splines model or "par" for parametric model
 #' - `spec` contains distribution (`dist`) and coefficients (`coefs`) if `type=="par"`
 #' - `spec` contains gamma values (`gamma`), knot locations (log scale, `knots`) and scale (`scale`) for Royston-Parmar splines model, if `type=="spl"`
-#' @export
 #' @seealso [flexsurv::flexsurvspline()]
 #' @examples
 #' \donttest{
@@ -84,7 +83,6 @@ convert_fit2spec <- function(fitsurv) {
 #' - `BIC`: Bayesian Information Criterion value for this model
 #' @seealso [calc_likes()], [calc_likes_psm_complex()], [calc_likes_stm_cf()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
-#' @export
 #' @examples
 #' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
@@ -186,7 +184,6 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
-#' @export
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_par(bosonc)
@@ -291,7 +288,6 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
-#' @export
 #' @examples
 #' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
@@ -385,7 +381,6 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_stm_cf()], [calc_likes_psm_simple()], [calc_likes_psm_complex()]
-#' @export
 #' @importFrom rlang .data
 #' @examples
 #' \donttest{
