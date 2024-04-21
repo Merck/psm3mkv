@@ -4,7 +4,7 @@
 \alias{graph_survs}
 \title{Graph the observed and fitted state membership probabilities}
 \usage{
-graph_survs(ptdata, dpam, cuttime = 0, tpoints = 100)
+graph_survs(ptdata, dpam, cuttime = 0)
 }
 \arguments{
 \item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
@@ -31,8 +31,6 @@ Survival data for all other endpoints (time to progression, pre-progression deat
 }}
 
 \item{cuttime}{is the cut-off time for a two-piece model (default 0, indicating a one-piece model)}
-
-\item{tpoints}{indicates how many timepoints should be included in the graphics (default 100)}
 }
 \value{
 Four datasets and graphics as a list
