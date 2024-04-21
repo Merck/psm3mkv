@@ -30,26 +30,6 @@ List containing:
 Discretized Restricted Mean Duration calculation for State Transition Model Clock Forward structure
 Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Forward structure.
 }
-\examples{
-\donttest{
-# Create dataset and fit survival models (splines)
-bosonc <- create_dummydata("flexbosms")
-fits <- fit_ends_mods_spl(bosonc)
-# Pick out best distribution according to min AIC
-params <- list(
-  ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-  ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-  pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-  os = find_bestfit_spl(fits$os, "aic")$fit,
-  pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-  pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-)
-drmd_stm_cf(dpam=params)
-# Add a lifetable constraint
-ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-drmd_stm_cf(dpam=params, lifetable=ltable)
-}
-}
 \seealso{
 \code{\link[=drmd_psm]{drmd_psm()}} \code{\link[=drmd_stm_cr]{drmd_stm_cr()}}
 }

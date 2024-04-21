@@ -53,26 +53,6 @@ List containing:
 Discretized Restricted Mean Duration calculation for Partitioned Survival Model
 Calculate restricted mean duration (RMD) in PF, PD and OS states under a Partitioned Survival Model structure.
 }
-\examples{
-\donttest{
-# Create dataset and fit survival models (splines)
-bosonc <- create_dummydata("flexbosms")
-fits <- fit_ends_mods_spl(bosonc)
-# Pick out best distribution according to min AIC
-params <- list(
-  ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-  ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-  pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-  os = find_bestfit_spl(fits$os, "aic")$fit,
-  pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-  pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
-)
-drmd_psm(ptdata=bosonc, dpam=params)
-# Add a lifetable constraint
-ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)
-}
-}
 \seealso{
 \code{\link[=drmd_stm_cf]{drmd_stm_cf()}} \code{\link[=drmd_stm_cr]{drmd_stm_cr()}}
 }

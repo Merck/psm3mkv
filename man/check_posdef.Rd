@@ -15,8 +15,3 @@ logical: TRUE if Hessian matrix is positive definite, FALSE if not.
 \description{
 Checks whether the Hessian matrix returned in a list after fitting a survival regression with flexsurvreg is positive-definite.
 }
-\examples{
-bosonc <- create_dummydata("flexbosms")
-fits <- fit_ends_mods_par(bosonc)
-check_posdef(fits$pfs[[2]]$result)
-}

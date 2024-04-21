@@ -444,7 +444,7 @@ graph_survs <- function(ptdata, dpam, cuttime=0){
   # Declare local variables
   ds <- dspps <- pfsfit <- osfit <- ppsfit <- NULL
   rnding <- kmpfs <- kmos <- kmpps <- kmdata <- gdata <- NULL
-  time <- surv <- km_os <- km_pf <- endp <- NULL
+  time <- surv <- km_os <- km_pf <- endp <- timeplus <- NULL
   timecut <- cut_pf <- cut_os <- starting <- NULL
   # Calculations
   ds <- create_extrafields(ptdata, cuttime)

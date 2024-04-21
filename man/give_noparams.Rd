@@ -30,10 +30,6 @@ a numeric value
 \description{
 Returns the number of parameters used by the specified statistical model
 }
-\examples{
-give_noparams(type="par", spec=list(dist="weibullPH"))
-give_noparams(type="spl", spec=list(gamma=c(1.1,2.1,3.1)))
-}
 \seealso{
 \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}
 }

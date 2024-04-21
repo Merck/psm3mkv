@@ -93,9 +93,9 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
 #' @param lifetable The lifetable must be a dataframe with columns named `lttime` (years) and `lx`. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default).
 #' @return Numeric survival probability
-#' @examples
-#' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
-#' calc_ltsurv(c(2, 2.5, 9.3), ltable)
+# Examples
+# ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
+# calc_ltsurv(c(2, 2.5, 9.3), ltable)
 calc_ltsurv <- function(looktime, lifetable=NA, method="geom"){
   if (!is.data.frame(lifetable)) {return(rep(1, length(looktime)))}
   if (lifetable$lttime[1]!=0) {stop("Lifetable must run from time zero")}
@@ -108,9 +108,9 @@ calc_ltsurv <- function(looktime, lifetable=NA, method="geom"){
 #' @param lifetable The lifetable must be a dataframe with columns named `lttime` (years) and `lx`. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default). 
 #' @return Numeric survival probability
-#' @examples
-#' ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
-#' calc_ltdens(c(2, 2.5, 9.3), ltable)
+# Examples
+# ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
+# calc_ltdens(c(2, 2.5, 9.3), ltable)
 calc_ltdens <- function(looktime, lifetable=NA, method="geom"){
   if (!is.data.frame(lifetable)) stop("Lifetable must be specified")
   if (lifetable$lttime[1]!=0) stop("Lifetable must run from time zero")
