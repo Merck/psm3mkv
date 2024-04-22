@@ -239,11 +239,10 @@ pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
 #' # psmh_simple <- graph_psm_hazards(
 #' #   timerange=(0:10)*6,
 #' #   endpoint="OS",
-#' #   ptdata=bosonc,
 #' #   dpam=params,
 #' #   psmtype="simple")
 #' # psmh_simple$graph
-graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
+graph_psm_hazards <- function(timevar, endpoint, dpam, psmtype) {
   # Declare local variables
   Adjusted <- Unadjusted <- Time <- Hazard <- Method <- NULL
   # Convert endpoint to upper case text
@@ -281,14 +280,10 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 #'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 #' )
-#' # Original OS graphic
-#' graph_orig <- graph_survs(ptdata=bosonc, dpam=params)
-#' graph_orig$graph$os
-#' # New graphic illustrating effect of constraints on OS model
+#' # Graphic illustrating effect of constraints on OS model
 #' psms_simple <- graph_psm_survs(
-#'   timerange=6*(0:10),
+#'   timevar=6*(0:10),
 #'   endpoint="OS",
-#'   ptdata=bosonc,
 #'   dpam=params,
 #'   psmtype="simple"
 #' )

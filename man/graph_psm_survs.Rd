@@ -34,6 +34,7 @@ List containing:
 Graph the PSM survival functions
 }
 \examples{
+\donttest{
 bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_par(bosonc)
 # Pick out best distribution according to min AIC
@@ -49,11 +50,13 @@ params <- list(
 graph_orig <- graph_survs(ptdata=bosonc, dpam=params)
 graph_orig$graph$os
 # New graphic illustrating effect of constraints on OS model
-# psms_simple <- graph_psm_survs(
-# timerange=6*(0:10),
-# endpoint="OS",
-# ptdata=bosonc,
-# dpam=params,
-# psmtype="simple")
-# psms_simple$graph
+psms_simple <- graph_psm_survs(
+  timerange=6*(0:10),
+  endpoint="OS",
+  ptdata=bosonc,
+  dpam=params,
+  psmtype="simple"
+)
+psms_simple$graph
+}
 }
