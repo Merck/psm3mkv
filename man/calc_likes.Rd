@@ -77,6 +77,3 @@ params <- list(
 calc_likes(bosonc, dpam=params)
 }
 }
-\seealso{
-This function calls \code{\link[=calc_likes_psm_simple]{calc_likes_psm_simple()}}, \code{\link[=calc_likes_psm_complex]{calc_likes_psm_complex()}}, \code{\link[=calc_likes_stm_cf]{calc_likes_stm_cf()}}, and \code{\link[=calc_likes_stm_cr]{calc_likes_stm_cr()}}.
-}

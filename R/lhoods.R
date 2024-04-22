@@ -509,7 +509,6 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #'
 #' The number of patients for each outcome are given for each model structure. You may confirm that these are identical across model structures.
 #' The contribution of each patient group to the calculation of log-likelihood for each model is given in fields beginning `ll_`. This is helpful for understanding differences in likelihoods between model structures, according to patient outcomes.
-#' @seealso This function calls [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cf()], and [calc_likes_stm_cr()].
 #' @export
 #' @examples
 #' \donttest{

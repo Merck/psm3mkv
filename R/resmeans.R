@@ -448,7 +448,6 @@ calc_rmd_first <- function(ds, cuttime) {
 #' @return List of detailed numeric results
 #' - cutadj indicates the survival function and area under the curves for PFS and OS up to the cutpoint
 #' - results provides results of the restricted means calculations, by model and state.
-#' @seealso Restricted means are provided by [rmd_pf_psm()], [rmd_os_psm()], [rmd_pf_stm()], [rmd_pd_stm_cf()] and [rmd_pd_stm_cr()]. The function [calc_allrmds_boot] provides a version for bootstrapping.
 #' @export
 #' @examples
 #' \donttest{
