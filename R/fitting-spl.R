@@ -33,6 +33,7 @@
 #' - result: A list of class [flexsurv::flexsurvspline] containing information about the fitted model.
 #' - error: Any error message returned on fitting the regression (NULL indicates no error).
 #' @seealso [flexsurv::flexsurvspline] and [survival::Surv()]
+#' @noRd
 fit_mods_spl <- function(durn1, durn2=NA, evflag,
                          knot_set=1:3,
                          scale_set=c("hazard", "odds", "normal"),

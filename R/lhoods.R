@@ -28,6 +28,7 @@
 #' - `spec` contains distribution (`dist`) and coefficients (`coefs`) if `type=="par"`
 #' - `spec` contains gamma values (`gamma`), knot locations (log scale, `knots`) and scale (`scale`) for Royston-Parmar splines model, if `type=="spl"`
 #' @seealso [flexsurv::flexsurvspline()]
+#' @noRd
 # Examples
 # bosonc <- create_dummydata("flexbosms")
 # fits <- fit_ends_mods_spl(bosonc)
@@ -53,13 +54,13 @@ convert_fit2spec <- function(fitsurv) {
 #' Calculate likelihood for a simple three-state partitioned survival model
 #' @description Calculate likelihood values and other summary output for a simple three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes].x three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes]. Unlike [calc_likes_psm_complex], this likelihood function assumes a progression hazard can be derived from the PFS hazard function and the ratio of progression to PFS events from PF patients.
 #' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
-#' - ptid: patient identifier
-#' - pfs.durn: duration of PFS from baseline
-#' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
-#' - os.durn: duration of OS from baseline
-#' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
-#' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
-#' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#' - `ptid`: patient identifier
+#' - `pfs.durn`: duration of PFS from baseline
+#' - `pfs.flag`: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - `os.durn`: duration of OS from baseline
+#' - `os.flag`: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - `ttp.durn`: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - `ttp.flag`: event flag for TTP (=1 if progression occurred, 0 for censoring).
 #'
 #' Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.
 #' @param dpam List of survival regressions for each endpoint:
@@ -81,6 +82,7 @@ convert_fit2spec <- function(fitsurv) {
 #' - `BIC`: Bayesian Information Criterion value for this model
 #' @seealso [calc_likes()], [calc_likes_psm_complex()], [calc_likes_stm_cf()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
+#' @noRd
 # Examples
 # bosonc <- create_dummydata("flexbosms")
 # fits <- fit_ends_mods_spl(bosonc)
@@ -181,6 +183,7 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
+#' @noRd
 # Examples
 # bosonc <- create_dummydata("flexbosms")
 # fits <- fit_ends_mods_par(bosonc)
@@ -285,6 +288,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
+#' @noRd
 # Examples
 # bosonc <- create_dummydata("flexbosms")
 # fits <- fit_ends_mods_spl(bosonc)
@@ -377,6 +381,7 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 #' @inherit calc_likes_psm_simple return
 #' @seealso [calc_likes()], [calc_likes_stm_cf()], [calc_likes_psm_simple()], [calc_likes_psm_complex()]
 #' @importFrom rlang .data
+#' @noRd
 # Examples
 # bosonc <- create_dummydata("flexbosms")
 # fits <- fit_ends_mods_spl(bosonc)
@@ -466,7 +471,24 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 
 #' Calculate likelihoods for three three-state model structures
 #' @description Calculate likelihood values and other summary output for the following three state models structures: partitioned survival, clock forward state transition, and clock reset state transition. The function requires appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used).
-#' @inheritParams calc_likes_psm_simple
+#' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
+#' - `ptid`: patient identifier
+#' - `pfs.durn`: duration of PFS from baseline
+#' - `pfs.flag`: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - `os.durn`: duration of OS from baseline
+#' - `os.flag`: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - `ttp.durn`: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - `ttp.flag`: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#'
+#' Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.
+#' @param dpam List of survival regressions for each endpoint:
+#' - pre-progression death (PPD)
+#' - time to progression (TTP)
+#' - progression-free survival (PFS)
+#' - overall survival (OS)
+#' - post-progression survival clock forward (PPS-CF) and
+#' - post-progression survival clock reset (PPS-CR).
+#' @param cuttime Time cutoff - this is nonzero for two-piece models.
 #' @return Two outputs are returned:
 #' 
 #' `results` is a tibble of values and data relating to the likelihood for this model:

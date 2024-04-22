@@ -174,12 +174,13 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, psmtype="simple")
 }
 
 #' Obtain adjusted and unadjusted PSM hazards
-#' @description EXPERIMENTAL. Obtain adjusted and unadjusted PSM hazards for given endpoint and time
+#' @description Obtain adjusted and unadjusted PSM hazards for given endpoint and time
 #' @param endpoint Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)
 #' @inheritParams calc_haz_psm
 #' @param psmtype Type of PSM - simple or complex
 #' @importFrom rlang .data
 #' @return `adj` is the hazard adjusted for constraints, `unadj` is the unadjusted hazard
+#' @noRd
 pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
   # Run calculation of all hazards
   allhaz <- calc_haz_psm(timevar, dpam, psmtype)
@@ -207,16 +208,19 @@ pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
 
 #' Graph the PSM hazard functions
 #' @description Graph the PSM hazard functions
-#' @inheritParams pickout_psmhaz
+#' @param endpoint Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)
+#' @inheritParams calc_haz_psm
 #' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
-#' - ptid: patient identifier
-#' - pfs.durn: duration of PFS from baseline
-#' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
-#' - os.durn: duration of OS from baseline
-#' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
-#' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
-#' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
-#' @inherit pickout_psmhaz return
+#' - `ptid`: patient identifier
+#' - `pfs.durn`: duration of PFS from baseline
+#' - `pfs.flag`: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - `os.durn`: duration of OS from baseline
+#' - `os.flag`: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - `ttp.durn`: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - `ttp.flag`: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#' @returns List containing:
+#' - `adj` is the hazard adjusted for constraints
+#' - `unadj` is the unadjusted hazard
 #' @importFrom rlang .data
 #' @export
 #' @examples

@@ -46,6 +46,7 @@ create_dummydata <- function(dsname) {
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @seealso [create_dummydata()]
 #' @importFrom rlang .data
+#' @noRd
 create_dummydata_survcan <- function() {
   # Declare local variables
   ptid <- os.durn <- os.flag <- NULL
@@ -64,6 +65,7 @@ create_dummydata_survcan <- function() {
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @seealso [create_dummydata()]
 #' @importFrom rlang .data
+#' @noRd
 create_dummydata_flexbosms <- function() {
   # Declare local variables
   id <- pfs.durn <- pfs.flag <- NULL
