@@ -21,10 +21,14 @@ graph_psm_survs(timevar, endpoint, dpam, psmtype)
 \item post-progression survival clock reset (PPS-CR).
 }}
 
-\item{psmtype}{Type of PSM - simple or complex}
+\item{psmtype}{Either "simple" or "complex" PSM formulation}
 }
 \value{
-\code{adj} is the hazard adjusted for constraints, \code{unadj} is the unadjusted hazard
+List containing:
+\itemize{
+\item \code{adj} is the hazard adjusted for constraints
+\item \code{unadj} is the unadjusted hazard
+}
 }
 \description{
 Graph the PSM survival functions

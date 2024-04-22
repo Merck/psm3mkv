@@ -35,6 +35,7 @@
 #' - Generalized Gamma requires the mu, sigma and Q parameters if using the standard parameterization (`gengamma`) or shape, scale and k parameters if using the original parameterization (`gengamma.orig`).
 #' @seealso [flexsurv::flexsurvreg]
 #' @return The value of the distribution function, a numeric value.
+#' @noRd
 # Examples
 # calc_pdist_par(10, "exp", 0.01)
 # calc_pdist_par(5, "lnorm", c(3, 1))
@@ -80,6 +81,7 @@ calc_pdist_par <- function(time, dist, pars) {
 #' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
 #' @seealso [flexsurv::flexsurvspline] and [flexsurv::flexsurvreg]
 #' @return The value of the distribution function, a numeric value.
+#' @noRd
 # Examples
 # calc_pdist(time=1:5,
 #     type="spl",
@@ -114,6 +116,7 @@ calc_pdist <- function(time, type, spec){
 #' @inheritParams calc_pdist
 #' @return The value of the survival function, a numeric value.
 #' @inherit calc_pdist seealso
+#' @noRd
 # Examples
 # calc_surv(time=1:5,
 #     type="spl",
@@ -132,6 +135,7 @@ calc_surv <- function(time, type, spec) {
 #' @inheritParams calc_pdist_par
 #' @inherit calc_pdist_par seealso
 #' @return The value of a hazard function, a numeric value.
+#' @noRd
 # Examples
 # calc_haz_par(10, "exp", 0.01)
 # calc_haz_par(5, "lnorm", c(3, 1))
@@ -163,6 +167,7 @@ calc_haz_par <- function(time, dist, pars) {
 #' @description Calculate the value of the hazard function, given specification as either parametric or Royston-Parmar splines model
 #' @inheritParams calc_surv
 #' @inherit calc_haz_par return
+#' @noRd
 # Examples
 # calc_haz(time=1:5,
 #     type="spl",
@@ -195,6 +200,7 @@ calc_haz <- function(time, type, spec){
 #' @inheritParams calc_pdist_par
 #' @inherit calc_pdist_par seealso
 #' @return The value of a density function, a numeric value.
+#' @noRd
 # Examples
 # calc_dens_par(10, "exp", 0.01)
 # calc_dens_par(5, "lnorm", c(3, 1))
@@ -226,6 +232,7 @@ calc_dens_par <- function(time, dist, pars) {
 #' @description Calculate the value of the density function, given specification as either parametric or Royston-Parmar splines model
 #' @inheritParams calc_surv
 #' @inherit calc_haz_par return
+#' @noRd
 # Examples
 # calc_dens(time=1:5,
 #     type="spl",
@@ -266,6 +273,7 @@ calc_dens <- function(time, type, spec){
 #' @param Tw is the time period over which the restricted mean is calculated
 #' @inherit calc_pdist seealso
 #' @return the restricted mean duration, a numeric value.
+#' @noRd
 # Examples
 # calc_rmd_par(20, "exp", 0.2)
 # calc_rmd_par(10, "lnorm", c(3, 1))
@@ -310,8 +318,8 @@ calc_rmd_par <- function(Tw, dist, pars) {
 #' - `knots` - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
 #' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
 #' @param discrate Discounting rate (%) per year
-#' @inherit calc_haz_par seealso
-#' @inherit calc_haz_par return
+#' @returns Numeric
+#' @seealso [flexsurv::flexsurvspline] and [flexsurv::flexsurvreg]
 #' @export
 #' @examples
 #' calc_rmd(Tw=200,
@@ -347,6 +355,7 @@ calc_rmd <- function(Tw, type, spec, discrate=0){
 #' @param dist is the statistical distribution (named per [flexsurv::flexsurvreg])
 #' @return a numeric value
 #' @inherit calc_pdist seealso
+#' @noRd
 # Examples
 # give_noparams_par("llogis")
 give_noparams_par <- function(dist) {
@@ -365,6 +374,7 @@ give_noparams_par <- function(dist) {
 #' @inheritParams calc_surv
 #' @return a numeric value
 #' @inherit calc_pdist seealso
+#' @noRd
 # Examples
 # give_noparams(type="par", spec=list(dist="weibullPH"))
 # give_noparams(type="spl", spec=list(gamma=c(1.1,2.1,3.1)))
@@ -386,6 +396,7 @@ give_noparams <- function(type, spec) {
 #' @param weeks Number of weeks
 #' @return Number of years = weeks x 7 / 365.25
 #' @seealso [psm3mkv::convert_yrs2wks]
+#' @noRd
 convert_wks2yrs <- function(weeks) {
   weeks*7/365.25
 }
@@ -395,6 +406,7 @@ convert_wks2yrs <- function(weeks) {
 #' @param years Number of years
 #' @return Number of weeks = years / 7 * 365.25
 #' @seealso [psm3mkv::convert_wks2yrs]
+#' @noRd
 convert_yrs2wks <- function(years) {
   years*365.25/7
 }
