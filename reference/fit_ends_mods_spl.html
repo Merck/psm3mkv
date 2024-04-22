@@ -80,11 +80,11 @@
 
 
 <dt>knot_set</dt>
-<dd><p>is a vector of the numbers of knots to consider, following <code><a href="https://rdrr.io/pkg/flexsurv/man/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline()</a></code>).</p></dd>
+<dd><p>is a vector of the numbers of knots to consider, following <code><a href="http://chjackson.github.io/flexsurv-dev/reference/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline()</a></code>).</p></dd>
 
 
 <dt>scale_set</dt>
-<dd><p>is a vector of the spline scales to consider, following <code><a href="https://rdrr.io/pkg/flexsurv/man/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline()</a></code>).</p></dd>
+<dd><p>is a vector of the spline scales to consider, following <code><a href="http://chjackson.github.io/flexsurv-dev/reference/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline()</a></code>).</p></dd>
 
 
 <dt>expvar</dt>
@@ -95,7 +95,7 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list by endpoint, then distribution, each containing two components:</p><ul><li><p>result: A list of class <a href="https://rdrr.io/pkg/flexsurv/man/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline</a> containing information about the fitted model.</p></li>
+<p>A list by endpoint, then distribution, each containing two components:</p><ul><li><p>result: A list of class <a href="http://chjackson.github.io/flexsurv-dev/reference/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline</a> containing information about the fitted model.</p></li>
 <li><p>error: Any error message returned on fitting the regression (NULL indicates no error).
 Also, the given cuttime.</p></li>
 </ul></div>
@@ -140,7 +140,7 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.8065  -3.2682  -2.3448   0.2356</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.8694   0.4668   1.2719   0.2054</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.8694   0.4668   1.2720   0.2054</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0153  -0.0511   0.0205   0.0183</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
@@ -181,10 +181,10 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.73940  -3.27506  -2.20374   0.27330</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.94983   0.43833   1.46132   0.26097</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.00852  -0.14684   0.12981   0.07058</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.02978  -0.19567   0.25523   0.11503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.73940  -3.27510  -2.20370   0.27332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.94983   0.43830   1.46135   0.26098</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.00852  -0.14676   0.12973   0.07053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.02978  -0.19546   0.25502   0.11492</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -203,8 +203,8 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.6568  -3.2134  -2.1003   0.2840</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.0097   0.4700   1.5494   0.2754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.6568  -3.2137  -2.1000   0.2841</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.0097   0.4700   1.5495   0.2754</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.0691  -0.0964   0.2346   0.0844</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.1375  -0.4197   0.1448   0.1440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -247,11 +247,11 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est        L95%       U95%       se       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.485963  -3.046780  -1.925146   0.286136</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.197935   0.554972   1.840897   0.328048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.221183   0.000965   0.441402   0.112358</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.837151  -1.573188  -0.101115   0.375536</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.887201   0.107658   1.666745   0.397734</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.485963  -3.046933  -1.924993   0.286214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.197935   0.554813   1.841057   0.328130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.221183   0.000829   0.441538   0.112428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.837151  -1.573248  -0.101055   0.375566</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.887201   0.107971   1.666432   0.397574</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -270,10 +270,10 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.4671  -3.0582  -1.8759   0.3016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1985   0.5475   1.8495   0.3322</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2335  -0.0137   0.4807   0.1261</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7797  -1.6891   0.1296   0.4640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.4671  -3.0586  -1.8755   0.3018</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1985   0.5473   1.8496   0.3322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2335  -0.0139   0.4809   0.1262</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7797  -1.6893   0.1298   0.4641</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.7355  -0.2786   1.7496   0.5174</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 103,  Censored: 101</span>
@@ -340,7 +340,7 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.79819  -7.70574  -3.89064   0.97326</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.52049   0.39352   2.64745   0.57499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.52049   0.39352   2.64746   0.57499</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.00446  -0.14762   0.13870   0.07304</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
@@ -382,7 +382,7 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.260  -8.623  -3.897   1.206</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.080   0.308   3.851   0.904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.080   0.308   3.852   0.904</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.404  -0.502   1.309   0.462</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.433  -1.434   0.569   0.511</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -406,7 +406,7 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.279  -8.668  -3.891   1.219</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.108   0.301   3.916   0.922</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.487  -0.491   1.465   0.499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.560  -1.665   0.545   0.564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.560  -1.666   0.545   0.564</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -447,10 +447,10 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.3287  -8.9745  -3.6828   1.3500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.1917  -0.2408   4.6243   1.2411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2345  -1.2647   1.7336   0.7649</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0531  -2.7172   2.8234   1.4134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.3287  -8.9746  -3.6827   1.3500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.1917  -0.2409   4.6243   1.2411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2345  -1.2648   1.7337   0.7649</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0531  -2.7173   2.8235   1.4135</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.3086  -2.3272   1.7101   1.0299</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 29,  Censored: 175</span>
@@ -472,7 +472,7 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est     L95%    U95%    se    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -6.320  -8.969  -3.671   1.352</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   2.182  -0.262   4.626   1.247</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.223  -1.328   1.775   0.792</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.223  -1.329   1.775   0.792</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.174  -2.806   3.154   1.521</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.487  -2.746   1.772   1.153</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -518,9 +518,9 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.71386  -3.13362  -2.29410   0.21417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.99398   0.61139   1.37657   0.19520</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.00393  -0.01836   0.02622   0.01137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.71386  -3.13361  -2.29411   0.21416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.99398   0.61132   1.37664   0.19524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.00393  -0.01838   0.02623   0.01138</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -538,10 +538,10 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> .f(formula = ..1, k = ..2, scale = ..3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         est       L95%      U95%      se      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.84806  -3.29863  -2.39748   0.22989</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.83234   0.44998   1.21469   0.19508</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.02545  -0.05136   0.00045   0.01322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         est        L95%       U95%       se       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.848058  -3.298634  -2.397482   0.229890</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.832337   0.449968   1.214706   0.195090</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.025453  -0.051358   0.000453   0.013217</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -583,8 +583,8 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.7744  -3.2640  -2.2848   0.2498</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.9271   0.4496   1.4046   0.2436</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0307  -0.1622   0.1007   0.0671</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0441  -0.1242   0.2124   0.0859</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0307  -0.1621   0.1006   0.0670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0441  -0.1240   0.2122   0.0858</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -603,10 +603,10 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.7070  -3.2247  -2.1892   0.2642</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.9774   0.4708   1.4841   0.2585</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.7070  -3.2250  -2.1890   0.2643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   0.9774   0.4707   1.4841   0.2585</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.0822  -0.0934   0.2577   0.0896</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.1403  -0.3780   0.0973   0.1212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.1403  -0.3779   0.0973   0.1212</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -647,11 +647,11 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.5410  -3.0589  -2.0230   0.2643</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1468   0.5511   1.7425   0.3040</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.1899  -0.0306   0.4103   0.1125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7089  -1.3940  -0.0237   0.3496</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.6196   0.0375   1.2017   0.2970</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.5410  -3.0590  -2.0230   0.2643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1468   0.5509   1.7427   0.3040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.1899  -0.0307   0.4104   0.1125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7089  -1.3939  -0.0238   0.3495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.6196   0.0378   1.2013   0.2968</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -670,11 +670,11 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.5276  -3.0764  -1.9788   0.2800</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1501   0.5432   1.7569   0.3096</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2371  -0.0217   0.4958   0.1320</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7336  -1.6565   0.1894   0.4709</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.5475  -0.2960   1.3910   0.4303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -2.5276  -3.0767  -1.9784   0.2802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.1501   0.5431   1.7570   0.3097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.2371  -0.0218   0.4960   0.1321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3  -0.7336  -1.6567   0.1896   0.4710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4   0.5475  -0.2959   1.3910   0.4303</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 132,  Censored: 72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 2358.845</span>
@@ -740,7 +740,7 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -4.8971  -6.1132  -3.6809   0.6205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.2418   0.5762   1.9075   0.3396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.2418   0.5761   1.9075   0.3396</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma2  -0.0854  -0.1808   0.0101   0.0487</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
@@ -871,10 +871,10 @@ Also, the given cuttime.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         est      L95%     U95%     se     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gamma0  -5.4331  -7.0056  -3.8607   0.8023</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.8919   0.7270   3.0569   0.5944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.3778  -0.6283   1.3839   0.5133</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0734  -2.4751   2.6219   1.3003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.8477  -3.1699   1.4744   1.1848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma1   1.8919   0.7269   3.0570   0.5944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma2   0.3778  -0.6283   1.3840   0.5134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma3   0.0734  -2.4752   2.6220   1.3003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gamma4  -0.8477  -3.1700   1.4745   1.1848</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> N = 204,  Events: 97,  Censored: 107</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total time at risk: 3479.143</span>
