@@ -174,15 +174,16 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, psmtype="simple")
 }
 
 #' Obtain adjusted and unadjusted PSM hazards
-#' @description EXPERIMENTAL. Obtain adjusted and unadjusted PSM hazards for given endpoint and time
+#' @description Obtain adjusted and unadjusted PSM hazards for given endpoint and time
 #' @param endpoint Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)
 #' @inheritParams calc_haz_psm
 #' @param psmtype Type of PSM - simple or complex
 #' @importFrom rlang .data
 #' @return `adj` is the hazard adjusted for constraints, `unadj` is the unadjusted hazard
-pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
+#' @noRd
+pickout_psmhaz <- function(timevar, endpoint=NA, ptdata, dpam, psmtype) {
   # Run calculation of all hazards
-  allhaz <- calc_haz_psm(timevar, dpam, psmtype)
+  allhaz <- calc_haz_psm(timevar, ptdata, dpam, psmtype)
   # Required hazard, unadjusted
   h_unadj <- dplyr::case_when(
     endpoint=="TTP" ~ allhaz$unadj$ttp,
@@ -207,16 +208,19 @@ pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
 
 #' Graph the PSM hazard functions
 #' @description Graph the PSM hazard functions
-#' @inheritParams pickout_psmhaz
+#' @param endpoint Endpoint for which hazard is required (TTP, PPD, PFS, OS or PPS)
+#' @inheritParams calc_haz_psm
 #' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
-#' - ptid: patient identifier
-#' - pfs.durn: duration of PFS from baseline
-#' - pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
-#' - os.durn: duration of OS from baseline
-#' - os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
-#' - ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
-#' - ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
-#' @inherit pickout_psmhaz return
+#' - `ptid`: patient identifier
+#' - `pfs.durn`: duration of PFS from baseline
+#' - `pfs.flag`: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+#' - `os.durn`: duration of OS from baseline
+#' - `os.flag`: event flag for OS (=1 if death occurred, 0 for censoring)
+#' - `ttp.durn`: duration of TTP from baseline (usually should be equal to pfs.durn)
+#' - `ttp.flag`: event flag for TTP (=1 if progression occurred, 0 for censoring).
+#' @returns List containing:
+#' - `adj` is the hazard adjusted for constraints
+#' - `unadj` is the unadjusted hazard
 #' @importFrom rlang .data
 #' @export
 #' @examples
@@ -235,7 +239,6 @@ pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
 #' # psmh_simple <- graph_psm_hazards(
 #' #   timerange=(0:10)*6,
 #' #   endpoint="OS",
-#' #   ptdata=bosonc,
 #' #   dpam=params,
 #' #   psmtype="simple")
 #' # psmh_simple$graph
@@ -245,8 +248,8 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Pull out hazards to plot (inefficiently calls function twice, but is quite quick)
-  adjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, dpam, psmtype)$adj)
-  unadjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, dpam, psmtype)$unadj)
+  adjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$adj)
+  unadjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$unadj)
   # Create dataset for graphic
   result_data <- dplyr::tibble(Time=timevar, Adjusted=adjhaz, Unadjusted=unadjhaz) |>
       tidyr::pivot_longer(cols=c(Adjusted, Unadjusted),
@@ -265,6 +268,7 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 #' @importFrom rlang .data
 #' @export
 #' @examples
+#' \donttest{
 #' bosonc <- create_dummydata("flexbosms")
 #' fits <- fit_ends_mods_par(bosonc)
 #' # Pick out best distribution according to min AIC
@@ -276,29 +280,28 @@ graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
 #'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
 #'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
 #' )
-#' # Original OS graphic
-#' graph_orig <- graph_survs(ptdata=bosonc, dpam=params)
-#' graph_orig$graph$os
-#' # New graphic illustrating effect of constraints on OS model
-#' # psms_simple <- graph_psm_survs(
-#' # timerange=6*(0:10),
-#' # endpoint="OS",
-#' # ptdata=bosonc,
-#' # dpam=params,
-#' # psmtype="simple")
-#' # psms_simple$graph
-graph_psm_survs <- function(timevar, endpoint, dpam, psmtype) {
+#' # Graphic illustrating effect of constraints on OS model
+#' psms_simple <- graph_psm_survs(
+#'   timevar=6*(0:10),
+#'   endpoint="OS",
+#'   ptdata=bosonc,
+#'   dpam=params,
+#'   psmtype="simple"
+#' )
+#' psms_simple$graph
+#' }
+graph_psm_survs <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Declare local variables
   Adjusted <- Unadjusted <- Time <- Survival <- Method <- NULL
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Unadjusted hazard
   haz_unadj <- function(time) {
-    pickout_psmhaz(time, endpoint, dpam, psmtype)$unadj
+    pickout_psmhaz(time, endpoint, ptdata, dpam, psmtype)$unadj
   }
   # Adjusted hazard
   haz_adj <- function(time) {
-    pickout_psmhaz(time, endpoint, dpam, psmtype)$adj
+    pickout_psmhaz(time, endpoint, ptdata, dpam, psmtype)$adj
   }
   # Unadjusted cumulative hazard
   cumhaz_unadj <- function(time) {

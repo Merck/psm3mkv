@@ -33,6 +33,7 @@
 #' - `arith`: Arithmetic mean, where interpolation is required between measured values
 #' - `geom`: Geometric mean, where interpolation is required between measured values
 #' @seealso [psm3mkv::vlookup]
+#' @noRd
 vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
   if (is.na(oneindexval)) return(NA) # Return NA rather than error if index value lookup is NA
   if (oneindexval<min(indexvec)) stop("Lookup value is below range of lookup table")
@@ -93,6 +94,7 @@ vlookup <- function(indexval, indexvec, valvec, method="geom") {
 #' @param lifetable The lifetable must be a dataframe with columns named `lttime` (years) and `lx`. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default).
 #' @return Numeric survival probability
+#' @noRd
 # Examples
 # ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
 # calc_ltsurv(c(2, 2.5, 9.3), ltable)
@@ -108,6 +110,7 @@ calc_ltsurv <- function(looktime, lifetable=NA, method="geom"){
 #' @param lifetable The lifetable must be a dataframe with columns named `lttime` (years) and `lx`. The first entry of the time column must be zero. Data should be sorted in ascending order by time, and all times must be unique.
 #' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default). 
 #' @return Numeric survival probability
+#' @noRd
 # Examples
 # ltable <- tibble::tibble(lttime=0:10, lx=10-(0:10))
 # calc_ltdens(c(2, 2.5, 9.3), ltable)
@@ -134,11 +137,12 @@ calc_ltdens <- function(looktime, lifetable=NA, method="geom"){
 #' @param discrate Discount rate (%) per year
 #' @return List containing `ex_y` and `ex_w'`, the numeric (restricted) life expectancy in years and weeks respectively,
 #' and `calcs`, a dataframe of the calculations.
-#' @examples
-#' # Create a lifetable. Must end with lx=0.
-#' # ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
-#' # calc_ex(lifetable=ltable, discrate=0.03)
-#' # calc_ex(Ty=Inf, lifetable=ltable)
+#' @noRd
+# Examples
+# Create a lifetable. Must end with lx=0.
+# ltable <- tibble::tibble(lttime=0:20, lx=1-lttime*0.05)
+# calc_ex(lifetable=ltable, discrate=0.03)
+# calc_ex(Ty=Inf, lifetable=ltable)
 calc_ex <- function(Ty=10, lifetable, discrate=0) {
   lx <- lttime <- midtime <- vn <- beyond <- lxvn <- blxvn <- NULL
   # Lifetable must have minimum lx = 0

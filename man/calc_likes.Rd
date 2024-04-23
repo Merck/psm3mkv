@@ -9,13 +9,13 @@ calc_likes(ptdata, dpam, cuttime = 0)
 \arguments{
 \item{ptdata}{Dataset of patient level data. Must be a tibble with columns named:
 \itemize{
-\item ptid: patient identifier
-\item pfs.durn: duration of PFS from baseline
-\item pfs.flag: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
-\item os.durn: duration of OS from baseline
-\item os.flag: event flag for OS (=1 if death occurred, 0 for censoring)
-\item ttp.durn: duration of TTP from baseline (usually should be equal to pfs.durn)
-\item ttp.flag: event flag for TTP (=1 if progression occurred, 0 for censoring).
+\item \code{ptid}: patient identifier
+\item \code{pfs.durn}: duration of PFS from baseline
+\item \code{pfs.flag}: event flag for PFS (=1 if progression or death occurred, 0 for censoring)
+\item \code{os.durn}: duration of OS from baseline
+\item \code{os.flag}: event flag for OS (=1 if death occurred, 0 for censoring)
+\item \code{ttp.durn}: duration of TTP from baseline (usually should be equal to pfs.durn)
+\item \code{ttp.flag}: event flag for TTP (=1 if progression occurred, 0 for censoring).
 }
 
 Survival data for all other endpoints (time to progression, pre-progression death, post-progression survival) are derived from PFS and OS.}
@@ -76,7 +76,4 @@ params <- list(
   )
 calc_likes(bosonc, dpam=params)
 }
-}
-\seealso{
-This function calls \code{\link[=calc_likes_psm_simple]{calc_likes_psm_simple()}}, \code{\link[=calc_likes_psm_complex]{calc_likes_psm_complex()}}, \code{\link[=calc_likes_stm_cf]{calc_likes_stm_cf()}}, and \code{\link[=calc_likes_stm_cr]{calc_likes_stm_cr()}}.
 }
