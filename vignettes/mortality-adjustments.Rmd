@@ -114,7 +114,6 @@ First we load the packages we need - all of which are suggested for or imported 
 
 ```{r packages, message=FALSE}
 library("dplyr")
-library("HMDHFDplus")
 library("psm3mkv")
 library("tibble")
 ```
@@ -124,6 +123,9 @@ library("tibble")
 In order to apply constraints to background mortality, we need some background mortality data, in the form of a lifetable. We can take this from the Human Mortality Database using the *HMDHFDplus* package mentioned above (with thanks to Robert Hettle for the recommendation). The lifetable will need to start from an assumed age at baseline. Lifetables are constructed by time in years.
 
 ```{r ltable1, eval=FALSE}
+# HMD HFD package
+library("HMDHFDplus")
+
 # Assumed population age at baseline (time=0)
 baseage <- 51.0
 

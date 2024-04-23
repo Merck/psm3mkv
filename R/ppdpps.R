@@ -181,9 +181,9 @@ calc_surv_psmpps <- function(totime, fromtime=0, ptdata, dpam, psmtype="simple")
 #' @importFrom rlang .data
 #' @return `adj` is the hazard adjusted for constraints, `unadj` is the unadjusted hazard
 #' @noRd
-pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
+pickout_psmhaz <- function(timevar, endpoint=NA, ptdata, dpam, psmtype) {
   # Run calculation of all hazards
-  allhaz <- calc_haz_psm(timevar, dpam, psmtype)
+  allhaz <- calc_haz_psm(timevar, ptdata, dpam, psmtype)
   # Required hazard, unadjusted
   h_unadj <- dplyr::case_when(
     endpoint=="TTP" ~ allhaz$unadj$ttp,
@@ -242,14 +242,14 @@ pickout_psmhaz <- function(timevar, endpoint=NA, dpam, psmtype) {
 #' #   dpam=params,
 #' #   psmtype="simple")
 #' # psmh_simple$graph
-graph_psm_hazards <- function(timevar, endpoint, dpam, psmtype) {
+graph_psm_hazards <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Declare local variables
   Adjusted <- Unadjusted <- Time <- Hazard <- Method <- NULL
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Pull out hazards to plot (inefficiently calls function twice, but is quite quick)
-  adjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, dpam, psmtype)$adj)
-  unadjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, dpam, psmtype)$unadj)
+  adjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$adj)
+  unadjhaz <- timevar |> purrr::map_vec(~pickout_psmhaz(.x, endpoint, ptdata, dpam, psmtype)$unadj)
   # Create dataset for graphic
   result_data <- dplyr::tibble(Time=timevar, Adjusted=adjhaz, Unadjusted=unadjhaz) |>
       tidyr::pivot_longer(cols=c(Adjusted, Unadjusted),
@@ -284,23 +284,24 @@ graph_psm_hazards <- function(timevar, endpoint, dpam, psmtype) {
 #' psms_simple <- graph_psm_survs(
 #'   timevar=6*(0:10),
 #'   endpoint="OS",
+#'   ptdata=bosonc,
 #'   dpam=params,
 #'   psmtype="simple"
 #' )
 #' psms_simple$graph
 #' }
-graph_psm_survs <- function(timevar, endpoint, dpam, psmtype) {
+graph_psm_survs <- function(timevar, endpoint, ptdata, dpam, psmtype) {
   # Declare local variables
   Adjusted <- Unadjusted <- Time <- Survival <- Method <- NULL
   # Convert endpoint to upper case text
   endpoint <- toupper(endpoint)
   # Unadjusted hazard
   haz_unadj <- function(time) {
-    pickout_psmhaz(time, endpoint, dpam, psmtype)$unadj
+    pickout_psmhaz(time, endpoint, ptdata, dpam, psmtype)$unadj
   }
   # Adjusted hazard
   haz_adj <- function(time) {
-    pickout_psmhaz(time, endpoint, dpam, psmtype)$adj
+    pickout_psmhaz(time, endpoint, ptdata, dpam, psmtype)$adj
   }
   # Unadjusted cumulative hazard
   cumhaz_unadj <- function(time) {
