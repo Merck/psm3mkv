@@ -29,7 +29,7 @@ If type=="spl":
 \item{discrate}{Discounting rate (\%) per year}
 }
 \value{
-The value of a hazard function, a numeric value.
+Numeric
 }
 \description{
 Calculates the restricted mean duration, given the form of a parametric distribution of Royston-Parmar splines
@@ -45,5 +45,5 @@ calc_rmd(Tw=250,
     )
 }
 \seealso{
-\link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}
+\link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}
 }
