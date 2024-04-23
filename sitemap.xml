@@ -34,100 +34,25 @@
     <loc>https://merck.github.io/psm3mkv/reference/calc_allrmds_boot.html</loc>
   </url>
   <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_dens.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_dens_par.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_ex.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_haz.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_haz_par.html</loc>
-  </url>
-  <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_haz_psm.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_likes.html</loc>
   </url>
   <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_likes_psm_complex.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_likes_psm_simple.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_likes_stm_cf.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_likes_stm_cr.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_ltdens.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_ltsurv.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_pdist.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_pdist_par.html</loc>
-  </url>
-  <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_rmd.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_rmd_first.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_rmd_par.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/calc_surv.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/calc_surv_psmpps.html</loc>
   </url>
   <url>
-    <loc>https://merck.github.io/psm3mkv/reference/check_posdef.html</loc>
-  </url>
-  <url>
     <loc>https://merck.github.io/psm3mkv/reference/constrain_survprob.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/convert_fit2spec.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/convert_wks2yrs.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/convert_yrs2wks.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/create_dummydata.html</loc>
   </url>
   <url>
-    <loc>https://merck.github.io/psm3mkv/reference/create_dummydata_flexbosms.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/create_dummydata_survcan.html</loc>
-  </url>
-  <url>
     <loc>https://merck.github.io/psm3mkv/reference/create_extrafields.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/drmd_psm.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/drmd_stm_cf.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/drmd_stm_cr.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/find_bestfit_par.html</loc>
@@ -136,28 +61,10 @@
     <loc>https://merck.github.io/psm3mkv/reference/find_bestfit_spl.html</loc>
   </url>
   <url>
-    <loc>https://merck.github.io/psm3mkv/reference/fit_ends_mods_given.html</loc>
-  </url>
-  <url>
     <loc>https://merck.github.io/psm3mkv/reference/fit_ends_mods_par.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/fit_ends_mods_spl.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/fit_mods.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/fit_mods_par.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/fit_mods_spl.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/give_noparams.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/give_noparams_par.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/graph_psm_hazards.html</loc>
@@ -170,24 +77,6 @@
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/pickout_psmhaz.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/prmd_os_psm.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/prmd_pd_stm_cf.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/prmd_pd_stm_cr.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/prmd_pf_psm.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/prmd_pf_stm.html</loc>
   </url>
   <url>
     <loc>https://merck.github.io/psm3mkv/reference/prob_os_psm.html</loc>
@@ -223,24 +112,6 @@
     <loc>https://merck.github.io/psm3mkv/reference/psm3mkv-package.html</loc>
   </url>
   <url>
-    <loc>https://merck.github.io/psm3mkv/reference/rmd_os_psm.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/rmd_pd_stm_cf.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/rmd_pd_stm_cr.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/rmd_pf_psm.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/rmd_pf_stm.html</loc>
-  </url>
-  <url>
     <loc>https://merck.github.io/psm3mkv/reference/vlookup.html</loc>
-  </url>
-  <url>
-    <loc>https://merck.github.io/psm3mkv/reference/vonelookup.html</loc>
   </url>
 </urlset>

@@ -262,7 +262,6 @@ making further use of <span class="citation">Wickham et al.
 (2023)</span>, <span class="citation">Riffe (2015)</span> and <span class="citation">Müller and Wickham (2023)</span>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://dplyr.tidyverse.org" class="external-link">"dplyr"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/timriffe/TR1" class="external-link">"HMDHFDplus"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://merck.github.io/psm3mkv/">"psm3mkv"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://tibble.tidyverse.org/" class="external-link">"tibble"</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -276,7 +275,10 @@ mentioned above (with thanks to Robert Hettle for the recommendation).
 The lifetable will need to start from an assumed age at baseline.
 Lifetables are constructed by time in years.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Assumed population age at baseline (time=0)</span></span>
+<code class="sourceCode R"><span><span class="co"># HMD HFD package</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/timriffe/TR1" class="external-link">"HMDHFDplus"</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Assumed population age at baseline (time=0)</span></span>
 <span><span class="va">baseage</span> <span class="op">&lt;-</span> <span class="fl">51.0</span></span>
 <span></span>
 <span><span class="co"># Mortality data - England &amp; Wales, Female, 2019</span></span>
