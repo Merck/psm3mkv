@@ -60,7 +60,6 @@ params <- list(
 # psmh_simple <- graph_psm_hazards(
 #   timerange=(0:10)*6,
 #   endpoint="OS",
-#   ptdata=bosonc,
 #   dpam=params,
 #   psmtype="simple")
 # psmh_simple$graph
