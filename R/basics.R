@@ -392,8 +392,7 @@ calc_rmd_spl <- function(Tw, spec) {
 #' - `knots` - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
 #' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
 #' @param survobj is a survival fit object from [flexsurv::flexsurvspline] or [flexsurv::flexsurvreg]
-#' @inherit calc_haz_par seealso
-#' @inherit calc_haz_par return
+#' @return the restricted mean duration, a numeric value.
 #' @export
 #' @examples
 #' calc_rmd(Tw=200,

@@ -28,28 +28,28 @@
 #' - `spec` contains distribution (`dist`) and coefficients (`coefs`) if `type=="par"`
 #' - `spec` contains gamma values (`gamma`), knot locations (log scale, `knots`) and scale (`scale`) for Royston-Parmar splines model, if `type=="spl"`
 #' @seealso [flexsurv::flexsurvspline()]
-#' @noRd
+# @noRd
 # Examples
 # bosonc <- create_dummydata("flexbosms")
 # fits <- fit_ends_mods_spl(bosonc)
 # convert_fit2spec(fits$pfs[[3]]$result)
-convert_fit2spec <- function(fitsurv) {
-  # Declare local variables
-  par.dist <- type <- spec <- NULL
-  # Pick out distribution/splines
-  par.dist <- fitsurv$dlist$name
-  if (par.dist=="survspline") {
-    type <- "spl"
-    spec <- list(gamma = fitsurv$coefficients,
-                 knots = fitsurv$aux$knots,
-                 k = length(fitsurv$aux$knots)-2,
-                 scale = fitsurv$aux$scale)
-  } else {
-    type <- "par"
-    spec <- list(dist=par.dist, pars=fitsurv$res[,1])
-  }
-  return(list(type=type, spec=spec))
-}
+#convert_fit2spec <- function(fitsurv) {
+#  # Declare local variables
+#  par.dist <- type <- spec <- NULL
+#  # Pick out distribution/splines
+#  par.dist <- fitsurv$dlist$name
+#  if (par.dist=="survspline") {
+#    type <- "spl"
+#    spec <- list(gamma = fitsurv$coefficients,
+#                 knots = fitsurv$aux$knots,
+#                 k = length(fitsurv$aux$knots)-2,
+#                 scale = fitsurv$aux$scale)
+#  } else {
+#    type <- "par"
+#    spec <- list(dist=par.dist, pars=fitsurv$res[,1])
+#  }
+#  return(list(type=type, spec=spec))
+#}
 
 #' Calculate likelihood for a simple three-state partitioned survival model
 #' @description Calculate likelihood values and other summary output for a simple three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes].x three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes]. Unlike [calc_likes_psm_complex], this likelihood function assumes a progression hazard can be derived from the PFS hazard function and the ratio of progression to PFS events from PF patients.
