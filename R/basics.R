@@ -391,15 +391,9 @@ calc_rmd_spl <- function(Tw, spec) {
 #' - `gamma` - Vector of parameters describing the baseline spline function, as described in [flexsurv::flexsurvspline]. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
 #' - `knots` - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
 #' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
-<<<<<<< HEAD
-#' @param discrate Discounting rate (%) per year
-#' @returns Numeric
-#' @seealso [flexsurv::flexsurvspline] and [flexsurv::flexsurvreg]
-=======
 #' @param survobj is a survival fit object from [flexsurv::flexsurvspline] or [flexsurv::flexsurvreg]
 #' @inherit calc_haz_par seealso
 #' @inherit calc_haz_par return
->>>>>>> 92c7533 (Extend calc_surv and similar to work with survival objects)
 #' @export
 #' @examples
 #' calc_rmd(Tw=200,
