@@ -281,5 +281,5 @@ for (i in 1:length(knots)) {
 test_that("survival at time zero is 1", {
   expect_equal(szeros_par, rep(1, length(dists)))
   expect_equal(szeros_spl, rep(1, length(knots) * length(scales)))
-})
 
+})
