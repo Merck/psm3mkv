@@ -63,6 +63,20 @@ calc_pdist_par <- function(time, dist, pars) {
   }
 }
 
+calc_pdist_spl <- function(time, spec) {
+  flexsurv::psurvspline(q = time,
+                        gamma = spec$gamma,
+                        beta = 0,
+                        X = 0,
+                        knots = spec$knots,
+                        scale = spec$scale,
+                        timescale = "log",
+                        offset = 0,
+                        lower.tail = TRUE,
+                        log.p = FALSE)
+}
+
+
 #' Calculate the distribution function
 #' @description Calculate the value of the distribution function, given a regular parametric or Royston-Parmar formulation
 #' @param time is the time at which the distribution function should be calculated.
@@ -79,6 +93,7 @@ calc_pdist_par <- function(time, dist, pars) {
 #' - `gamma` - Vector of parameters describing the baseline spline function, as described in [flexsurv::flexsurvspline]. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
 #' - `knots` - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
 #' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
+#' @param survobj is a survival fit object from [flexsurv::flexsurvspline] or [flexsurv::flexsurvreg]
 #' @seealso [flexsurv::flexsurvspline] and [flexsurv::flexsurvreg]
 #' @return The value of the distribution function, a numeric value.
 #' @noRd
@@ -91,26 +106,32 @@ calc_pdist_par <- function(time, dist, pars) {
 #     type="par",
 #     spec=list(dist="lnorm", pars=c(3,1))
 #     )
-calc_pdist <- function(time, type, spec){
-  type <- tolower(substr(type, 1, 3))
-  if (type=="spl") {
-    flexsurv::psurvspline(q = time,
-                          gamma = spec$gamma,
-                          beta = 0,
-                          X = 0,
-                          knots = spec$knots,
-                          scale = spec$scale,
-                          timescale = "log",
-                          offset = 0,
-                          lower.tail = TRUE,
-                          log.p = FALSE)
-  } else if (type=="par") {
-    calc_pdist_par(time, dist=spec$dist, pars=spec$pars)
-  } else {
-    NA
+calc_pdist <- function(time, type=NA, spec=NA, survobj=NULL){
+  # Where a flexsurv object (survobj) is specified, pull its distribution, parameters, type 
+  if (!is.null(survobj)) {
+    objtype <- survobj$dlist$name
+    if (objtype=="survspline") {
+      type <- "spl"
+      spec <- list(
+        knots=survobj$knots,
+        scale=survobj$scale,
+        gamma=survobj$res[,1])
+    } else {
+      type <- "par"
+      spec <- list(
+        dist=survobj$dlist$name,
+        pars=survobj$res[,1]
+      )
+    }
   }
+  # Then call either parametric or splines function, using type and spec parameters
+  if (type=="spl") {
+    calc_pdist_spl(time, spec=spec)
+    } else {
+    calc_pdist_par(time, dist=spec$dist, pars=spec$pars)
+    }
 }
-
+  
 #' Calculate the value of the survival function
 #' @description Calculate the value of the survival function, given the statistical distribution and its parameters.
 #' @inheritParams calc_pdist
@@ -126,8 +147,8 @@ calc_pdist <- function(time, type, spec){
 #     type="par",
 #     spec=list(dist="lnorm", pars=c(3,1))
 #     )
-calc_surv <- function(time, type, spec) {
-  1-calc_pdist(time, type, spec)
+calc_surv <- function(time, type=NA, spec=NA, survobj=NULL) {
+  1-calc_pdist(time, type, spec, survobj)
 }
 
 #' Calculate the value of the hazard function (parametric form)
@@ -163,6 +184,17 @@ calc_haz_par <- function(time, dist, pars) {
   }
 }
 
+calc_haz_spl <- function(time, spec) {
+flexsurv::hsurvspline(x = time,
+                      gamma = spec$gamma,
+                      beta = 0,
+                      X = 0,
+                      knots = spec$knots,
+                      scale = spec$scale,
+                      timescale = "log",
+                      offset = 0)
+}
+
 #' Calculate the value of the hazard function
 #' @description Calculate the value of the hazard function, given specification as either parametric or Royston-Parmar splines model
 #' @inheritParams calc_surv
@@ -177,22 +209,31 @@ calc_haz_par <- function(time, dist, pars) {
 #     type="par",
 #     spec=list(dist="lnorm", pars=c(3,1))
 #     )
-calc_haz <- function(time, type, spec){
-  type <- tolower(substr(type, 1, 3))
-  if (type=="spl") {
-    flexsurv::hsurvspline(x = time,
-                                 gamma = spec$gamma,
-                                 beta = 0,
-                                 X = 0,
-                                 knots = spec$knots,
-                                 scale = spec$scale,
-                                 timescale = "log",
-                                 offset = 0)
-  } else if (type=="par") {
-    calc_haz_par(time, dist=spec$dist, pars=spec$pars)
-  } else {
-    NA
+calc_haz <- function(time, type=NA, spec=NA, survobj=NULL){
+  # Where a flexsurv object (survobj) is specified, pull its distribution, parameters, type 
+  if (!is.null(survobj)) {
+    objtype <- survobj$dlist$name
+    if (objtype=="survspline") {
+      type <- "spl"
+      spec <- list(
+        knots=survobj$knots,
+        scale=survobj$scale,
+        gamma=survobj$res[,1])
+    } else {
+      type <- "par"
+      spec <- list(
+        dist=survobj$dlist$name,
+        pars=survobj$res[,1]
+      )
+    }
   }
+  # Then call either parametric or splines function, using type and spec parameters
+  if (type=="spl") {
+    calc_haz_spl(time, spec=spec)
+  } else {
+    calc_haz_par(time, dist=spec$dist, pars=spec$pars)
+  }
+
 }
 
 #' Calculate the value of the density function (parametric form)
@@ -228,6 +269,17 @@ calc_dens_par <- function(time, dist, pars) {
   }
 }
 
+calc_dens_spl <- function(time, spec) {
+  flexsurv::dsurvspline(x = time,
+                      gamma = spec$gamma,
+                      beta = 0,
+                      X = 0,
+                      knots = spec$knots,
+                      scale = spec$scale,
+                      timescale = "log",
+                      offset = 0)
+}
+
 #' Calculate the value of the density function
 #' @description Calculate the value of the density function, given specification as either parametric or Royston-Parmar splines model
 #' @inheritParams calc_surv
@@ -242,26 +294,35 @@ calc_dens_par <- function(time, dist, pars) {
 #     type="par",
 #     spec=list(dist="lnorm", pars=c(3,1))
 #     )
-calc_dens <- function(time, type, spec){
-  type <- tolower(substr(type, 1, 3))
+calc_dens <- function(time, type=NA, spec=NA, survobj=NULL){
+  # Where a flexsurv object (survobj) is specified, pull its distribution, parameters, type 
+  if (!is.null(survobj)) {
+    objtype <- survobj$dlist$name
+    if (objtype=="survspline") {
+      type <- "spl"
+      spec <- list(
+        knots=survobj$knots,
+        scale=survobj$scale,
+        gamma=survobj$res[,1])
+    } else {
+      type <- "par"
+      spec <- list(
+        dist=survobj$dlist$name,
+        pars=survobj$res[,1]
+      )
+    }
+  }
+  # Then call either parametric or splines function, using type and spec parameters
   if (type=="spl") {
-    flexsurv::dsurvspline(x = time,
-                          gamma = spec$gamma,
-                          beta = 0,
-                          X = 0,
-                          knots = spec$knots,
-                          scale = spec$scale,
-                          timescale = "log",
-                          offset = 0)
-  } else if (type=="par") {
-    calc_dens_par(time, dist=spec$dist, pars=spec$pars)
+    calc_dens_spl(time, spec=spec)
   } else {
-    NA
+    calc_dens_par(time, dist=spec$dist, pars=spec$pars)
   }
 }
 
 #' Calculate restricted mean durations (parametric form)
 #' @description Calculates the restricted mean duration, given a parametric statistical distribution.
+#' @param Tw is the time period over which the restricted mean is calculated
 #' @param dist is the statistical distribution (named per [flexsurv::flexsurvreg]).
 #' @param pars is a vector of the parameters for that distribution.
 #' - Exponential distribution (`exp`) requires the rate parameter.
@@ -270,7 +331,6 @@ calc_dens <- function(time, type, spec){
 #' - Log-normal distribution (`lnorm`) requires the meanlog and sdlog parameters.
 #' - Gamma and Gompertz distributions (`gamma` and `gompertz`) require the shape and rate parameters.
 #' - Generalized Gamma requires the mu, sigma and Q parameters if using the standard parameterization (`gengamma`) or shape, scale and k parameters if using the original parameterization (`gengamma.orig`).
-#' @param Tw is the time period over which the restricted mean is calculated
 #' @inherit calc_pdist seealso
 #' @return the restricted mean duration, a numeric value.
 #' @noRd
@@ -301,6 +361,20 @@ calc_rmd_par <- function(Tw, dist, pars) {
   }
 }
 
+
+calc_rmd_spl <- function(Tw, spec) {
+  flexsurv::rmst_survspline(t = Tw,
+                          gamma = spec$gamma,
+                          beta = 0,
+                          X = 0,
+                          knots = spec$knots,
+                          scale = spec$scale,
+                          timescale = "log",
+                          offset = 0
+  )
+}
+
+
 #' Calculate restricted mean durations
 #' @description Calculates the restricted mean duration, given the form of a parametric distribution of Royston-Parmar splines
 #' @param Tw is the time horizon (weeks) over which the mean should be calculated.
@@ -317,9 +391,9 @@ calc_rmd_par <- function(Tw, dist, pars) {
 #' - `gamma` - Vector of parameters describing the baseline spline function, as described in [flexsurv::flexsurvspline]. This may be supplied as a vector with number of elements equal to the length of knots, in which case the parameters are common to all times. Alternatively a matrix may be supplied, with rows corresponding to different times, and columns corresponding to knots.
 #' - `knots` - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
 #' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
-#' @param discrate Discounting rate (%) per year
-#' @returns Numeric
-#' @seealso [flexsurv::flexsurvspline] and [flexsurv::flexsurvreg]
+#' @param survobj is a survival fit object from [flexsurv::flexsurvspline] or [flexsurv::flexsurvreg]
+#' @inherit calc_haz_par seealso
+#' @inherit calc_haz_par return
 #' @export
 #' @examples
 #' calc_rmd(Tw=200,
@@ -330,23 +404,29 @@ calc_rmd_par <- function(Tw, dist, pars) {
 #'     type="par",
 #'     spec=list(dist="lnorm", pars=c(3,1))
 #'     )
-calc_rmd <- function(Tw, type, spec, discrate=0){
-  vn <- (1+discrate)^(-convert_wks2yrs(Tw))
-  type <- tolower(substr(type, 1, 3))
+calc_rmd <- function(Tw, type=NA, spec=NA, survobj=NULL){
+  # Where a flexsurv object (survobj) is specified, pull its distribution, parameters, type 
+  if (!is.null(survobj)) {
+    objtype <- survobj$dlist$name
+    if (objtype=="survspline") {
+      type <- "spl"
+      spec <- list(
+        knots=survobj$knots,
+        scale=survobj$scale,
+        gamma=survobj$res[,1])
+    } else {
+      type <- "par"
+      spec <- list(
+        dist=survobj$dlist$name,
+        pars=survobj$res[,1]
+      )
+    }
+  }
+  # Then call either parametric or splines function, using type and spec parameters
   if (type=="spl") {
-    vn * flexsurv::rmst_survspline(t = Tw,
-                                 gamma = spec$gamma,
-                                 beta = 0,
-                                 X = 0,
-                                 knots = spec$knots,
-                                 scale = spec$scale,
-                                 timescale = "log",
-                                 offset = 0
-                                 )
-  } else if (type=="par") {
-    vn * calc_rmd_par(Tw=Tw, dist=spec$dist, pars=spec$pars)
+    calc_rmd_spl(Tw, spec=spec)
   } else {
-    NA
+    calc_rmd_par(Tw, dist=spec$dist, pars=spec$pars)
   }
 }
 
