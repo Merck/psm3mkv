@@ -103,14 +103,14 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
   os.ts <- os.type <- os.spec <- os.npars <- NULL
   s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # PFS
-  pfs.ts <- convert_fit2spec(dpam$pfs)
-  pfs.type <- pfs.ts$type
-  pfs.spec <- pfs.ts$spec
+  # pfs.ts <- convert_fit2spec(dpam$pfs)
+  # pfs.type <- pfs.ts$type
+  # pfs.spec <- pfs.ts$spec
   pfs.npars <- dpam$pfs$npars
   # OS
-  os.ts <- convert_fit2spec(dpam$os)
-  os.type <- os.ts$type
-  os.spec <- os.ts$spec
+  # os.ts <- convert_fit2spec(dpam$os)
+  # os.type <- os.ts$type
+  # os.spec <- os.ts$spec
   os.npars <- dpam$os$npars
   # Count parameters
   s_npars <- pfs.npars + os.npars + 1
@@ -125,8 +125,10 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      hpfsu = calc_haz(.data$pfs.durn, pfs.type, pfs.spec),
-      spfsu = calc_surv(.data$pfs.durn, pfs.type, pfs.spec),
+      # hpfsu = calc_haz(.data$pfs.durn, pfs.type, pfs.spec),
+      hpfsu = new_calc_haz(.data$pfs.durn, dpam$pfs),
+      # spfsu = calc_surv(.data$pfs.durn, pfs.type, pfs.spec),
+      spfsu = new_calc_surv(.data$pfs.durn, dpam$pfs),
       hppdu = calc_haz_psm(timevar=.data$pfs.durn,
                            ptdata=ptdata,
                            dpam=dpam,
@@ -204,19 +206,19 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
   os.ts <- os.type <- os.spec <- os.npars <- NULL
   s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # TTP
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
+  #ttp.ts <- convert_fit2spec(dpam$ttp)
+  #ttp.type <- ttp.ts$type
+  #ttp.spec <- ttp.ts$spec
   ttp.npars <- dpam$ttp$npars
   # PFS
-  pfs.ts <- convert_fit2spec(dpam$pfs)
-  pfs.type <- pfs.ts$type
-  pfs.spec <- pfs.ts$spec
+  #pfs.ts <- convert_fit2spec(dpam$pfs)
+  #pfs.type <- pfs.ts$type
+  #pfs.spec <- pfs.ts$spec
   pfs.npars <- dpam$pfs$npars
   # OS
-  os.ts <- convert_fit2spec(dpam$os)
-  os.type <- os.ts$type
-  os.spec <- os.ts$spec
+  #os.ts <- convert_fit2spec(dpam$os)
+  #os.type <- os.ts$type
+  #os.spec <- os.ts$spec
   os.npars <- dpam$os$npars
   # Count parameters
   s_npars <- pfs.npars + os.npars + ttp.npars
@@ -231,8 +233,10 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      hpfsu = calc_haz(.data$pfs.durn, pfs.type, pfs.spec),
-      spfsu = calc_surv(.data$pfs.durn, pfs.type, pfs.spec),
+      # hpfsu = calc_haz(.data$pfs.durn, pfs.type, pfs.spec),
+      hpfsu = new_calc_haz(.data$pfs.durn, dpam$pfs),
+      # spfsu = calc_surv(.data$pfs.durn, pfs.type, pfs.spec),
+      spfsu = new_calc_surv(.data$pfs.durn, dpam$pfs),
       hppdu = calc_haz_psm(timevar=.data$pfs.durn,
                            ptdata=ptdata,
                            dpam=dpam,
@@ -309,19 +313,19 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
   pps.ts <- pps.type <- pps.spec <- pps.npars <- NULL
   s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # Pull out distributions and parameters - PPD
-  ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
+  #ppd.ts <- convert_fit2spec(dpam$ppd)
+  #ppd.type <- ppd.ts$type
+  #ppd.spec <- ppd.ts$spec
   ppd.npars <- dpam$ppd$npars
   # TTP
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
+  #ttp.ts <- convert_fit2spec(dpam$ttp)
+  #ttp.type <- ttp.ts$type
+  #ttp.spec <- ttp.ts$spec
   ttp.npars <- dpam$ttp$npars
   # PPS_CF
-  pps.ts <- convert_fit2spec(dpam$pps_cf)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
+  #pps.ts <- convert_fit2spec(dpam$pps_cf)
+  #pps.type <- pps.ts$type
+  #pps.spec <- pps.ts$spec
   pps.npars <- dpam$pps_cf$npars
   # Count parameters
   s_npars <- ppd.npars + ttp.npars + pps.npars
@@ -336,13 +340,20 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      httpu = calc_haz(.data$pfs.durn, ttp.type, ttp.spec),
-      sttpu = calc_surv(.data$pfs.durn, ttp.type, ttp.spec),
-      hppdu = calc_haz(.data$pfs.durn, ppd.type, ppd.spec),
-      sppdu = calc_surv(.data$pfs.durn, ppd.type, ppd.spec),
-      sppsu = calc_surv(.data$pfs.durn, pps.type, pps.spec),
-      sppst = calc_surv(.data$os.durn, pps.type, pps.spec),
-      hppst = calc_haz(.data$os.durn, pps.type, pps.spec),
+      # httpu = calc_haz(.data$pfs.durn, ttp.type, ttp.spec),
+      httpu = new_calc_haz(.data$pfs.durn, dpam$ttp),
+      # sttpu = calc_surv(.data$pfs.durn, ttp.type, ttp.spec),
+      sttpu = new_calc_surv(.data$pfs.durn, dpam$ttp),
+      # hppdu = calc_haz(.data$pfs.durn, ppd.type, ppd.spec),
+      hppdu = new_calc_haz(.data$pfs.durn, dpam$ppd),
+      # sppdu = calc_surv(.data$pfs.durn, ppd.type, ppd.spec),
+      sppdu = new_calc_surv(.data$pfs.durn, dpam$ppd),
+      # sppsu = calc_surv(.data$pfs.durn, pps.type, pps.spec),
+      sppsu = new_calc_surv(.data$pfs.durn, dpam$pps_cf),
+      # sppst = calc_surv(.data$os.durn, pps.type, pps.spec),
+      sppst = new_calc_surv(.data$os.durn, dpam$pps_cf),
+      # hppst = calc_haz(.data$os.durn, pps.type, pps.spec),
+      hppst = new_calc_haz(.data$os.durn, dpam$pps_cf),
       # Four possible outcomes
       f1 = (1-.data$ttp.flag) * (1-.data$os.flag),
       f2 = (1-.data$ttp.flag) * .data$os.flag,
@@ -402,19 +413,19 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
   pps.ts <- pps.type <- pps.spec <- pps.npars <- NULL
   s_npars <- likedata <- npts <- llsum <- retlist <- NULL
   # Pull out distributions and parameters - PPD
-  ppd.ts <- convert_fit2spec(dpam$ppd)
-  ppd.type <- ppd.ts$type
-  ppd.spec <- ppd.ts$spec
+  #ppd.ts <- convert_fit2spec(dpam$ppd)
+  #ppd.type <- ppd.ts$type
+  #ppd.spec <- ppd.ts$spec
   ppd.npars <- dpam$ppd$npars
   # TTP
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
+  #ttp.ts <- convert_fit2spec(dpam$ttp)
+  #ttp.type <- ttp.ts$type
+  #ttp.spec <- ttp.ts$spec
   ttp.npars <- dpam$ttp$npars
   # PPS_CR
-  pps.ts <- convert_fit2spec(dpam$pps_cr)
-  pps.type <- pps.ts$type
-  pps.spec <- pps.ts$spec
+  #pps.ts <- convert_fit2spec(dpam$pps_cr)
+  #pps.type <- pps.ts$type
+  #pps.spec <- pps.ts$spec
   pps.npars <- dpam$pps_cr$npars
   # Count parameters
   s_npars <- ppd.npars + ttp.npars + pps.npars
@@ -429,13 +440,20 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      httpu = calc_haz(.data$pfs.durn, ttp.type, ttp.spec),
-      sttpu = calc_surv(.data$pfs.durn, ttp.type, ttp.spec),
-      hppdu = calc_haz(.data$pfs.durn, ppd.type, ppd.spec),
-      sppdu = calc_surv(.data$pfs.durn, ppd.type, ppd.spec),
-      hppdt = calc_haz(.data$os.durn, ppd.type, ppd.spec),
-      sppstu = calc_surv(.data$os.durn-pfs.durn, pps.type, pps.spec),
-      hppstu = calc_haz(.data$os.durn-.data$pfs.durn, pps.type, pps.spec),
+      # httpu = calc_haz(.data$pfs.durn, ttp.type, ttp.spec),
+      httpu = new_calc_haz(.data$pfs.durn, dpam$ttp),
+      # sttpu = calc_surv(.data$pfs.durn, ttp.type, ttp.spec),
+      sttpu = new_calc_surv(.data$pfs.durn, dpam$ttp),
+      # hppdu = calc_haz(.data$pfs.durn, ppd.type, ppd.spec),
+      hppdu = new_calc_haz(.data$pfs.durn, dpam$ppd),
+      # sppdu = calc_surv(.data$pfs.durn, ppd.type, ppd.spec),
+      sppdu = new_calc_surv(.data$pfs.durn, dpam$ppd),
+      # hppdt = calc_haz(.data$os.durn, ppd.type, ppd.spec),
+      hppdt = new_calc_haz(.data$os.durn, dpam$ppd),
+      # sppstu = calc_surv(.data$os.durn-pfs.durn, pps.type, pps.spec),
+      sppstu = new_calc_surv(.data$os.durn-pfs.durn, dpam$pps_cr),
+      # hppstu = calc_haz(.data$os.durn-.data$pfs.durn, pps.type, pps.spec),
+      hppstu = new_calc_haz(.data$os.durn-.data$pfs.durn, dpam$pps_cr),
       # Four possible outcomes
       f1 = (1-.data$ttp.flag) * (1-.data$os.flag),   # No progression or death
       f2 = (1-.data$ttp.flag) * .data$os.flag,       # Death before progression
