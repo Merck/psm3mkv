@@ -29,7 +29,7 @@ If type=="spl":
 \item{survobj}{is a survival fit object from \link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} or \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}}
 }
 \value{
-Numeric
+the restricted mean duration, a numeric value.
 }
 \description{
 Calculates the restricted mean duration, given the form of a parametric distribution of Royston-Parmar splines
@@ -43,7 +43,4 @@ calc_rmd(Tw=250,
     type="par",
     spec=list(dist="lnorm", pars=c(3,1))
     )
-}
-\seealso{
-\link[flexsurv:flexsurvspline]{flexsurv::flexsurvspline} and \link[flexsurv:flexsurvreg]{flexsurv::flexsurvreg}
 }
