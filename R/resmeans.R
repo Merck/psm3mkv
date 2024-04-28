@@ -112,18 +112,14 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP, PPD and PPS_CR
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ppd.ts <- convert_fit2spec(dpam$ppd)
-  pps.ts <- convert_fit2spec(dpam$pps_cr)
   # Integrand from PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS(x2-x1)
   # = S_PPD x f_TTP x S_PPS
   # S_PPD and S_PPS are constrained by any lifetable
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
-    fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
-    spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
+    sppd <- calc_surv(x[1], survobj=dpam$ppd)
+    fttp <- calc_dens(x[1], survobj=dpam$ttp)
+    spps <- calc_surv(x[2]-x[1], survobj=dpam$pps_cr)
     # Integrand
     vn*sppd*fttp*spps
   }
@@ -132,7 +128,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Integrand from PD = S_PPS(x2-x1) - constraint ignored (cannot be readily calculated) so issue warning
   integrand_pd <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    spps <- calc_surv(x, pps.ts$type, pps.ts$spec)
+    spps <- calc_surv(x, survobj=dpam$pps_cr)
     vn*spps
     }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
@@ -177,19 +173,15 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP, PPD and PPS_CF
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ppd.ts <- convert_fit2spec(dpam$ppd)
-  pps.ts <- convert_fit2spec(dpam$pps_cf)
   # Integrand PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS_CF(x1, x2)
   # where S_PPS_CF = S_OS(x2)/S_OS(x1)
   # and each S_OS is subject to constrained lifetable mortality
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
-    fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
-    sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
-    sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
+    sppd <- calc_surv(x[1], survobj=dpam$ppd)
+    fttp <- calc_dens(x[1], survobj=dpam$ttp)
+    sos1 <- calc_surv(x[1], survobj=dpam$pps_cf)
+    sos2 <- calc_surv(x[2], survobj=dpam$pps_cf)
     spps <- sos2/sos1
     if (sos1==0) 0 else {vn*sppd*fttp*spps}
   }
@@ -197,7 +189,7 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
   # Integrand PD = S_OS(x2)/S_OS(x1) - warning lifetable constraint cannot be computed
   integrand_pd <- function(x) {
-    calc_surv(x, pps.ts$type, pps.ts$spec)
+    calc_surv(x, survobj=dpam$pps_cf)
   }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
   # Mean sojourn given starting vector
@@ -240,13 +232,10 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for PFS
-  pfs.ts <- convert_fit2spec(dpam$pfs)
-  ttp.ts <- convert_fit2spec(dpam$ttp)
   # Create an integrand for PF survival
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    spfs <- calc_surv(x, pfs.ts$type, pfs.ts$spec)
+    spfs <- calc_surv(x, survobj=dpam$pfs)
     vn * spfs
   }
   int_pf <- stats::integrate(integrand_pf, 0, Tw)          
@@ -288,12 +277,10 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for OS
-  os.ts <- convert_fit2spec(dpam$os)
   # Create an integrand for overall survival
   integrand_os <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    sos <- calc_surv(x, os.ts$type, os.ts$spec)
+    sos <- calc_surv(x, survobj=dpam$os)
     vn*sos
   }
   int_os <- stats::integrate(integrand_os, 0, Tw)
