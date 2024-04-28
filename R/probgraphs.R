@@ -47,12 +47,12 @@
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pf_psm(0:100, params)
 #' }
@@ -79,12 +79,12 @@ prob_pf_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pf_stm(0:100, params)
 #' }
@@ -114,12 +114,12 @@ prob_pf_stm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_os_psm(0:100, params)
 #' }
@@ -145,12 +145,12 @@ prob_os_psm <- function(time, dpam, starting=c(1, 0, 0)){
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pps_cr(0:100, params)
 #' }
@@ -175,12 +175,12 @@ prob_pps_cr <- function(time, dpam) {
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pps_cf(0:100, 0:100, params)
 #' }
@@ -220,12 +220,12 @@ prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pd_psm(0:100, params)
 #' }
@@ -251,12 +251,12 @@ prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pd_stm_cr(0:100, params)
 #' }
@@ -300,12 +300,12 @@ prob_pd_stm_cr <- Vectorize(prob_pd_stm_cr, "time")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_pd_stm_cf(0:100, params)
 #' }
@@ -350,12 +350,12 @@ prob_pd_stm_cf <- Vectorize(prob_pd_stm_cf, "time")
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_os_stm_cr(0:100, params)
 #' }
@@ -381,12 +381,12 @@ prob_os_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' prob_os_stm_cf(0:100, params)
 #' }
@@ -428,12 +428,12 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' fits <- fit_ends_mods_par(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_par(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_par(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_par(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_par(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_par(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_par(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #' )
 #' # Create graphics
 #' gs <- graph_survs(ptdata=bosonc, dpam=params)

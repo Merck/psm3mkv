@@ -196,22 +196,14 @@ bosonc <- bosonc |>
 # Fit parametric models to each endpoint
 allfits <- fit_ends_mods_par(bosonc)
 
-# Pick out best distributions according to min AIC
-fit.ppd <- find_bestfit_par(allfits$ppd, "aic")
-fit.ttp <- find_bestfit_par(allfits$ttp, "aic")
-fit.pfs <- find_bestfit_par(allfits$pfs, "aic")
-fit.os <- find_bestfit_par(allfits$os, "aic")
-fit.pps_cf <- find_bestfit_par(allfits$pps_cf, "aic")
-fit.pps_cr <- find_bestfit_par(allfits$pps_cr, "aic")
-
-# Bring together our preferred fits for each endpoint in a list
+# Bring together preferred fits for each endpoint
 params <- list(
-  ppd = fit.ppd$fit,
-  ttp = fit.ttp$fit,
-  pfs = fit.pfs$fit,
-  os = fit.os$fit,
-  pps_cf = fit.pps_cf$fit,
-  pps_cr = fit.pps_cr$fit
+  ppd = find_bestfit(allfits$ppd, "aic")$fit,
+  ttp = find_bestfit(allfits$ttp, "aic")$fit,
+  pfs = find_bestfit(allfits$pfs, "aic")$fit,
+  os = find_bestfit(allfits$os, "aic")$fit,
+  pps_cf = find_bestfit(allfits$pps_cf, "aic")$fit,
+  pps_cr = find_bestfit(allfits$pps_cr, "aic")$fit
 )
 ```
 

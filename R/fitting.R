@@ -215,67 +215,77 @@ fit_ends_mods_par <- function(simdat,
        )
 }
 
-#' Find the "best" survival regression from a list
-#' @description When there are multiple survival regressions fitted to the same endpoint and dataset, it is necessary to identify the preferred model. This function reviews the fitted regressions and selects that with the minimum Akaike or Bayesian Information Criterion (AIC, BIC), depending on user choice.
+#' Find the "best" survival regression from a list of model fits
+#' @description When there are multiple survival regressions fitted to the same endpoint and dataset, it is necessary to identify the preferred model. This function reviews the fitted regressions and selects that with the minimum Akaike or Bayesian Information Criterion (AIC, BIC), depending on user choice. Model fits must be all parametric or all splines.
 #' @param reglist List of fitted survival regressions to an endpoint and dataset.
 #' @param crit Criterion to be used in selection of best fit, either "aic" (Akaike Information Criterion) or "bic" (Bayesian Information Criterion).
 #' @return List of the single survival regression with the best fit.
 #' @export
+#' @importFrom rlang .data
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
-#' # Pick some distributions to fit to all endpoints
-#' dists <- c("exp", "llogis", "lnorm")
-#' # Fit all distributions to all endpoints
-#' fits <- fit_ends_mods_par(bosonc,
-#'     cuttime = 0,
-#'     ppd.dist = dists,
-#'     ttp.dist = dists,
-#'     pfs.dist = dists,
-#'     os.dist = dists,
-#'     pps_cr.dist = dists,
-#'     pps_cf.dist = dists)
-#' find_bestfit_par(fits$ttp, "aic")
-#' find_bestfit_par(fits$os, "bic")
-find_bestfit_par <- function(reglist, crit) {
+#' # Parametric modeling
+#' fits_par <- fit_ends_mods_par(bosonc)
+#' find_bestfit(fits_par$ttp, "aic")
+#' # Splines modeling
+#' fits_spl <- fit_ends_mods_spl(bosonc)
+#' find_bestfit(fits_spl$ttp, "bic")
+find_bestfit <- function(reglist, crit) {
   # Declare local variables
-  noreg <- valid <- remain <- NULL
-  npts <- pars <- aic <- loglik <- bic <- NULL
-  ic <- chosen <- posdef <- conv <- dists <- NULL
-  restab <- othtab <- NULL
-  # Pick out the valid regressions (where valid==TRUE)
-  noreg <- length(reglist)
-  valid <- seq(noreg) |> purrr::map_lgl(~is.null(reglist[[.x]]$error))
-  remain <- seq(noreg)*valid
-  remain <- remain[remain>0]
-  # Pull useful data from fitted regressions
-  npts <- remain |>
-    purrr::map_dbl(~reglist[[.x]]$result$N)
-  pars <- remain |>
-    purrr::map_dbl(~reglist[[.x]]$result$npars)
-  aic <- remain |>
-    purrr::map_dbl(~reglist[[.x]]$result$AIC)
-  loglik <- remain |>
-    purrr::map_dbl(~reglist[[.x]]$result$loglik)
-  bic <- pars*log(npts)-2*loglik
-  # Find min AIC or BIC depending on crit
-  ic <- if (crit=="BIC"|crit=="bic") bic
-        else if (crit=="AIC"|crit=="aic") aic
-        else rep(NA, noreg)
-  chosen <- which.min(ic)
-  # Create a useful table
-  posdef <- remain |>
-    purrr::map_lgl(~check_posdef(reglist[[.x]]$result))
-  conv <- remain |>
-    purrr::map_lgl(~reglist[[.x]]$result$opt$convergence==0)
-  dists <- remain |>
+  fittable <- chosen <- NULL
+  aic <- bic <- conv <- dists <- ic <- id <- loglik <- NULL
+  nknots <- npts <- pars <- pfs.durn <- posdef <- rankaic <- NULL
+  rankbic <- scales <- valid <- NULL
+  # Check crit is either aic or bic (lower case)
+  crit <- tolower(crit)
+  if (crit!="aic" & crit!="bic") {stop("Criteria must be AIC or BIC")}
+  # Set-up tibble of fits information
+  fittable <- tibble::tibble(id=1:length(reglist))
+  # Check whether fits are parametric or splines
+  fittable$name <- fittable$id |>
     purrr::map_chr(~reglist[[.x]]$result$dlist$name)
-  restab <- tibble::tibble(id=remain, dists, npts, pars, loglik, conv, posdef, aic, bic)
-  othtab <- tibble::tibble(id=seq(noreg)[valid==FALSE], dists="unknown", npts=0, pars=0, loglik=-Inf, conv=FALSE, posdef=FALSE, aic=Inf, bic=Inf)
-  restab <- dplyr::add_row(restab, othtab) |>
+  # Are all the distributions survspline?
+  allsplines <- (length(unique(fittable$name))==1) & ("survspline" %in% fittable$name)
+  # Add variables to datatable
+  fittable$valid <- fittable$id |>
+    purrr::map_lgl(~is.null(reglist[[.x]]$error))
+  fittable$npts <- fittable$id |>
+    purrr::map_dbl(~reglist[[.x]]$result$N)
+  fittable$pars <- fittable$id |>
+    purrr::map_dbl(~reglist[[.x]]$result$npars)
+  fittable$aic <- fittable$id |>
+    purrr::map_dbl(~reglist[[.x]]$result$AIC)
+  fittable$loglik <- fittable$id |>
+    purrr::map_dbl(~reglist[[.x]]$result$loglik)
+  fittable$conv <- fittable$id |>
+    purrr::map_lgl(~reglist[[.x]]$result$opt$convergence==0)
+  fittable$posdef <- fittable$id |>
+    purrr::map_lgl(~check_posdef(reglist[[.x]]$result))
+  fittable <- fittable |>
     dplyr::mutate(
+      bic = pars*log(npts)-2*loglik,
+      ic = (crit=="bic")*bic + (1-(crit=="bic"))*aic,
       rankaic = rank(aic),
-      rankbic = rank(bic)
+      rankbic = rank(bic),
     )
+  # Add variables specific to model type (parametric or splines), and reorder
+  if (allsplines) {
+    # Splines - # knots, name of scale
+    fittable$nknots <- fittable$id|>
+      purrr::map_int(~reglist[[.x]]$result$k)
+    fittable$scales <- fittable$id |>
+      purrr::map_chr(~reglist[[.x]]$result$aux$scale)
+    fittable <- fittable |>
+      dplyr::select(id, valid, conv, posdef, npts, scales, nknots, pars, loglik, aic, bic, ic, rankaic, rankbic)
+  } else {
+    # Parametric - distribution names
+    fittable$dists <- fittable$id |>
+      purrr::map_chr(~reglist[[.x]]$result$dlist$name)
+    fittable <- fittable |>
+      dplyr::select(id, valid, conv, posdef, npts, dists, pars, loglik, aic, bic, ic, rankaic, rankbic)
+  }
+  # Identify chosen fit
+  chosen <- fittable$id[which.min(fittable$ic)]
   # Pull out just the result
-  list(fit=reglist[[remain[chosen]]]$result, results=restab)
+  list(fit=reglist[[chosen]]$result, results=fittable)
 }
