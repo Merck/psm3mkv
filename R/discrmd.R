@@ -114,23 +114,19 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
 # drmd_stm_cf(dpam=params, lifetable=ltable)
 drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
-  Tw <- tvec <- ppd.ts <- ttp.ts <- pps.ts <- NULsppd <- sttp <- sos <- NULL
+  Tw <- tvec <- sppd <- sttp <- sos <- NULL
   adjsppd <- adjos <- vn <- pf <- os <- NULL
   # Time horizon in weeks (ceiling)
   Tw <- convert_yrs2wks(Ty)
   # Create time vector, with half-cycle addition
   tvec <- timestep*(0:floor(Tw/timestep)) + timestep/2
-  # Pull out type and spec for PPD and TTP
-  ppd.ts <- convert_fit2spec(dpam$ppd)
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  pps.ts <- convert_fit2spec(dpam$pps_cf)
   # Obtain hazard and survival functions
-  hppd <- tvec |> purrr::map_dbl(~calc_haz(.x, ppd.ts$type, ppd.ts$spec))
-  http <- tvec |> purrr::map_dbl(~calc_haz(.x, ttp.ts$type, ttp.ts$spec))
-  hpps <- tvec |> purrr::map_dbl(~calc_haz(.x, pps.ts$type, pps.ts$spec))
-  sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, ppd.ts$type, ppd.ts$spec))
-  sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, ttp.ts$type, ttp.ts$spec))
-  spps <- tvec |> purrr::map_dbl(~calc_surv(.x, pps.ts$type, pps.ts$spec))
+  hppd <- tvec |> purrr::map_dbl(~calc_haz(.x, survobj=dpam$ppd))
+  http <- tvec |> purrr::map_dbl(~calc_haz(.x, survobj=dpam$ttp))
+  hpps <- tvec |> purrr::map_dbl(~calc_haz(.x, survobj=dpam$pps_cf))
+  sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$ppd))
+  sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$ttp))
+  spps <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$pps_cf))
   # Derive the constrained S_PPD and S_PFS
   con.sppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
   con.spps <- constrain_survprob(spps, lifetable=lifetable, timevec=tvec)
@@ -171,27 +167,23 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
 # drmd_stm_cr(dpam=params, lifetable=ltable)
 drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
-  Tw <- tvec <- ppd.ts <- ttp.ts <- sppd <- sttp <- sos <- NULL
+  Tw <- tvec <- sppd <- sttp <- sos <- NULL
   adjsppd <- adjos <- vn <- pf <- os <- NULL
   # Time horizon in weeks (ceiling)
   Tw <- convert_yrs2wks(Ty)
   # Create time vector, with half-cycle addition
   tvec <- timestep*(0:floor(Tw/timestep)) + timestep/2
-  # Pull out type and spec for PPD and TTP
-  ppd.ts <- convert_fit2spec(dpam$ppd)
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  pps.ts <- convert_fit2spec(dpam$pps_cr)
   # Obtain unconstrained survival functions
-  sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, ppd.ts$type, ppd.ts$spec))
-  sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, ttp.ts$type, ttp.ts$spec))
+  sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$ppd))
+  sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$ttp))
   # Derive the constrained S_PPD
   c.sppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
   # Integrand with constraints on S_PPD and S_PPS
   integrand <- function(u, t) {
-    i.http <- calc_haz(u, ttp.ts$type, ttp.ts$spec)
-    i.sttp <- calc_surv(u, ttp.ts$type, ttp.ts$spec)
-    i.u.sppd <- calc_surv(u, ppd.ts$type, ppd.ts$spec)
-    i.u.spps <- calc_surv(t-u, pps.ts$type, pps.ts$spec)
+    i.http <- calc_haz(u, survobj=dpam$ttp)
+    i.sttp <- calc_surv(u, survobj=dpam$ttp)
+    i.u.sppd <- calc_surv(u, survobj=dpam$ppd)
+    i.u.spps <- calc_surv(t-u, survobj=dpam$ppd_cr)
     i.slxu <- calc_ltsurv(convert_wks2yrs(u), lifetable=lifetable)
     i.slxt <- calc_ltsurv(convert_wks2yrs(t), lifetable=lifetable)
     i.c.sppd <- pmin(i.u.sppd, i.slxu)
