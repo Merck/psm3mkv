@@ -58,7 +58,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_haz</span><span class="op">(</span><span class="va">time</span>, <span class="va">type</span>, <span class="va">spec</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_haz</span><span class="op">(</span><span class="va">time</span>, type <span class="op">=</span> <span class="cn">NA</span>, spec <span class="op">=</span> <span class="cn">NA</span>, survobj <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -84,6 +84,10 @@ If type=="spl":</p></li>
 <li><p><code>knots</code> - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in <a href="http://chjackson.github.io/flexsurv-dev/reference/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline</a>, these include the two boundary knots.</p></li>
 <li><p><code>scale</code> - Either "hazard", "odds", or "normal", as described in <a href="http://chjackson.github.io/flexsurv-dev/reference/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline</a>. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.</p></li>
 </ul></dd>
+
+
+<dt>survobj</dt>
+<dd><p>is a survival fit object from <a href="http://chjackson.github.io/flexsurv-dev/reference/flexsurvspline.html" class="external-link">flexsurv::flexsurvspline</a> or <a href="http://chjackson.github.io/flexsurv-dev/reference/flexsurvreg.html" class="external-link">flexsurv::flexsurvreg</a></p></dd>
 
 </dl></div>
     <div class="section level2">

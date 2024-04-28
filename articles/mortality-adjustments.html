@@ -357,22 +357,14 @@ approximately 52.18 weeks per year.</p>
 <span><span class="co"># Fit parametric models to each endpoint</span></span>
 <span><span class="va">allfits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_ends_mods_par.html">fit_ends_mods_par</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Pick out best distributions according to min AIC</span></span>
-<span><span class="va">fit.ppd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.ttp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.pfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pfs</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.os</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">os</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.pps_cf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span><span class="va">fit.pps_cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit_par.html">find_bestfit_par</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Bring together our preferred fits for each endpoint in a list</span></span>
+<span><span class="co"># Bring together preferred fits for each endpoint</span></span>
 <span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  ppd <span class="op">=</span> <span class="va">fit.ppd</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>  ttp <span class="op">=</span> <span class="va">fit.ttp</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>  pfs <span class="op">=</span> <span class="va">fit.pfs</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>  os <span class="op">=</span> <span class="va">fit.os</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>  pps_cf <span class="op">=</span> <span class="va">fit.pps_cf</span><span class="op">$</span><span class="va">fit</span>,</span>
-<span>  pps_cr <span class="op">=</span> <span class="va">fit.pps_cr</span><span class="op">$</span><span class="va">fit</span></span>
+<span>  ppd <span class="op">=</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  ttp <span class="op">=</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  pfs <span class="op">=</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pfs</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  os <span class="op">=</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">os</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  pps_cf <span class="op">=</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cf</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span>,</span>
+<span>  pps_cr <span class="op">=</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
