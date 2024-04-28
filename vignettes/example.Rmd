@@ -83,12 +83,12 @@ We have fitted multiple parametric distributions to each endpoint. We only need 
 
 ```{r find_bestfit_par}
 # Pick out best distribution according to min AIC
-fitpar.ppd <- find_bestfit_par(allfits_par$ppd, "aic")
-fitpar.ttp <- find_bestfit_par(allfits_par$ttp, "aic")
-fitpar.pfs <- find_bestfit_par(allfits_par$pfs, "aic")
-fitpar.os <- find_bestfit_par(allfits_par$os, "aic")
-fitpar.pps_cf <- find_bestfit_par(allfits_par$pps_cf, "aic")
-fitpar.pps_cr <- find_bestfit_par(allfits_par$pps_cr, "aic")
+fitpar.ppd <- find_bestfit(allfits_par$ppd, "aic")
+fitpar.ttp <- find_bestfit(allfits_par$ttp, "aic")
+fitpar.pfs <- find_bestfit(allfits_par$pfs, "aic")
+fitpar.os <- find_bestfit(allfits_par$os, "aic")
+fitpar.pps_cf <- find_bestfit(allfits_par$pps_cf, "aic")
+fitpar.pps_cr <- find_bestfit(allfits_par$pps_cr, "aic")
 
 # Inspect the selection for PFS
 fitpar.pfs
@@ -112,12 +112,12 @@ We have fitted multiple splines to each endpoint. We only need to retain the bes
 
 ```{r find_bestfit_spl}
 # Pick out best distribution according to min AIC
-fitspl.ppd <- find_bestfit_spl(allfits_spl$ppd, "aic")
-fitspl.ttp <- find_bestfit_spl(allfits_spl$ttp, "aic")
-fitspl.pfs <- find_bestfit_spl(allfits_spl$pfs, "aic")
-fitspl.os <- find_bestfit_spl(allfits_spl$os, "aic")
-fitspl.pps_cf <- find_bestfit_spl(allfits_spl$pps_cf, "aic")
-fitspl.pps_cr <- find_bestfit_spl(allfits_spl$pps_cr, "aic")
+fitspl.ppd <- find_bestfit(allfits_spl$ppd, "aic")
+fitspl.ttp <- find_bestfit(allfits_spl$ttp, "aic")
+fitspl.pfs <- find_bestfit(allfits_spl$pfs, "aic")
+fitspl.os <- find_bestfit(allfits_spl$os, "aic")
+fitspl.pps_cf <- find_bestfit(allfits_spl$pps_cf, "aic")
+fitspl.pps_cr <- find_bestfit(allfits_spl$pps_cr, "aic")
 
 # Inspect the selection for PFS
 fitspl.pfs

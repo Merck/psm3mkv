@@ -20,12 +20,12 @@ af1 <- fit_ends_mods_par(bosonc,
                         pps_cf.dist = alldists)
 
 # Pick out the best fit for each endpoint
-fit.ppd <- find_bestfit_par(af1$ppd, "aic")
-fit.ttp <- find_bestfit_par(af1$ttp, "aic")
-fit.pfs <- find_bestfit_par(af1$pfs, "aic")
-fit.os <- find_bestfit_par(af1$os, "aic")
-fit.pps_cf <- find_bestfit_par(af1$pps_cf, "aic")
-fit.pps_cr <- find_bestfit_par(af1$pps_cr, "aic")
+fit.ppd <- find_bestfit(af1$ppd, "aic")
+fit.ttp <- find_bestfit(af1$ttp, "aic")
+fit.pfs <- find_bestfit(af1$pfs, "aic")
+fit.os <- find_bestfit(af1$os, "aic")
+fit.pps_cf <- find_bestfit(af1$pps_cf, "aic")
+fit.pps_cr <- find_bestfit(af1$pps_cr, "aic")
 
 # Bring together
 params <- list(ppd=fit.ppd$fit,
@@ -98,12 +98,12 @@ test_that("Likelihood totals match for parametric", {
 af2 <- fit_ends_mods_spl(bosonc)
 
 # Pick out the best fit for each endpoint
-fit.ppd <- find_bestfit_par(af2$ppd, "aic")
-fit.ttp <- find_bestfit_par(af2$ttp, "aic")
-fit.pfs <- find_bestfit_par(af2$pfs, "aic")
-fit.os <- find_bestfit_par(af2$os, "aic")
-fit.pps_cf <- find_bestfit_par(af2$pps_cf, "aic")
-fit.pps_cr <- find_bestfit_par(af2$pps_cr, "aic")
+fit.ppd <- find_bestfit(af2$ppd, "aic")
+fit.ttp <- find_bestfit(af2$ttp, "aic")
+fit.pfs <- find_bestfit(af2$pfs, "aic")
+fit.os <- find_bestfit(af2$os, "aic")
+fit.pps_cf <- find_bestfit(af2$pps_cf, "aic")
+fit.pps_cr <- find_bestfit(af2$pps_cr, "aic")
 
 # Bring together
 params_spl <- list(ppd=fit.ppd$fit,
