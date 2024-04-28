@@ -130,6 +130,21 @@ calc_surv <- function(time, type, spec) {
   1-calc_pdist(time, type, spec)
 }
 
+#' Calculate the value of the survival function
+#' @description Calculate the value of the survival function, given the statistical distribution and its parameters. There must be no covariates.
+#' @param time is the time at which the distribution function should be calculated.
+#' @param survob is the survival object (per [flexsurv::flexsurvreg]).
+#' @return A vector of values of the survival function, a numeric value.
+#' @inherit calc_pdist seealso
+# Examples
+# fit <- flexsurvreg(Surv(recyrs, censrec) ~ 1, data=flexsurv::bc, dist="weibull")
+# new_calc_surv(time=1:5, fit)
+new_calc_surv <- function(time, survobj) {
+  # Give an error if there are covariates in the survival object
+  if (survobj$ncovs>0) {stop("Cannot compute survival function when survival model includes covariates")}
+  flexsurv::standsurv(survobj, t=time, type="survival")$at1
+}
+
 #' Calculate the value of the hazard function (parametric form)
 #' @description Calculate the value of the hazard function, given the statistical distribution and its parameters.
 #' @inheritParams calc_pdist_par
@@ -193,6 +208,22 @@ calc_haz <- function(time, type, spec){
   } else {
     NA
   }
+}
+
+#' Calculate the value of the hazard function
+#' @description Calculate the value of the hazard function, given the statistical distribution and its parameters. There must be no covariates.
+#' @param time is the time at which the distribution function should be calculated.
+#' @param survob is the survival object (per [flexsurv::flexsurvreg]).
+#' @return A vector of values of the survival function, a numeric value.
+#' @inherit calc_pdist seealso
+# Examples
+# fit <- flexsurvreg(Surv(recyrs, censrec) ~ 1, data=flexsurv::bc, dist="weibull")
+# new_calc_haz(time=1:5, fit)
+new_calc_haz <- function(time, survobj) {
+  # Give an error if there are covariates in the survival object
+  if (survobj$ncovs>0) {stop("Cannot compute hazard function when survival model includes covariates")}
+  # Return hazards
+  flexsurv::standsurv(survobj, t=time, type="hazard")$at1
 }
 
 #' Calculate the value of the density function (parametric form)
