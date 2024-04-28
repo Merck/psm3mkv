@@ -175,46 +175,44 @@ fit_ends_mods_spl <- function(simdat,
 #' find_bestfit_spl(fits$ttp, "aic")
 #' }
 find_bestfit_spl <- function(reglist, crit="aic") {
-  # Declare local variables
-  noreg <- valid <- remain <- NULL
-  npts <- pars <- aic <- loglik <- bic <- NULL
-  ic <- chosen <- conv <- nknots <- scales <- NULL
-  restab <- othtab <- NULL
-  # Pick out the valid regressions (where valid==TRUE)
-  noreg <- length(reglist)
-  valid <- seq(noreg) |>
+  # Create local variable
+  fittable <- chosen <- NULL
+  # Check crit is either aic or bic (lower case)
+  crit <- tolower(crit)
+  if (crit!="aic" & crit!="bic") {stop("Criteria must be AIC or BIC")}
+  # Create tibble of fits information
+  fittable <- tibble::tibble(id=1:length(reglist))
+  # Add variables to datatable
+  fittable$valid <- fittable$id |>
     purrr::map_lgl(~is.null(reglist[[.x]]$error))
-  remain <- seq(noreg)*valid
-  remain <- remain[remain>0]
-  # Pull useful data from fitted regressions
-  npts <- remain |>
+  fittable$npts <- fittable$id |>
     purrr::map_dbl(~reglist[[.x]]$result$N)
-  pars <- remain |>
+  fittable$pars <- fittable$id |>
     purrr::map_dbl(~reglist[[.x]]$result$npars)
-  aic <- remain |>
+  fittable$aic <- fittable$id |>
     purrr::map_dbl(~reglist[[.x]]$result$AIC)
-  loglik <- remain |>
+  fittable$loglik <- fittable$id |>
     purrr::map_dbl(~reglist[[.x]]$result$loglik)
-  bic <- pars*log(npts)-2*loglik
-  # Find min AIC or BIC depending on crit
-  ic <- if (crit=="BIC"|crit=="bic") bic
-        else if (crit=="AIC"|crit=="aic") aic
-        else rep(NA, noreg)
-  chosen <- which.min(ic)
-  # Create a useful table
-  conv <- remain |>
+  fittable$conv <- fittable$id |>
     purrr::map_lgl(~reglist[[.x]]$result$opt$convergence==0)
-  nknots <- remain |>
-    purrr::map_int(~reglist[[.x]]$result$k)
-  scales <- remain |>
-    purrr::map_chr(~reglist[[.x]]$result$aux$scale)
-  restab <- tibble::tibble(id=remain, nknots, scales, npts, pars, loglik, conv, aic, bic)
-  othtab <- tibble::tibble(id=seq(noreg)[valid==FALSE], nknots=0, scales=NA_character_, npts=0, pars=0, loglik=-Inf, conv=FALSE, aic=Inf, bic=Inf)
-  restab <- dplyr::add_row(restab, othtab) |>
+  fittable$posdef <- fittable$id |>
+    purrr::map_lgl(~check_posdef(reglist[[.x]]$result))
+  fittable <- fittable |>
     dplyr::mutate(
+      bic = pars*log(npts)-2*loglik,
+      ic = (crit=="bic")*bic + (1-(crit=="bic"))*aic,
       rankaic = rank(aic),
-      rankbic = rank(bic)
+      rankbic = rank(bic),
     )
-  # Pull out just the result
-  list(fit=reglist[[remain[chosen]]]$result, results=restab)
+  # Add splines specific variables to datatable
+  fittable$nknots <- fittable$id|>
+    purrr::map_int(~reglist[[.x]]$result$k)
+  fittable$scales <- fittable$id |>
+    purrr::map_chr(~reglist[[.x]]$result$aux$scale)
+  # Present in chosen order
+  fittable <- fittable |> select(id, valid, conv, posdef, npts, scales, nknots, pars, loglik, aic, bic, ic, rankaic, rankbic)
+  # Identify chosen fit
+  chosen <- fittable$id[which.min(fittable$ic)]
+    # Pull out just the result
+  list(fit=reglist[[chosen]]$result, results=fittable)
 }
