@@ -221,6 +221,7 @@ fit_ends_mods_par <- function(simdat,
 #' @param crit Criterion to be used in selection of best fit, either "aic" (Akaike Information Criterion) or "bic" (Bayesian Information Criterion).
 #' @return List of the single survival regression with the best fit.
 #' @export
+#' @importFrom rlang .data
 #' @examples
 #' bosonc <- create_dummydata("flexbosms")
 #' # Parametric modeling
@@ -232,6 +233,9 @@ fit_ends_mods_par <- function(simdat,
 find_bestfit <- function(reglist, crit) {
   # Declare local variables
   fittable <- chosen <- NULL
+  aic <- bic <- conv <- dists <- ic <- id <- loglik <- NULL
+  nknots <- npts <- pars <- pfs.durn <- posdef <- rankaic <- NULL
+  rankbic <- scales <- valid <- NULL
   # Check crit is either aic or bic (lower case)
   crit <- tolower(crit)
   if (crit!="aic" & crit!="bic") {stop("Criteria must be AIC or BIC")}
