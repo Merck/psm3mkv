@@ -98,22 +98,10 @@ convert_fit2spec <- function(fitsurv) {
 # calc_likes_psm_simple(bosonc, dpam=params)
 # }
 calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
-  # Declare local variables
-  pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- pfs.durn <- NULL
-  os.ts <- os.type <- os.spec <- os.npars <- NULL
-  s_npars <- likedata <- npts <- llsum <- retlist <- NULL
-  # PFS
-  # pfs.ts <- convert_fit2spec(dpam$pfs)
-  # pfs.type <- pfs.ts$type
-  # pfs.spec <- pfs.ts$spec
-  pfs.npars <- dpam$pfs$npars
-  # OS
-  # os.ts <- convert_fit2spec(dpam$os)
-  # os.type <- os.ts$type
-  # os.spec <- os.ts$spec
-  os.npars <- dpam$os$npars
+  # Declare local variablesL
+  s_npars <- likedata <- npts <- llsum <- retlist <- pfs.durn <- NULL
   # Count parameters
-  s_npars <- pfs.npars + os.npars + 1
+  s_npars <- dpam$pfs$npars + dpam$os$npars + 1
   # Add on fields to dataset
   likedata <- tidyr::as_tibble(ptdata) |>
     dplyr::mutate(
@@ -125,10 +113,8 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      # hpfsu = calc_haz(.data$pfs.durn, pfs.type, pfs.spec),
-      hpfsu = new_calc_haz(.data$pfs.durn, dpam$pfs),
-      # spfsu = calc_surv(.data$pfs.durn, pfs.type, pfs.spec),
-      spfsu = new_calc_surv(.data$pfs.durn, dpam$pfs),
+      hpfsu = calc_haz(.data$pfs.durn, survobj=dpam$pfs),
+      spfsu = calc_surv(.data$pfs.durn, survobj=dpam$pfs),
       hppdu = calc_haz_psm(timevar=.data$pfs.durn,
                            ptdata=ptdata,
                            dpam=dpam,
@@ -201,27 +187,9 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 # calc_likes_psm_complex(bosonc, dpam=params)
 calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
-  ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
-  pfs.ts <- pfs.type <- pfs.spec <- pfs.npars <- pfs.durn <- NULL
-  os.ts <- os.type <- os.spec <- os.npars <- NULL
-  s_npars <- likedata <- npts <- llsum <- retlist <- NULL
-  # TTP
-  #ttp.ts <- convert_fit2spec(dpam$ttp)
-  #ttp.type <- ttp.ts$type
-  #ttp.spec <- ttp.ts$spec
-  ttp.npars <- dpam$ttp$npars
-  # PFS
-  #pfs.ts <- convert_fit2spec(dpam$pfs)
-  #pfs.type <- pfs.ts$type
-  #pfs.spec <- pfs.ts$spec
-  pfs.npars <- dpam$pfs$npars
-  # OS
-  #os.ts <- convert_fit2spec(dpam$os)
-  #os.type <- os.ts$type
-  #os.spec <- os.ts$spec
-  os.npars <- dpam$os$npars
+  s_npars <- likedata <- npts <- llsum <- retlist <- pfs.durn <- NULL
   # Count parameters
-  s_npars <- pfs.npars + os.npars + ttp.npars
+  s_npars <- dpam$pfs$npars + dpam$os$npars + dpam$ttp$npars
   # Add on fields to dataset
   likedata <- tidyr::as_tibble(ptdata) |>
     dplyr::mutate(
@@ -233,10 +201,8 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      # hpfsu = calc_haz(.data$pfs.durn, pfs.type, pfs.spec),
-      hpfsu = new_calc_haz(.data$pfs.durn, dpam$pfs),
-      # spfsu = calc_surv(.data$pfs.durn, pfs.type, pfs.spec),
-      spfsu = new_calc_surv(.data$pfs.durn, dpam$pfs),
+      hpfsu = calc_haz(.data$pfs.durn, survobj=dpam$pfs),
+      spfsu = calc_surv(.data$pfs.durn, survobj=dpam$pfs),
       hppdu = calc_haz_psm(timevar=.data$pfs.durn,
                            ptdata=ptdata,
                            dpam=dpam,
@@ -308,27 +274,9 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 # calc_likes_stm_cf(bosonc, dpam=params)
 calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
-  ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- ppd.npars <- pfs.durn <- NULL
-  pps.ts <- pps.type <- pps.spec <- pps.npars <- NULL
-  s_npars <- likedata <- npts <- llsum <- retlist <- NULL
-  # Pull out distributions and parameters - PPD
-  #ppd.ts <- convert_fit2spec(dpam$ppd)
-  #ppd.type <- ppd.ts$type
-  #ppd.spec <- ppd.ts$spec
-  ppd.npars <- dpam$ppd$npars
-  # TTP
-  #ttp.ts <- convert_fit2spec(dpam$ttp)
-  #ttp.type <- ttp.ts$type
-  #ttp.spec <- ttp.ts$spec
-  ttp.npars <- dpam$ttp$npars
-  # PPS_CF
-  #pps.ts <- convert_fit2spec(dpam$pps_cf)
-  #pps.type <- pps.ts$type
-  #pps.spec <- pps.ts$spec
-  pps.npars <- dpam$pps_cf$npars
+  s_npars <- likedata <- npts <- llsum <- retlist <- pfs.durn <- NULL
   # Count parameters
-  s_npars <- ppd.npars + ttp.npars + pps.npars
+  s_npars <- dpam$ppd$npars + dpam$ttp$npars + dpam$pps_cf$npars
   # Add on fields to dataset
   likedata <- tidyr::as_tibble(ptdata) |>
     dplyr::mutate(
@@ -340,20 +288,13 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      # httpu = calc_haz(.data$pfs.durn, ttp.type, ttp.spec),
-      httpu = new_calc_haz(.data$pfs.durn, dpam$ttp),
-      # sttpu = calc_surv(.data$pfs.durn, ttp.type, ttp.spec),
-      sttpu = new_calc_surv(.data$pfs.durn, dpam$ttp),
-      # hppdu = calc_haz(.data$pfs.durn, ppd.type, ppd.spec),
-      hppdu = new_calc_haz(.data$pfs.durn, dpam$ppd),
-      # sppdu = calc_surv(.data$pfs.durn, ppd.type, ppd.spec),
-      sppdu = new_calc_surv(.data$pfs.durn, dpam$ppd),
-      # sppsu = calc_surv(.data$pfs.durn, pps.type, pps.spec),
-      sppsu = new_calc_surv(.data$pfs.durn, dpam$pps_cf),
-      # sppst = calc_surv(.data$os.durn, pps.type, pps.spec),
-      sppst = new_calc_surv(.data$os.durn, dpam$pps_cf),
-      # hppst = calc_haz(.data$os.durn, pps.type, pps.spec),
-      hppst = new_calc_haz(.data$os.durn, dpam$pps_cf),
+      httpu = calc_haz(.data$pfs.durn, survobj=dpam$ttp),
+      sttpu = calc_surv(.data$pfs.durn, survobj=dpam$ttp),
+      hppdu = calc_haz(.data$pfs.durn, survobj=dpam$ppd),
+      sppdu = calc_surv(.data$pfs.durn, survobj=dpam$ppd),
+      sppsu = calc_surv(.data$pfs.durn, survobj=dpam$pps_cf),
+      sppst = calc_surv(.data$os.durn, survobj=dpam$pps_cf),
+      hppst = calc_haz(.data$os.durn, survobj=dpam$pps_cf),
       # Four possible outcomes
       f1 = (1-.data$ttp.flag) * (1-.data$os.flag),
       f2 = (1-.data$ttp.flag) * .data$os.flag,
@@ -408,27 +349,9 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 # calc_likes_stm_cr(bosonc, dpam=params)
 calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
-  ttp.ts <- ttp.type <- ttp.spec <- ttp.npars <- NULL
-  ppd.ts <- ppd.type <- ppd.spec <- ppd.npars <- pfs.durn <- NULL
-  pps.ts <- pps.type <- pps.spec <- pps.npars <- NULL
-  s_npars <- likedata <- npts <- llsum <- retlist <- NULL
-  # Pull out distributions and parameters - PPD
-  #ppd.ts <- convert_fit2spec(dpam$ppd)
-  #ppd.type <- ppd.ts$type
-  #ppd.spec <- ppd.ts$spec
-  ppd.npars <- dpam$ppd$npars
-  # TTP
-  #ttp.ts <- convert_fit2spec(dpam$ttp)
-  #ttp.type <- ttp.ts$type
-  #ttp.spec <- ttp.ts$spec
-  ttp.npars <- dpam$ttp$npars
-  # PPS_CR
-  #pps.ts <- convert_fit2spec(dpam$pps_cr)
-  #pps.type <- pps.ts$type
-  #pps.spec <- pps.ts$spec
-  pps.npars <- dpam$pps_cr$npars
+  s_npars <- likedata <- npts <- llsum <- retlist <- pfs.durn <- NULL
   # Count parameters
-  s_npars <- ppd.npars + ttp.npars + pps.npars
+  s_npars <- dpam$ppd$npars + dpam$ttp$npars + dpam$pps_cr$npars
   # Add on fields to dataset
   likedata <- tidyr::as_tibble(ptdata) |>
     dplyr::mutate(
@@ -440,20 +363,13 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
     dplyr::filter(pfs.durn>0) |>
     dplyr::mutate(
       # Survival and hazard functions needed
-      # httpu = calc_haz(.data$pfs.durn, ttp.type, ttp.spec),
-      httpu = new_calc_haz(.data$pfs.durn, dpam$ttp),
-      # sttpu = calc_surv(.data$pfs.durn, ttp.type, ttp.spec),
-      sttpu = new_calc_surv(.data$pfs.durn, dpam$ttp),
-      # hppdu = calc_haz(.data$pfs.durn, ppd.type, ppd.spec),
-      hppdu = new_calc_haz(.data$pfs.durn, dpam$ppd),
-      # sppdu = calc_surv(.data$pfs.durn, ppd.type, ppd.spec),
-      sppdu = new_calc_surv(.data$pfs.durn, dpam$ppd),
-      # hppdt = calc_haz(.data$os.durn, ppd.type, ppd.spec),
-      hppdt = new_calc_haz(.data$os.durn, dpam$ppd),
-      # sppstu = calc_surv(.data$os.durn-pfs.durn, pps.type, pps.spec),
-      sppstu = new_calc_surv(.data$os.durn-pfs.durn, dpam$pps_cr),
-      # hppstu = calc_haz(.data$os.durn-.data$pfs.durn, pps.type, pps.spec),
-      hppstu = new_calc_haz(.data$os.durn-.data$pfs.durn, dpam$pps_cr),
+      httpu = calc_haz(.data$pfs.durn, survobj=dpam$ttp),
+      sttpu = calc_surv(.data$pfs.durn, survobj=dpam$ttp),
+      hppdu = calc_haz(.data$pfs.durn, survobj=dpam$ppd),
+      sppdu = calc_surv(.data$pfs.durn, survobj=dpam$ppd),
+      hppdt = calc_haz(.data$os.durn, survobj=dpam$ppd),
+      sppstu = calc_surv(.data$os.durn-pfs.durn, survobj=dpam$pps_cr),
+      hppstu = calc_haz(.data$os.durn-.data$pfs.durn, survobj=dpam$pps_cr),
       # Four possible outcomes
       f1 = (1-.data$ttp.flag) * (1-.data$os.flag),   # No progression or death
       f2 = (1-.data$ttp.flag) * .data$os.flag,       # Death before progression
@@ -534,12 +450,12 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #' fits <- fit_ends_mods_spl(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
-#'   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#'   os = find_bestfit_spl(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#'   os = find_bestfit(fits$os, "aic")$fit,
+#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 #'   )
 #' calc_likes(bosonc, dpam=params)
 #' }

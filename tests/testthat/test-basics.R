@@ -109,19 +109,19 @@ test_that("Restricted mean equals mean over inf horizon, param", {
 
 test_that("Restricted mean equals mean over inf horizon, splines", {
   expect_equal(
-    psm3mkv::calc_rmd(Tw=Inf, type="splines", spec=spec_spl1),
+    psm3mkv::calc_rmd(Tw=Inf, type="spl", spec=spec_spl1),
     flexsurv::mean_survspline(gamma=spec_spl1$gammas,
                               knots=spec_spl1$knots,
                               scale=spec_spl1$scale)
     )
   expect_equal(
-    psm3mkv::calc_rmd(Tw=Inf, type="splines", spec=spec_spl2),
+    psm3mkv::calc_rmd(Tw=Inf, type="spl", spec=spec_spl2),
     flexsurv::mean_survspline(gamma=spec_spl2$gammas,
                               knots=spec_spl2$knots,
                               scale=spec_spl2$scale)
     )
   expect_equal(
-    psm3mkv::calc_rmd(Tw=Inf, type="splines", spec=spec_spl3),
+    psm3mkv::calc_rmd(Tw=Inf, type="spl", spec=spec_spl3),
     flexsurv::mean_survspline(gamma=spec_spl3$gammas,
                               knots=spec_spl3$knots,
                               scale=spec_spl3$scale)
@@ -169,19 +169,19 @@ test_that("Restricted mean < mean, parametric", {
 
 test_that("Restricted mean < mean, splines", {
   expect_lt(
-    psm3mkv::calc_rmd(Tw=10, type="splines", spec=spec_spl1),
+    psm3mkv::calc_rmd(Tw=10, type="spl", spec=spec_spl1),
     flexsurv::mean_survspline(gamma=spec_spl1$gammas,
                               knots=spec_spl1$knots,
                               scale=spec_spl1$scale)
   )
   expect_lt(
-    psm3mkv::calc_rmd(Tw=15, type="splines", spec=spec_spl2),
+    psm3mkv::calc_rmd(Tw=15, type="spl", spec=spec_spl2),
     flexsurv::mean_survspline(gamma=spec_spl2$gammas,
                               knots=spec_spl2$knots,
                               scale=spec_spl2$scale)
   )
   expect_lt(
-    psm3mkv::calc_rmd(Tw=30, type="splines", spec=spec_spl3),
+    psm3mkv::calc_rmd(Tw=30, type="spl", spec=spec_spl3),
     flexsurv::mean_survspline(gamma=spec_spl3$gammas,
                               knots=spec_spl3$knots,
                               scale=spec_spl3$scale)
@@ -233,21 +233,21 @@ test_that("Calling restricted mean function correctly, parametric", {
 
 test_that("Calling restricted mean function correctly, splines", {
   expect_equal(
-    psm3mkv::calc_rmd(Tw=30, type="splines", spec=spec_spl1),
+    psm3mkv::calc_rmd(Tw=30, type="spl", spec=spec_spl1),
     flexsurv::rmst_survspline(t=30,
                           gamma=spec_spl1$gammas,
                           knots=spec_spl1$knots,
                           scale=spec_spl1$scale)
   )
   expect_equal(
-    psm3mkv::calc_rmd(Tw=15, type="splines", spec=spec_spl2),
+    psm3mkv::calc_rmd(Tw=15, type="spl", spec=spec_spl2),
     flexsurv::rmst_survspline(t=15,
                           gamma=spec_spl2$gammas,
                           knots=spec_spl2$knots,
                           scale=spec_spl2$scale)
   )
   expect_equal(
-    psm3mkv::calc_rmd(Tw=20, type="splines", spec=spec_spl3),
+    psm3mkv::calc_rmd(Tw=20, type="spl", spec=spec_spl3),
     flexsurv::rmst_survspline(t=20,
                           gamma=spec_spl3$gammas,
                           knots=spec_spl3$knots,
@@ -265,7 +265,7 @@ dists <- c("exp", "weibullPH", "weibull", "llogis", "lnorm", "gamma", "gompertz"
 fits_par <- seq(dists) |>
   purrr::map(~flexsurv::flexsurvreg(survival::Surv(recyrs, censrec) ~ 1, data=flexsurv::bc, dist=dists[.x]))
 szeros_par <- seq(dists) |>
-  purrr::map_vec(~new_calc_surv(time=0, survobj=fits_par[[.x]]))
+  purrr::map_vec(~calc_surv(time=0, survobj=fits_par[[.x]]))
 
 # Splines
 knots <- 1:3
@@ -274,7 +274,7 @@ szeros_spl <- rep(NA, length(knots) * length(scales))
 for (i in 1:length(knots)) {
   for (j in 1:length(scales)) {
     tempfit <- flexsurv::flexsurvspline(survival::Surv(recyrs, censrec) ~ 1, data=flexsurv::bc, k=knots[i], scale=scales[j])
-    szeros_spl[i*3+j-3] <- new_calc_surv(time=0, survobj=tempfit)
+    szeros_spl[i*3+j-3] <- calc_surv(time=0, survobj=tempfit)
   }
 }
 

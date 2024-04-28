@@ -25,12 +25,12 @@ bosonc <- create_dummydata("flexbosms")
 fits <- fit_ends_mods_spl(bosonc)
 # Pick out best distribution according to min AIC
 params <- list(
-  ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-  ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-  pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-  os = find_bestfit_spl(fits$os, "aic")$fit,
-  pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-  pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+  ppd = find_bestfit(fits$ppd, "aic")$fit,
+  ttp = find_bestfit(fits$ttp, "aic")$fit,
+  pfs = find_bestfit(fits$pfs, "aic")$fit,
+  os = find_bestfit(fits$os, "aic")$fit,
+  pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+  pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 )
 prob_os_psm(0:100, params)
 }
