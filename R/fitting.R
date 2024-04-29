@@ -227,9 +227,11 @@ fit_ends_mods_par <- function(simdat,
 #' # Parametric modeling
 #' fits_par <- fit_ends_mods_par(bosonc)
 #' find_bestfit(fits_par$ttp, "aic")
+#' \donttest{
 #' # Splines modeling
 #' fits_spl <- fit_ends_mods_spl(bosonc)
 #' find_bestfit(fits_spl$ttp, "bic")
+#' }
 find_bestfit <- function(reglist, crit) {
   # Declare local variables
   fittable <- chosen <- NULL

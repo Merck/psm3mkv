@@ -62,29 +62,17 @@
 #' }
 calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
   # Declare local variables
-  pfs.ts <- pfs.type <- pfs.spec <- NULL
-  os.ts <- os.type <- os.spec <- NULL
-  ttp.ts <- ttp.type <- ttp.spec <- NULL
   ne_pfs <- ne_ttp <- progfrac <- NULL
   http <- hpf <- hos <- sos <- spf <- NULL
   hppd_simple <- hppd_complex <- hppd <- hpps <- hdiff <- NULL
   # PFS
-  pfs.ts <- convert_fit2spec(dpam$pfs)
-  pfs.type <- pfs.ts$type
-  pfs.spec <- pfs.ts$spec
-  hpf <- calc_haz(timevar, pfs.type, pfs.spec)
-  spf <- calc_surv(timevar, pfs.type, pfs.spec)
+  hpf <- calc_haz(timevar, survobj=dpam$pfs)
+  spf <- calc_surv(timevar, survobj=dpam$pfs)
   # OS
-  os.ts <- convert_fit2spec(dpam$os)
-  os.type <- os.ts$type
-  os.spec <- os.ts$spec
-  hos <- calc_haz(timevar, os.type, os.spec)
-  sos <- calc_surv(timevar, os.type, os.spec)
+  hos <- calc_haz(timevar, survobj=dpam$os)
+  sos <- calc_surv(timevar, survobj=dpam$os)
   # TTP complex
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ttp.type <- ttp.ts$type
-  ttp.spec <- ttp.ts$spec
-  http_complex <- calc_haz(timevar, ttp.type, ttp.spec)
+  http_complex <- calc_haz(timevar, survobj=dpam$ttp)
   # TTP simple
   ne_pfs <- sum(ptdata$pfs.flag)
   ne_ttp <- sum(ptdata$ttp.flag)
@@ -102,8 +90,6 @@ calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
   hpps_unadj <- (sos*hos-spf*hppd)/(sos-spf)
   hpps <- pmax(0, pmin(hpps_unadj, 5000))
   hpps[timevar==0] <- 0
-  # Diff
-  # hdiff <- hos-(spf*hppd+(sos-spf)*hpps)
   # Adjusted for caps and collars
   hadj <- list(
     ttp = http,

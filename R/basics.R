@@ -22,6 +22,36 @@
 # basics.R
 # ==================================================================
 
+# Extract the type of a survival object - either "par" (parametric) or "spl" (splines)
+extract_type <- function(survobj) {
+  if (is.null(survobj)) {return(NA)}
+  objtype <- survobj$dlist$name
+  if (objtype=="survspline") {
+      type <- "spl"
+    } else {
+      type <- "par"
+    }
+  return(type)
+}
+
+# Extract the specification of a survival object - dependent on whether parametric or splines model
+extract_spec <- function(survobj) {
+  if (is.null(survobj)) {return(NA)}
+  objtype <- survobj$dlist$name
+  if (objtype=="survspline") {
+    spec <- list(
+      knots=survobj$knots,
+      scale=survobj$scale,
+      gamma=survobj$res[,1])
+  } else {
+    spec <- list(
+      dist=survobj$dlist$name,
+      pars=survobj$res[,1]
+    )
+  }
+  return(spec)
+}
+
 #' Calculate the distribution function for parametric functions
 #' @description Calculate the value of the distribution function for a parametric distribution, given the statistical distribution and its parameters.
 #' @param time is the time at which the distribution function should be calculated.
@@ -109,20 +139,8 @@ calc_pdist_spl <- function(time, spec) {
 calc_pdist <- function(time, type=NA, spec=NA, survobj=NULL){
   # Where a flexsurv object (survobj) is specified, pull its distribution, parameters, type 
   if (!is.null(survobj)) {
-    objtype <- survobj$dlist$name
-    if (objtype=="survspline") {
-      type <- "spl"
-      spec <- list(
-        knots=survobj$knots,
-        scale=survobj$scale,
-        gamma=survobj$res[,1])
-    } else {
-      type <- "par"
-      spec <- list(
-        dist=survobj$dlist$name,
-        pars=survobj$res[,1]
-      )
-    }
+    type <- extract_type(survobj)
+    spec <- extract_spec(survobj)
   }
   # Then call either parametric or splines function, using type and spec parameters
   if (type=="spl") {
@@ -212,20 +230,8 @@ flexsurv::hsurvspline(x = time,
 calc_haz <- function(time, type=NA, spec=NA, survobj=NULL){
   # Where a flexsurv object (survobj) is specified, pull its distribution, parameters, type 
   if (!is.null(survobj)) {
-    objtype <- survobj$dlist$name
-    if (objtype=="survspline") {
-      type <- "spl"
-      spec <- list(
-        knots=survobj$knots,
-        scale=survobj$scale,
-        gamma=survobj$res[,1])
-    } else {
-      type <- "par"
-      spec <- list(
-        dist=survobj$dlist$name,
-        pars=survobj$res[,1]
-      )
-    }
+    type <- extract_type(survobj)
+    spec <- extract_spec(survobj)
   }
   # Then call either parametric or splines function, using type and spec parameters
   if (type=="spl") {
@@ -297,20 +303,8 @@ calc_dens_spl <- function(time, spec) {
 calc_dens <- function(time, type=NA, spec=NA, survobj=NULL){
   # Where a flexsurv object (survobj) is specified, pull its distribution, parameters, type 
   if (!is.null(survobj)) {
-    objtype <- survobj$dlist$name
-    if (objtype=="survspline") {
-      type <- "spl"
-      spec <- list(
-        knots=survobj$knots,
-        scale=survobj$scale,
-        gamma=survobj$res[,1])
-    } else {
-      type <- "par"
-      spec <- list(
-        dist=survobj$dlist$name,
-        pars=survobj$res[,1]
-      )
-    }
+    type <- extract_type(survobj)
+    spec <- extract_spec(survobj)
   }
   # Then call either parametric or splines function, using type and spec parameters
   if (type=="spl") {
@@ -392,8 +386,7 @@ calc_rmd_spl <- function(Tw, spec) {
 #' - `knots` - Vector of locations of knots on the axis of log time, supplied in increasing order. Unlike in [flexsurv::flexsurvspline], these include the two boundary knots.
 #' - `scale` - Either "hazard", "odds", or "normal", as described in [flexsurv::flexsurvspline]. With the default of no knots in addition to the boundaries, this model reduces to the Weibull, log-logistic and log-normal respectively. The scale must be common to all times.
 #' @param survobj is a survival fit object from [flexsurv::flexsurvspline] or [flexsurv::flexsurvreg]
-#' @inherit calc_haz_par seealso
-#' @inherit calc_haz_par return
+#' @return the restricted mean duration, a numeric value.
 #' @export
 #' @examples
 #' calc_rmd(Tw=200,
@@ -407,20 +400,8 @@ calc_rmd_spl <- function(Tw, spec) {
 calc_rmd <- function(Tw, type=NA, spec=NA, survobj=NULL){
   # Where a flexsurv object (survobj) is specified, pull its distribution, parameters, type 
   if (!is.null(survobj)) {
-    objtype <- survobj$dlist$name
-    if (objtype=="survspline") {
-      type <- "spl"
-      spec <- list(
-        knots=survobj$knots,
-        scale=survobj$scale,
-        gamma=survobj$res[,1])
-    } else {
-      type <- "par"
-      spec <- list(
-        dist=survobj$dlist$name,
-        pars=survobj$res[,1]
-      )
-    }
+    type <- extract_type(survobj)
+    spec <- extract_spec(survobj)
   }
   # Then call either parametric or splines function, using type and spec parameters
   if (type=="spl") {
