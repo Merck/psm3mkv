@@ -395,7 +395,13 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' - post-progression survival clock forward (PPS-CF) and
 #' - post-progression survival clock reset (PPS-CR).
 #' @param cuttime is the cut-off time for a two-piece model (default 0, indicating a one-piece model)
-#' @return Four datasets and graphics as a list
+#' @return List of two items as follows.
+#' `data` is a tibble containing data derived and used in the derivation of the graphics.
+#' `graph` is a list of four graphics as follows:
+#' - `pf`: Membership probability in PF (progression-free) state versus time since baseline, by method
+#' - `pd`: Membership probability in PD (progressive disease) state versus time since baseline, by method
+#' - `os`: Probability alive versus time since baseline, by method
+#' - `pps`: Probability alive versus time since progression, by method
 #' @export
 #' @importFrom rlang .data
 #' @examples
