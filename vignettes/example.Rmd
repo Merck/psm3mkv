@@ -108,9 +108,9 @@ allfits_spl$pfs[[2]]$result$aux$scale # Scale
 allfits_spl$pfs[[2]]$result$aux$knots # Knot locations (log time)
 ```
 
-We have fitted multiple splines to each endpoint. We only need to retain the best-fitting distribution, which we select on the basis of the distribution having the lowest Akaike Information Criterion (AIC). We use `find_bestfit_spl()` for this.
+We have fitted multiple splines to each endpoint. We only need to retain the best-fitting distribution, which we select on the basis of the distribution having the lowest Akaike Information Criterion (AIC). We use `find_bestfit()` for this.
 
-```{r find_bestfit_spl}
+```{r find_bestfit}
 # Pick out best distribution according to min AIC
 fitspl.ppd <- find_bestfit(allfits_spl$ppd, "aic")
 fitspl.ttp <- find_bestfit(allfits_spl$ttp, "aic")
