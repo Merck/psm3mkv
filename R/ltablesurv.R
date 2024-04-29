@@ -53,14 +53,14 @@ vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
 }
 
 #' VLOOKUP function
-#' @description Function to lookup values according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel.
+#' @description Function to lookup values according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel, however several lookups can be made at once (`indexval` can be a vector) and interpolation is available where lookups are inexact (choice of 4 methods).
 #' @param indexval The index value to be looked-up (may be a vector of multiple values)
-#' @param indexvec The vector of indices to look-up in
+#' @param indexvec The vector of indices to look-up within
 #' @param valvec The vector of values corresponding to the vector of indices
 #' @param method Method may be `floor`, `ceiling`, `arith` or `geom` (default).
 #' @return Numeric value or vector, depending on the lookup/interpolation method chosen:
-#' - `floor`: Floor value, where interpolation is required between measured values
-#' - `ceiling`: Ceiling value, where interpolation is required between measured values
+#' - `floor`: Floor (minimum) value, where interpolation is required between measured values
+#' - `ceiling`: Ceiling (maximum) value, where interpolation is required between measured values
 #' - `arith`: Arithmetic mean, where interpolation is required between measured values
 #' - `geom`: Geometric mean, where interpolation is required between measured values
 #' @seealso [HMDHFDplus::readHMDweb] can be used to obtain lifetables from the Human Mortality Database

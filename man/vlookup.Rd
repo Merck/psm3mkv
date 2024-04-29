@@ -9,7 +9,7 @@ vlookup(indexval, indexvec, valvec, method = "geom")
 \arguments{
 \item{indexval}{The index value to be looked-up (may be a vector of multiple values)}
 
-\item{indexvec}{The vector of indices to look-up in}
+\item{indexvec}{The vector of indices to look-up within}
 
 \item{valvec}{The vector of values corresponding to the vector of indices}
 
@@ -18,14 +18,14 @@ vlookup(indexval, indexvec, valvec, method = "geom")
 \value{
 Numeric value or vector, depending on the lookup/interpolation method chosen:
 \itemize{
-\item \code{floor}: Floor value, where interpolation is required between measured values
-\item \code{ceiling}: Ceiling value, where interpolation is required between measured values
+\item \code{floor}: Floor (minimum) value, where interpolation is required between measured values
+\item \code{ceiling}: Ceiling (maximum) value, where interpolation is required between measured values
 \item \code{arith}: Arithmetic mean, where interpolation is required between measured values
 \item \code{geom}: Geometric mean, where interpolation is required between measured values
 }
 }
 \description{
-Function to lookup values according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel.
+Function to lookup values according to an index. Aims to behave similarly to VLOOKUP in Microsoft Excel, however several lookups can be made at once (\code{indexval} can be a vector) and interpolation is available where lookups are inexact (choice of 4 methods).
 }
 \examples{
 # Suppose we have survival probabilities at times 0 to 20

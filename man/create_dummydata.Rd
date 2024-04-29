@@ -9,8 +9,8 @@ create_dummydata(dsname)
 \arguments{
 \item{dsname}{Dataset name, as follows:
 \itemize{
-\item 'flexbosms' provides a dataset based on \code{\link[flexsurv:bos]{flexsurv::bosms3()}}. This contains all the fields necessary for \link{psm3mkv}.
-\item 'survcan' provides a dataset based on \code{\link[survival:lung]{survival::cancer()}}. This contains the necessary ID and overall survival fields. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use \link{psm3mkv}.
+\item 'flexbosms' provides a dataset based on \code{\link[flexsurv:bos]{flexsurv::bosms3()}}. This contains all the fields necessary for \link{psm3mkv}. Durations have been converted from months in the original dataset to weeks.
+\item 'survcan' provides a dataset based on \code{\link[survival:lung]{survival::cancer()}}. This contains the necessary ID and overall survival fields only. Durations have been converted from days in the original dataset to weeks. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use \link{psm3mkv}.
 }}
 }
 \value{
