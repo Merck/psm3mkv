@@ -33,30 +33,29 @@ Survival data for all other endpoints (time to progression, pre-progression deat
 \item{cuttime}{Time cutoff - this is nonzero for two-piece models.}
 }
 \value{
-Two outputs are returned:
-
-\code{results} is a tibble of values and data relating to the likelihood for this model:
+A list of three tibbles:
+\code{all} is a tibble of results for all patients:
 \itemize{
-\item \code{npts}: Number of patients analysed for each endpoint.
-\item \code{likedata}: Patient-level dataset with additional likelihood-related calculations.
-\item \code{coefsdists}: Summary table of distributions and parameters used for each endpoint.
-\item \code{slikes}: Total log-likelihood for each possible outcome
-\item \code{ll}: Total log-likelihood
-\item \code{params}: Number of parameters used in this model
+\item \code{methname}: the model structure or method.
+\item \code{npar}: is the number of parameters used by that method.
+\item \code{npts_1} to \code{npts_4} are the number of patients experiencing outcomes 1-4 respectively (see below), and \code{npts_tot} the total.
+\item \code{ll_1} to \code{ll_4} are the log-likelihood values for patients experiencing outcomes 1-4 respectively (see below), and \code{ll_tot} the total.
+\code{valid} is a tibble of the same design as \code{all} but only in patients with valid likelihoods for all 4 methods
+\code{sum} is a tibble in respect of patients with valid likelihoods for all 4 methods providing:
+\item \code{npts}: number of patients contributing results for this method.
+\item \code{npar}: number of parameters used by that method.
+\item \code{ll}: total log-likelihood
 \item \code{AIC}: Akaike Information Criterion value for this model
 \item \code{BIC}: Bayesian Information Criterion value for this model
 }
 
-\code{llcomp} is a tibble providing a breakdown of the likelihood calculations by outcome. Outcomes are as follows:
+The four outcomes are as follows:
 \itemize{
 \item (1) refers to patients who remain alive and progression-free during the follow-up;
 \item (2) refers to patients who die without prior progression during the follow-up;
 \item (3) refers to patients who progress and then remain alive for the remaining follow-up, and
 \item (4) refers to patients who progress and die within the follow-up.
 }
-
-The number of patients for each outcome are given for each model structure. You may confirm that these are identical across model structures.
-The contribution of each patient group to the calculation of log-likelihood for each model is given in fields beginning \code{ll_}. This is helpful for understanding differences in likelihoods between model structures, according to patient outcomes.
 }
 \description{
 Calculate likelihood values and other summary output for the following three state models structures: partitioned survival, clock forward state transition, and clock reset state transition. The function requires appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used).

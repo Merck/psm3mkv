@@ -43,13 +43,8 @@
 #' @param cuttime Time cutoff - this is nonzero for two-piece models.
 #' @return List of values and data relating to the likelihood for this model:
 #' - `npts`: Number of patients analysed for each endpoint.
-#' - `likedata`: Patient-level dataset with additional likelihood-related calculations.
-#' - `coefsdists`: Summary table of distributions and parameters used for each endpoint.
-#' - `slikes`: Total log-likelihood for each possible outcome
-#' - `ll`: Total log-likelihood
-#' - `params`: Number of parameters used in this model
-#' - `AIC`: Akaike Information Criterion value for this model
-#' - `BIC`: Bayesian Information Criterion value for this model
+#' - `npar`: Number of parameters used in this model.
+#' - `data`: A tibble of detailed likelihood calculations, where each row represents a patient.
 #' @seealso [calc_likes()], [calc_likes_psm_complex()], [calc_likes_stm_cf()], [calc_likes_stm_cr()]
 #' @importFrom rlang .data
 #' @noRd
@@ -393,26 +388,25 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #' - post-progression survival clock forward (PPS-CF) and
 #' - post-progression survival clock reset (PPS-CR).
 #' @param cuttime Time cutoff - this is nonzero for two-piece models.
-#' @return Two outputs are returned:
-#' 
-#' `results` is a tibble of values and data relating to the likelihood for this model:
-#' - `npts`: Number of patients analysed for each endpoint.
-#' - `likedata`: Patient-level dataset with additional likelihood-related calculations.
-#' - `coefsdists`: Summary table of distributions and parameters used for each endpoint.
-#' - `slikes`: Total log-likelihood for each possible outcome
-#' - `ll`: Total log-likelihood
-#' - `params`: Number of parameters used in this model
+#' @return A list of three tibbles:
+#' `all` is a tibble of results for all patients:
+#' - `methname`: the model structure or method.
+#' - `npar`: is the number of parameters used by that method.
+#' - `npts_1` to `npts_4` are the number of patients experiencing outcomes 1-4 respectively (see below), and `npts_tot` the total.
+#' - `ll_1` to `ll_4` are the log-likelihood values for patients experiencing outcomes 1-4 respectively (see below), and `ll_tot` the total.
+#' `valid` is a tibble of the same design as `all` but only in patients with valid likelihoods for all 4 methods
+#' `sum` is a tibble in respect of patients with valid likelihoods for all 4 methods providing:
+#' - `npts`: number of patients contributing results for this method.
+#' - `npar`: number of parameters used by that method.
+#' - `ll`: total log-likelihood
 #' - `AIC`: Akaike Information Criterion value for this model
 #' - `BIC`: Bayesian Information Criterion value for this model
 #' 
-#' `llcomp` is a tibble providing a breakdown of the likelihood calculations by outcome. Outcomes are as follows:
+#' The four outcomes are as follows:
 #' - (1) refers to patients who remain alive and progression-free during the follow-up;
 #' - (2) refers to patients who die without prior progression during the follow-up;
 #' - (3) refers to patients who progress and then remain alive for the remaining follow-up, and
 #' - (4) refers to patients who progress and die within the follow-up.
-#'
-#' The number of patients for each outcome are given for each model structure. You may confirm that these are identical across model structures.
-#' The contribution of each patient group to the calculation of log-likelihood for each model is given in fields beginning `ll_`. This is helpful for understanding differences in likelihoods between model structures, according to patient outcomes.
 #' @export
 #' @examples
 #' \donttest{
@@ -431,29 +425,45 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #' }
 calc_likes <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
-  methodnames <- list1 <- list2 <- list3 <- list4 <- methno <- NULL
+  methodnames <- methno <- NULL
   lldata1 <- lldata2 <- lldata3 <- lldata4 <- methono <- methname <- NULL
   llvdata <- lldata <- s1_long <- s1_wide <- s2_long <- s2_wide <- s3_long <- NULL
   ptid <- outcome <- llike <- valid <- valid.x <- valid.y <- valid.x.x <- valid.y.y <- validall <- NULL
-  methodnames <- c("psm_simple", "psm_complex", "stm_cf", "stm_cr")
-  # Call PSM and STM functions
+  # methodnames <- c("psm_simple", "psm_complex", "stm_cf", "stm_cr")
+  # Pull the likelihood calculations
   list1 <- calc_likes_psm_simple(ptdata, dpam, cuttime)
   list2 <- calc_likes_psm_complex(ptdata, dpam, cuttime)
   list3 <- calc_likes_stm_cf(ptdata, dpam, cuttime)
   list4 <- calc_likes_stm_cr(ptdata, dpam, cuttime)
-  # Create datasets for each method
+  # Create datasets
   lldata1 <- list1$data |>
     dplyr::select(ptid, outcome, llike, valid) |>
-    dplyr::mutate(methno=1)
+    dplyr::mutate(
+      methno = 1,
+      methname = "psm_simple",
+      npar = list1$npar
+      )
   lldata2 <- list2$data |>
     dplyr::select(ptid, outcome, llike, valid) |>
-    dplyr::mutate(methno=2)
+    dplyr::mutate(
+      methno = 2,
+      methname = "psm_complex",
+      npar = list2$npar
+      )
   lldata3 <- list3$data |>
     dplyr::select(ptid, outcome, llike, valid) |>
-    dplyr::mutate(methno=3)
+    dplyr::mutate(
+      methno = 3,
+      methname = "stm_cf",
+      npar = list3$npar
+      )
   lldata4 <- list4$data |>
     dplyr::select(ptid, outcome, llike, valid) |>
-    dplyr::mutate(methno=4)
+    dplyr::mutate(
+      methno = 4,
+      methname = "stm_cr",
+      npar = list4$npar
+      )
   # Pull datasets together by columns
   llvdata <- lldata1 |>
     dplyr::left_join(lldata2, by="ptid") |>
@@ -466,60 +476,62 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
     dplyr::add_row(lldata2) |>
     dplyr::add_row(lldata3) |>
     dplyr::add_row(lldata4) |>
-    dplyr::mutate(methname = methodnames[methno]) |>
     dplyr::left_join(llvdata, by="ptid")
-  # Present likelihood by outcome, validity and model
-  s1_long <- lldata |>
+  # Detailed table, valid pts only
+  tab_detval <- lldata |>
+    dplyr::filter(validall==TRUE) |>
     dplyr::summarise(
       npts = dplyr::n(),
+      npar = mean(npar),
       ll = sum(llike),
-      .by = c("valid", "outcome", "methno", "methname")
-    )
-  s1_wide <- s1_long |>
-    dplyr::select(-methname) |>
-    tidyr::pivot_wider(names_from="methno",
-                       names_prefix="ll_",
-                       values_from="ll") |>
-    dplyr::arrange(valid, outcome)
-  # Summarise across all patients by validity, irrespective of outcome
-  s2_long <- lldata |>
-    dplyr::summarise(
-      npts = dplyr::n(),
-      ll = sum(llike),
-      .by = c("validall", "methno", "methname")
-    )
-  s2_wide <- s2_long |>
-    tidyr::pivot_wider(names_from="validall",
-                       values_from=c("npts", "ll"))
-  # Summarise across all patients, irrespective of outcome or validity
-  s3_long <- lldata |>
-    dplyr::summarise(
-      npts = dplyr::n(),
-      ll = sum(llike),
-      .by = c("validall", "methno", "methname")
+      .by = c("outcome", "methname")
     ) |>
-  dplyr::mutate(
-    # Number of parameters
-    nparam = dplyr::case_when(
-      methno == 1 ~ list1$npar,
-      methno == 2 ~ list2$npar,
-      methno == 3 ~ list3$npar,
-      methno == 4 ~ list4$npar,
-      .default = 0
-    ),
-    # Calculate AIC, BIC
-    aic = ifelse(.data$validall, 2*.data$nparam - 2*.data$ll, NA),
-    bic = ifelse(.data$validall, .data$nparam * log(.data$npts) - 2 * .data$ll, NA),
-    # Calculate ranks, among pts where likelihood can be calculated
-    rank_aic = rank(.data$aic),
-    rank_bic = rank(.data$bic),
-    rank_aic = ifelse(.data$validall, .data$rank_aic, NA),
-    rank_bic = ifelse(.data$validall, .data$rank_bic, NA)
+    tidyr::pivot_wider(names_from="outcome",
+                       values_from=c("npts", "ll")) |>
+    dplyr::mutate(
+      npts_tot = npts_1+npts_2+npts_3+npts_4,
+      ll_tot = ll_1+ll_2+ll_3+ll_4,
     ) |>
-    dplyr::arrange(validall, methno)
+    dplyr::select(methname, npar,
+                   npts_1, npts_2, npts_3, npts_4, npts_tot,
+                   ll_1, ll_2, ll_3, ll_4, ll_tot)
+  # Detailed table, all patients (valid or not)
+  tab_detall <- lldata |>
+    dplyr::summarise(
+      npts = dplyr::n(),
+      npar = mean(npar),
+      ll = sum(llike),
+      .by = c("outcome", "methname")
+    ) |>
+    tidyr::pivot_wider(names_from="outcome",
+                       values_from=c("npts", "ll")) |>
+    dplyr::mutate(
+      npts_tot = npts_1+npts_2+npts_3+npts_4,
+      ll_tot = ll_1+ll_2+ll_3+ll_4,
+    ) |>
+    dplyr::select(methname, npar,
+                  npts_1, npts_2, npts_3, npts_4, npts_tot,
+                  ll_1, ll_2, ll_3, ll_4, ll_tot)
+  # Totals, valid patients only
+  tab_tots <- lldata |>
+    dplyr::filter(validall==TRUE) |>
+    dplyr::summarise(
+      npts = dplyr::n(),
+      npar = mean(npar),
+      ll = sum(llike),
+      .by = c("methname")
+    ) |>
+    dplyr::mutate(
+      # Calculate AIC, BIC, ranks
+      aic = 2*.data$npar - 2*.data$ll,
+      bic = .data$npar * log(.data$npts) - 2 * .data$ll,
+      rank_aic = rank(.data$aic),
+      rank_bic = rank(.data$bic),
+    )
+    
   # Return results
   return(list(
-    detailed = s1_wide,
-    valid = s2_wide,
-    sumall = s3_long))
+    all = tab_detall,
+    valid = tab_detval,
+    sum = tab_tots))
 }
