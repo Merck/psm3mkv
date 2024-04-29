@@ -184,7 +184,7 @@ prob_pps_cf <- function(ttptimes, ppstimes, dpam) {
   for (i in seq_len(length(ppstimes))) {
     for(j in seq_len(length(ttptimes))) {
       durn <- ttptimes[j] + ppstimes[i]
-      s2[i,j] <- calc_surv(durn, pps.ts$type, pps.ts$spec)
+      s2[i,j] <- calc_surv(durn, survobj=dpam$pps_cf)
       rel[i,j] <- s2[i,j]/s1[j]
     }
     meanrel[i] <- mean(rel[i,1:length(ttptimes)])
@@ -247,7 +247,6 @@ prob_pd_psm <- function(time, dpam, starting=c(1, 0, 0)) {
 #' }
 prob_pd_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
-  ttp.ts <- ppd.ts <- pps.ts <- NULL
   int_pf <- int_pd <- NULL
   # Avoid integration if time==0
   if (time==0) {return(starting[2])}
@@ -262,7 +261,7 @@ prob_pd_stm_cr <- function(time, dpam, starting=c(1, 0, 0)) {
   integrand_pf <- Vectorize(integrand_pf, "u")
   int_pf <- stats::integrate(integrand_pf, lower=0, upper=time)
   # Probability of PD, starting from PD
-  int_pd <- calc_surv(time, pps.ts$type, pps.ts$spec)
+  int_pd <- calc_surv(time, survobj=dpam$pps_cr)
   # Combined probability, given starting points
   starting[1] * int_pf$value + starting[2] * int_pd
 }
@@ -292,7 +291,6 @@ prob_pd_stm_cr <- Vectorize(prob_pd_stm_cr, "time")
 #' }
 prob_pd_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
   # Declare local variables
-  ttp.ts <- ppd.ts <- pps.ts <- NULL
   sppst <- int_pf <- int_pd <- NULL
   # Avoid integration if time==0
   if (time==0) {return(starting[2])}

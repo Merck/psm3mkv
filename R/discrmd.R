@@ -183,7 +183,7 @@ drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
     i.http <- calc_haz(u, survobj=dpam$ttp)
     i.sttp <- calc_surv(u, survobj=dpam$ttp)
     i.u.sppd <- calc_surv(u, survobj=dpam$ppd)
-    i.u.spps <- calc_surv(t-u, survobj=dpam$ppd_cr)
+    i.u.spps <- calc_surv(t-u, survobj=dpam$pps_cr)
     i.slxu <- calc_ltsurv(convert_wks2yrs(u), lifetable=lifetable)
     i.slxt <- calc_ltsurv(convert_wks2yrs(t), lifetable=lifetable)
     i.c.sppd <- pmin(i.u.sppd, i.slxu)
