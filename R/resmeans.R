@@ -56,20 +56,17 @@
 # rmd_pf_stm(dpam=params)
 rmd_pf_stm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Declare local variables
-  Tw <- ttp.ts <- ppd.ts <- NULL
+  Tw <- NULL
   # Time horizon in weeks
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP and PPD
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ppd.ts <- convert_fit2spec(dpam$ppd)
   # RMD PFS is the integral of S_PFS; S_PFS = S_TTP x S_PPD
   # SPPD is constrained by any lifetable
   integrand <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    sttp <- calc_surv(x, ttp.ts$type, ttp.ts$spec)
-    sppd <- calc_surv(x, ppd.ts$type, ppd.ts$spec)
+    sttp <- calc_surv(x, survobj=dpam$ttp)
+    sppd <- calc_surv(x, survobj=dpam$ppd)
     vn*sttp*sppd
   }
   int <- stats::integrate(integrand, 0, Tw)
@@ -112,18 +109,14 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP, PPD and PPS_CR
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ppd.ts <- convert_fit2spec(dpam$ppd)
-  pps.ts <- convert_fit2spec(dpam$pps_cr)
   # Integrand from PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS(x2-x1)
   # = S_PPD x f_TTP x S_PPS
   # S_PPD and S_PPS are constrained by any lifetable
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
-    fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
-    spps <- calc_surv(x[2]-x[1], pps.ts$type, pps.ts$spec)
+    sppd <- calc_surv(x[1], survobj=dpam$ppd)
+    fttp <- calc_dens(x[1], survobj=dpam$ttp)
+    spps <- calc_surv(x[2]-x[1], survobj=dpam$pps_cr)
     # Integrand
     vn*sppd*fttp*spps
   }
@@ -132,7 +125,7 @@ rmd_pd_stm_cr <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   # Integrand from PD = S_PPS(x2-x1) - constraint ignored (cannot be readily calculated) so issue warning
   integrand_pd <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    spps <- calc_surv(x, pps.ts$type, pps.ts$spec)
+    spps <- calc_surv(x, survobj=dpam$pps_cr)
     vn*spps
     }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
@@ -177,19 +170,15 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for TTP, PPD and PPS_CF
-  ttp.ts <- convert_fit2spec(dpam$ttp)
-  ppd.ts <- convert_fit2spec(dpam$ppd)
-  pps.ts <- convert_fit2spec(dpam$pps_cf)
   # Integrand PF = S_TTP(x1) * S_PPD(x1) * h_TTP(x1) * S_PPS_CF(x1, x2)
   # where S_PPS_CF = S_OS(x2)/S_OS(x1)
   # and each S_OS is subject to constrained lifetable mortality
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x[2]))
-    sppd <- calc_surv(x[1], ppd.ts$type, ppd.ts$spec)
-    fttp <- calc_dens(x[1], ttp.ts$type, ttp.ts$spec)
-    sos1 <- calc_surv(x[1], pps.ts$type, pps.ts$spec)
-    sos2 <- calc_surv(x[2], pps.ts$type, pps.ts$spec)
+    sppd <- calc_surv(x[1], survobj=dpam$ppd)
+    fttp <- calc_dens(x[1], survobj=dpam$ttp)
+    sos1 <- calc_surv(x[1], survobj=dpam$pps_cf)
+    sos2 <- calc_surv(x[2], survobj=dpam$pps_cf)
     spps <- sos2/sos1
     if (sos1==0) 0 else {vn*sppd*fttp*spps}
   }
@@ -197,7 +186,7 @@ rmd_pd_stm_cf <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   int_pf <- SimplicialCubature::adaptIntegrateSimplex(integrand_pf, S)
   # Integrand PD = S_OS(x2)/S_OS(x1) - warning lifetable constraint cannot be computed
   integrand_pd <- function(x) {
-    calc_surv(x, pps.ts$type, pps.ts$spec)
+    calc_surv(x, survobj=dpam$pps_cf)
   }
   int_pd <- stats::integrate(integrand_pd, 0, Tw)
   # Mean sojourn given starting vector
@@ -240,13 +229,10 @@ rmd_pf_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for PFS
-  pfs.ts <- convert_fit2spec(dpam$pfs)
-  ttp.ts <- convert_fit2spec(dpam$ttp)
   # Create an integrand for PF survival
   integrand_pf <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    spfs <- calc_surv(x, pfs.ts$type, pfs.ts$spec)
+    spfs <- calc_surv(x, survobj=dpam$pfs)
     vn * spfs
   }
   int_pf <- stats::integrate(integrand_pf, 0, Tw)          
@@ -288,12 +274,10 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
   Tw <- convert_yrs2wks(Ty)
   # Normalize starting vector
   starting <- starting/sum(starting)
-  # Pull out type and spec for OS
-  os.ts <- convert_fit2spec(dpam$os)
   # Create an integrand for overall survival
   integrand_os <- function(x) {
     vn <- (1+discrate)^(-convert_wks2yrs(x))
-    sos <- calc_surv(x, os.ts$type, os.ts$spec)
+    sos <- calc_surv(x, survobj=dpam$os)
     vn*sos
   }
   int_os <- stats::integrate(integrand_os, 0, Tw)
@@ -309,70 +293,63 @@ rmd_os_psm <- function(dpam, Ty=10, starting=c(1, 0, 0), discrate=0) {
 prmd_os_psm <- purrr::possibly(rmd_os_psm, otherwise=NA_real_)
 
 #' Fit survival models to each endpoint, given type and spec
-#' Internal function to fit survival models to each endpoint, given type and spec in format of [convert_fit2spec()]
+#' Internal function to fit survival models to each endpoint
 #' @param simdat is the (sample of the) patient-level dataset
 #' @param dpam is the currently fitted set of survival models to each endpoint
 #' @param cuttime is the cut-off time for two-piece modeling
 #' @return A list by endpoint, then distribution, each containing two components:
 #' - result: A list of class *flexsurvreg* containing information about the fitted model.
 #' - error: Any error message returned on fitting the regression (NULL indicates no error).
-#' @seealso [convert_fit2spec()], [fit_ends_mods_par()], [fit_ends_mods_spl()]
+#' @seealso [fit_ends_mods_par()], [fit_ends_mods_spl()]
 #' @noRd
 fit_ends_mods_given <- function(simdat, dpam, cuttime){
   # Declare variables
-  ds <- dspps <- ts.ppd <- fit.ppd <- ts.ttp <- fit.ttp <- NULL
-  ts.pfs <- fit.pfs <- ts.os <- fit.os <- NULL
-  ts.pps_cf <- fit.pps_cf <- ts.pps_cr <- fit.pps_cr <- NULL
+  ds <- dspps <- fit.ppd <- fit.ttp <- NULL
+  fit.pfs <- fit.os <- fit.pps_cf <- fit.pps_cr <- NULL
   # Extend datasets
   ds <- create_extrafields(simdat, cuttime)
-  dspps <- ds |> dplyr::filter(.data$pps.durn>0, .data$ttp.flag==1) 
+  dspps <- ds |> dplyr::filter(.data$pps.durn>0, .data$ttp.flag==1)
   # Fit chosen distributions to each endpoint - PPD
-  ts.ppd <- convert_fit2spec(dpam$ppd)
   fit.ppd <- fit_mods(durn1 = ds$tzero,
                       durn2 = ds$ppd.durn,
                       evflag = ds$ppd.flag,
-                      type = ts.ppd$type,
-                      spec = ts.ppd$spec
+                      type = extract_type(dpam$ppd),
+                      spec = extract_spec(dpam$ppd)
                       )[[1]]
   # TTP
-  ts.ttp <- convert_fit2spec(dpam$ttp)
   fit.ttp <- fit_mods(durn1 = ds$tzero,
                       durn2 = ds$ttp.durn,
                       evflag = ds$ttp.flag,
-                      type = ts.ttp$type,
-                      spec = ts.ttp$spec
+                      type = extract_type(dpam$ttp),
+                      spec = extract_spec(dpam$ttp)
                       )[[1]]
   # PFS
-  ts.pfs <- convert_fit2spec(dpam$pfs)
   fit.pfs <- fit_mods(durn1 = ds$tzero,
                       durn2 = ds$pfs.durn,
                       evflag = ds$pfs.flag,
-                      type = ts.pfs$type,
-                      spec = ts.pfs$spec
+                      type = extract_type(dpam$pfs),
+                      spec = extract_spec(dpam$pfs)
                       )[[1]]
   # OS
-  ts.os <- convert_fit2spec(dpam$os)
   fit.os <- fit_mods(durn1 = ds$tzero,
                      durn2 = ds$os.durn,
                      evflag = ds$os.flag,
-                     type = ts.os$type,
-                     spec = ts.os$spec
+                     type = extract_type(dpam$os),
+                     spec = extract_spec(dpam$os)
                       )[[1]]
   # PPS CF - requires two time values
-  ts.pps_cf <- convert_fit2spec(dpam$pps_cf)
   fit.pps_cf <- fit_mods(durn1 = dspps$ttp.durn,
                          durn2 = dspps$os.durn,
                          evflag = dspps$pps.flag,
-                         type = ts.pps_cf$type,
-                         spec = ts.pps_cf$spec
+                         type = extract_type(dpam$pps_cf),
+                         spec = extract_spec(dpam$pps_cf)
                           )[[1]]
   # PPS CR
-  ts.pps_cr <- convert_fit2spec(dpam$pps_cr)
   fit.pps_cr <- fit_mods(durn1 = dspps$tzero,
                          durn2 = dspps$pps.durn,
                          evflag = dspps$pps.flag,
-                         type = ts.pps_cr$type,
-                         spec = ts.pps_cr$spec
+                         type = extract_type(dpam$pps_cr),
+                         spec = extract_spec(dpam$pps_cr)
                         )[[1]]
   # Bring together the best fits for each endpoint in a list
   list(ppd=fit.ppd$result,
