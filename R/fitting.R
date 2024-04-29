@@ -104,7 +104,11 @@ fit_mods <- function(durn1, durn2=NA, evflag, type, spec) {
 #' Create the additional time-to-event endpoints, adjusting for cutpoint
 #' @param ds Patient-level dataset
 #' @param cuttime Time cutpoint
-#' @return Dataset of complete patient-level dataset, adjusted for cutpoint
+#' @return Tibble of complete patient-level dataset, adjusted for cutpoint
+#' `ttp.durn`, `pfs.durn`, `ppd.durn` and `os.durn` are the durations of TTP (time to progression), PFS (progression-free survival), PPD (pre-progression death) and OS (overall survival) respectively beyond the cutpoint.
+#' `pps.durn` is the duration of survival beyond progression, irrespective of the cutpoint.
+#' `pps.odurn` is the difference between `ttp.durn` and `os.durn` (which may be different to `pps.durn`).
+#' `ttp.flag`, `pfs.flag`, `ppd.flag`, `os.flag`, and `pps.flag` are event flag indicators for TTP, PFS, PPD, OS and PPS respectively (1=event, 0=censoring).
 #' @export
 #' @importFrom rlang .data
 #' @examples
