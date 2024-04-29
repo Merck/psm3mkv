@@ -92,24 +92,23 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Two outputs are returned:</p>
-
-
-<p><code>results</code> is a tibble of values and data relating to the likelihood for this model:</p><ul><li><p><code>npts</code>: Number of patients analysed for each endpoint.</p></li>
-<li><p><code>likedata</code>: Patient-level dataset with additional likelihood-related calculations.</p></li>
-<li><p><code>coefsdists</code>: Summary table of distributions and parameters used for each endpoint.</p></li>
-<li><p><code>slikes</code>: Total log-likelihood for each possible outcome</p></li>
-<li><p><code>ll</code>: Total log-likelihood</p></li>
-<li><p><code>params</code>: Number of parameters used in this model</p></li>
+<p>A list of three tibbles:
+<code>all</code> is a tibble of results for all patients:</p><ul><li><p><code>methname</code>: the model structure or method.</p></li>
+<li><p><code>npar</code>: is the number of parameters used by that method.</p></li>
+<li><p><code>npts_1</code> to <code>npts_4</code> are the number of patients experiencing outcomes 1-4 respectively (see below), and <code>npts_tot</code> the total.</p></li>
+<li><p><code>ll_1</code> to <code>ll_4</code> are the log-likelihood values for patients experiencing outcomes 1-4 respectively (see below), and <code>ll_tot</code> the total.
+<code>valid</code> is a tibble of the same design as <code>all</code> but only in patients with valid likelihoods for all 4 methods
+<code>sum</code> is a tibble in respect of patients with valid likelihoods for all 4 methods providing:</p></li>
+<li><p><code>npts</code>: number of patients contributing results for this method.</p></li>
+<li><p><code>npar</code>: number of parameters used by that method.</p></li>
+<li><p><code>ll</code>: total log-likelihood</p></li>
 <li><p><code>AIC</code>: Akaike Information Criterion value for this model</p></li>
 <li><p><code>BIC</code>: Bayesian Information Criterion value for this model</p></li>
-</ul><p><code>llcomp</code> is a tibble providing a breakdown of the likelihood calculations by outcome. Outcomes are as follows:</p><ul><li><p>(1) refers to patients who remain alive and progression-free during the follow-up;</p></li>
+</ul><p>The four outcomes are as follows:</p><ul><li><p>(1) refers to patients who remain alive and progression-free during the follow-up;</p></li>
 <li><p>(2) refers to patients who die without prior progression during the follow-up;</p></li>
 <li><p>(3) refers to patients who progress and then remain alive for the remaining follow-up, and</p></li>
 <li><p>(4) refers to patients who progress and die within the follow-up.</p></li>
-</ul><p>The number of patients for each outcome are given for each model structure. You may confirm that these are identical across model structures.
-The contribution of each patient group to the calculation of log-likelihood for each model is given in fields beginning <code>ll_</code>. This is helpful for understanding differences in likelihoods between model structures, according to patient outcomes.</p>
-    </div>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -126,38 +125,34 @@ The contribution of each patient group to the calculation of log-likelihood for 
 <span class="r-in"><span>  pps_cr <span class="op">=</span> <span class="fu"><a href="find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">fits</span><span class="op">$</span><span class="va">pps_cr</span>, <span class="st">"aic"</span><span class="op">)</span><span class="op">$</span><span class="va">fit</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">calc_likes</span><span class="op">(</span><span class="va">bosonc</span>, dpam<span class="op">=</span><span class="va">params</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $detailed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   valid outcome  npts   ll_1   ll_2   ll_3   ll_4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> FALSE       4     1   <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> TRUE        1    72  -<span style="color: #BB0000;">64.8</span>  -<span style="color: #BB0000;">64.8</span>  -<span style="color: #BB0000;">65.2</span>  -<span style="color: #BB0000;">65.2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> TRUE        2    29 -<span style="color: #BB0000;">152.</span>  -<span style="color: #BB0000;">147.</span>  -<span style="color: #BB0000;">147.</span>  -<span style="color: #BB0000;">147.</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> TRUE        3    35 -<span style="color: #BB0000;">151.</span>  -<span style="color: #BB0000;">150.</span>  -<span style="color: #BB0000;">148.</span>  -<span style="color: #BB0000;">148.</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> TRUE        4    67 -<span style="color: #BB0000;">469.</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> TRUE        4    68   <span style="color: #BB0000;">NA</span>   -<span style="color: #BB0000;">473.</span>  -<span style="color: #BB0000;">473.</span>  -<span style="color: #BB0000;">470.</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $all</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   methname     npar npts_1 npts_2 npts_3 npts_4 npts_tot  ll_1  ll_2  ll_3  ll_4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> psm_simple      7     72     29     35     68      204 -<span style="color: #BB0000;">64.8</span> -<span style="color: #BB0000;">152.</span> -<span style="color: #BB0000;">151.</span>   <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> psm_complex     9     72     29     35     68      204 -<span style="color: #BB0000;">64.8</span> -<span style="color: #BB0000;">147.</span> -<span style="color: #BB0000;">150.</span> -<span style="color: #BB0000;">473.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> stm_cf          9     72     29     35     68      204 -<span style="color: #BB0000;">65.2</span> -<span style="color: #BB0000;">147.</span> -<span style="color: #BB0000;">148.</span> -<span style="color: #BB0000;">473.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> stm_cr         10     72     29     35     68      204 -<span style="color: #BB0000;">65.2</span> -<span style="color: #BB0000;">147.</span> -<span style="color: #BB0000;">148.</span> -<span style="color: #BB0000;">470.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: ll_tot &lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $valid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   methno methname    npts_TRUE npts_FALSE ll_TRUE ll_FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>      1 psm_simple        203          1   -<span style="color: #BB0000;">836.</span>    <span style="color: #BB0000;">NA</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>      2 psm_complex       203          1   -<span style="color: #BB0000;">830.</span>    -<span style="color: #BB0000;">5.25</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>      3 stm_cf            203          1   -<span style="color: #BB0000;">828.</span>    -<span style="color: #BB0000;">5.45</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>      4 stm_cr            203          1   -<span style="color: #BB0000;">824.</span>    -<span style="color: #BB0000;">6.08</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   methname     npar npts_1 npts_2 npts_3 npts_4 npts_tot  ll_1  ll_2  ll_3  ll_4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> psm_simple      7     72     29     35     67      203 -<span style="color: #BB0000;">64.8</span> -<span style="color: #BB0000;">152.</span> -<span style="color: #BB0000;">151.</span> -<span style="color: #BB0000;">469.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> psm_complex     9     72     29     35     67      203 -<span style="color: #BB0000;">64.8</span> -<span style="color: #BB0000;">147.</span> -<span style="color: #BB0000;">150.</span> -<span style="color: #BB0000;">468.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> stm_cf          9     72     29     35     67      203 -<span style="color: #BB0000;">65.2</span> -<span style="color: #BB0000;">147.</span> -<span style="color: #BB0000;">148.</span> -<span style="color: #BB0000;">468.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> stm_cr         10     72     29     35     67      203 -<span style="color: #BB0000;">65.2</span> -<span style="color: #BB0000;">147.</span> -<span style="color: #BB0000;">148.</span> -<span style="color: #BB0000;">464.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: ll_tot &lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $sumall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   validall methno methname     npts      ll nparam   aic   bic rank_aic rank_bic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> FALSE         1 psm_simple      1   <span style="color: #BB0000;">NA</span>         7   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> FALSE         2 psm_complex     1   -<span style="color: #BB0000;">5.25</span>      9   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> FALSE         3 stm_cf          1   -<span style="color: #BB0000;">5.45</span>      9   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> FALSE         4 stm_cr          1   -<span style="color: #BB0000;">6.08</span>     10   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> TRUE          1 psm_simple    203 -<span style="color: #BB0000;">836.</span>        7 <span style="text-decoration: underline;">1</span>685. <span style="text-decoration: underline;">1</span>709.        4        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> TRUE          2 psm_complex   203 -<span style="color: #BB0000;">830.</span>        9 <span style="text-decoration: underline;">1</span>679. <span style="text-decoration: underline;">1</span>708.        3        3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> TRUE          3 stm_cf        203 -<span style="color: #BB0000;">828.</span>        9 <span style="text-decoration: underline;">1</span>673. <span style="text-decoration: underline;">1</span>703.        2        2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> TRUE          4 stm_cr        203 -<span style="color: #BB0000;">824.</span>       10 <span style="text-decoration: underline;">1</span>668. <span style="text-decoration: underline;">1</span>701.        1        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $sum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   methname     npts  npar    ll   aic   bic rank_aic rank_bic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> psm_simple    203     7 -<span style="color: #BB0000;">836.</span> <span style="text-decoration: underline;">1</span>685. <span style="text-decoration: underline;">1</span>709.        4        4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> psm_complex   203     9 -<span style="color: #BB0000;">830.</span> <span style="text-decoration: underline;">1</span>679. <span style="text-decoration: underline;">1</span>708.        3        3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> stm_cf        203     9 -<span style="color: #BB0000;">828.</span> <span style="text-decoration: underline;">1</span>673. <span style="text-decoration: underline;">1</span>703.        2        2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> stm_cr        203    10 -<span style="color: #BB0000;">824.</span> <span style="text-decoration: underline;">1</span>668. <span style="text-decoration: underline;">1</span>701.        1        1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

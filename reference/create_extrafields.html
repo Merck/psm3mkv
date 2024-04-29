@@ -75,7 +75,11 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Dataset of complete patient-level dataset, adjusted for cutpoint</p>
+<p>Tibble of complete patient-level dataset, adjusted for cutpoint
+<code>ttp.durn</code>, <code>pfs.durn</code>, <code>ppd.durn</code> and <code>os.durn</code> are the durations of TTP (time to progression), PFS (progression-free survival), PPD (pre-progression death) and OS (overall survival) respectively beyond the cutpoint.
+<code>pps.durn</code> is the duration of survival beyond progression, irrespective of the cutpoint.
+<code>pps.odurn</code> is the difference between <code>ttp.durn</code> and <code>os.durn</code> (which may be different to <code>pps.durn</code>).
+<code>ttp.flag</code>, <code>pfs.flag</code>, <code>ppd.flag</code>, <code>os.flag</code>, and <code>pps.flag</code> are event flag indicators for TTP, PFS, PPD, OS and PPS respectively (1=event, 0=censoring).</p>
     </div>
 
     <div class="section level2">
