@@ -425,9 +425,10 @@ calc_likes_stm_cr <- function(ptdata, dpam, cuttime=0) {
 #' }
 calc_likes <- function(ptdata, dpam, cuttime=0) {
   # Declare local variables
-  methodnames <- methno <- NULL
+  methodnames <- list1 <- list2 <- list3 <- list4 <- NULL
   lldata1 <- lldata2 <- lldata3 <- lldata4 <- methono <- methname <- NULL
-  llvdata <- lldata <- s1_long <- s1_wide <- s2_long <- s2_wide <- s3_long <- NULL
+  llvdata <- lldata <- npar <- npts_1 <- npts_2 <- npts_3 <- npts_4 <- npts_tot <- NULL
+  ll_1 <- ll_2 <- ll_3 <- ll_4 <- ll_tot <- NULL
   ptid <- outcome <- llike <- valid <- valid.x <- valid.y <- valid.x.x <- valid.y.y <- validall <- NULL
   # methodnames <- c("psm_simple", "psm_complex", "stm_cf", "stm_cr")
   # Pull the likelihood calculations
@@ -439,28 +440,24 @@ calc_likes <- function(ptdata, dpam, cuttime=0) {
   lldata1 <- list1$data |>
     dplyr::select(ptid, outcome, llike, valid) |>
     dplyr::mutate(
-      methno = 1,
       methname = "psm_simple",
       npar = list1$npar
       )
   lldata2 <- list2$data |>
     dplyr::select(ptid, outcome, llike, valid) |>
     dplyr::mutate(
-      methno = 2,
       methname = "psm_complex",
       npar = list2$npar
       )
   lldata3 <- list3$data |>
     dplyr::select(ptid, outcome, llike, valid) |>
     dplyr::mutate(
-      methno = 3,
       methname = "stm_cf",
       npar = list3$npar
       )
   lldata4 <- list4$data |>
     dplyr::select(ptid, outcome, llike, valid) |>
     dplyr::mutate(
-      methno = 4,
       methname = "stm_cr",
       npar = list4$npar
       )
