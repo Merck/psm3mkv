@@ -28,8 +28,8 @@
 #' Create dummy dataset for illustration
 #' @description Create dummy dataset to illustrate [psm3mkv]
 #' @param dsname Dataset name, as follows:
-#' * 'flexbosms' provides a dataset based on [flexsurv::bosms3()]. This contains all the fields necessary for [psm3mkv].
-#' * 'survcan' provides a dataset based on [survival::cancer()]. This contains the necessary ID and overall survival fields. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use [psm3mkv].
+#' * 'flexbosms' provides a dataset based on [flexsurv::bosms3()]. This contains all the fields necessary for [psm3mkv]. Durations have been converted from months in the original dataset to weeks.
+#' * 'survcan' provides a dataset based on [survival::cancer()]. This contains the necessary ID and overall survival fields only. Durations have been converted from days in the original dataset to weeks. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use [psm3mkv].
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @export
 #' @examples
@@ -49,15 +49,20 @@ create_dummydata <- function(dsname) {
 #' @noRd
 create_dummydata_survcan <- function() {
   # Declare local variables
-  ptid <- os.durn <- os.flag <- NULL
+  ds <- ptid <- os.durn <- os.flag <- NULL
   # Create dataset
-  survival::cancer |>
+  ds <- survival::cancer |>
     dplyr::mutate(
       ptid = dplyr::row_number(),
       os.durn = .data$time/7,
       os.flag = .data$status-1
     ) |>
     dplyr::select(ptid, os.durn, os.flag)
+  # Label dataset
+  attr(ds$ptid, "label") <- "Patient ID = row number"
+  attr(ds$os.durn, "label") <- "Duration of overall survival, =time/7"
+  attr(ds$os.flag, "label") <- "Event flag for overall survival (1=event, 0=censor), =status-1"
+  return(ds)
 }
 
 #' Create flexbosms dataset for illustration
@@ -68,10 +73,10 @@ create_dummydata_survcan <- function() {
 #' @noRd
 create_dummydata_flexbosms <- function() {
   # Declare local variables
-  id <- pfs.durn <- pfs.flag <- NULL
+  ds <- id <- pfs.durn <- pfs.flag <- NULL
   os.durn <- os.flag <- ttp.durn <- ttp.flag <- NULL
   # Create dataset
-  flexsurv::bosms3 |>
+  ds <- flexsurv::bosms3 |>
         tidyr::pivot_wider(id_cols = "id",
                      names_from = "trans",
                      values_from = c("Tstart", "Tstop", "status")
@@ -88,4 +93,13 @@ create_dummydata_flexbosms <- function() {
         dplyr::select(id, pfs.durn, pfs.flag,
                       os.durn, os.flag, ttp.durn, ttp.flag) |>
         dplyr::rename(ptid = "id")
+  # Label dataset
+  attr(ds$ptid, "label") <- "Patient ID"
+  attr(ds$pfs.durn, "label") <- "Duration of PFS"
+  attr(ds$pfs.flag, "label") <- "Event flag for PFS (1=event, 0=censor)"
+  attr(ds$os.durn, "label") <- "Duration of OS"
+  attr(ds$os.flag, "label") <- "Event flag for PFS (1=event, 0=censor)"
+  attr(ds$ttp.durn, "label") <- "Duration of TTP"
+  attr(ds$ttp.flag, "label") <- "Event flag for TTP (1=event, 0=censor)"
+  return(ds)
 }

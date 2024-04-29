@@ -12,7 +12,11 @@ create_extrafields(ds, cuttime = 0)
 \item{cuttime}{Time cutpoint}
 }
 \value{
-Dataset of complete patient-level dataset, adjusted for cutpoint
+Tibble of complete patient-level dataset, adjusted for cutpoint
+\code{ttp.durn}, \code{pfs.durn}, \code{ppd.durn} and \code{os.durn} are the durations of TTP (time to progression), PFS (progression-free survival), PPD (pre-progression death) and OS (overall survival) respectively beyond the cutpoint.
+\code{pps.durn} is the duration of survival beyond progression, irrespective of the cutpoint.
+\code{pps.odurn} is the difference between \code{ttp.durn} and \code{os.durn} (which may be different to \code{pps.durn}).
+\code{ttp.flag}, \code{pfs.flag}, \code{ppd.flag}, \code{os.flag}, and \code{pps.flag} are event flag indicators for TTP, PFS, PPD, OS and PPS respectively (1=event, 0=censoring).
 }
 \description{
 Create the additional time-to-event endpoints, adjusting for cutpoint
