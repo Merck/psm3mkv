@@ -1,5 +1,13 @@
-# psm3mkv 0.2.2
+# psm3mkv 0.3.0
 
+# psm3mkv 0.2.2 (4 May 2024)
+
+Several minor changes to ready the package for CRAN.
+
+- Reduced exported functions to only those necessary.
+- Reviewed and updated documentation and vignettes.
+- Reworked `calc_surv()` and `calc_haz()` functions and calls to make more efficient use of `flexsurv` objects.
+- Switched logo to corporate teal.
 - Fix all `R CMD check` notes.
 
 # psm3mkv 0.2.1 (14 Apr 2024)

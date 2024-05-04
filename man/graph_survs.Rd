@@ -33,7 +33,15 @@ Survival data for all other endpoints (time to progression, pre-progression deat
 \item{cuttime}{is the cut-off time for a two-piece model (default 0, indicating a one-piece model)}
 }
 \value{
-Four datasets and graphics as a list
+List of two items as follows.
+\code{data} is a tibble containing data derived and used in the derivation of the graphics.
+\code{graph} is a list of four graphics as follows:
+\itemize{
+\item \code{pf}: Membership probability in PF (progression-free) state versus time since baseline, by method
+\item \code{pd}: Membership probability in PD (progressive disease) state versus time since baseline, by method
+\item \code{os}: Probability alive versus time since baseline, by method
+\item \code{pps}: Probability alive versus time since progression, by method
+}
 }
 \description{
 Graph the observed and fitted state membership probabilities for PF, PD, OS and PPS.
