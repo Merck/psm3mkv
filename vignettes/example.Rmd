@@ -182,17 +182,17 @@ The two STMs estimate a duration in the PF state slightly longer than the PSM. T
 
 The above output can be bootstrapped to generate standard errors. Here we use just 10 boostrap samples (`R=10`) just to illustrate the process. In practice, we would want to use far more than 10 samples.
 
-```{r boot, include=FALSE}
-# Bootstrap to calculate SE over R bootstrap samples
-bootlys <- boot(
+```{r boot}
+# Bootstrap to calculate SE over 10 bootstrap samples
+boot::boot(
   data = bosonc,
-  statistic = calc_allrmds_boot,
-  R = 10, # Number of simulations
+  statistic = calc_allrmds,
+  R = 10, # Number of samples
   cuttime = 0,
   Ty = 10,
-  dpam = params
+  dpam = params,
+  boot = TRUE
 )
-bootlys
 ```
 
 Note that the percentiles information reported indicates that in a small number of samples, the restricted mean duration in PD was restricted to be negative in the PSM. This indicates an inconsistency between the statistical models used in this case for modeling PFS and OS, and may be an additional reason why STMs may be preferred in this case.
