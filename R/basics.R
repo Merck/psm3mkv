@@ -40,6 +40,7 @@ extract_spec <- function(survobj) {
   objtype <- survobj$dlist$name
   if (objtype=="survspline") {
     spec <- list(
+      k=survobj$k,
       knots=survobj$knots,
       scale=survobj$scale,
       gamma=survobj$res[,1])
