@@ -14,7 +14,8 @@ calc_allrmds(
   lifetable = NA,
   discrate = 0,
   rmdmethod = "int",
-  timestep = 1
+  timestep = 1,
+  boot = FALSE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ calc_allrmds(
 \item{rmdmethod}{can be "int" (default for full integral calculations) or "disc" for approximate discretized calculations}
 
 \item{timestep}{required if method=="int", default being 1}
+
+\item{boot}{logical flag to indicate whether abbreviated output is required (default = FALSE), for example for bootstrapping}
 }
 \value{
 List of detailed numeric results
@@ -61,7 +64,7 @@ Calculate restricted mean durations for each health state (progression free and 
 \donttest{
 # Create dataset and fit survival models (splines)
 bosonc <- create_dummydata("flexbosms")
-fits <- fit_ends_mods_spl(bosonc)
+fits <- fit_ends_mods_par(bosonc)
 # Pick out best distribution according to min AIC
 params <- list(
   ppd = find_bestfit(fits$ppd, "aic")$fit,
@@ -74,6 +77,6 @@ params <- list(
 # RMD using default "int" method, no lifetable constraint
 calc_allrmds(bosonc, dpam=params)
 # RMD using discretized ("disc") method, no lifetable constraint
-calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
+calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1, boot=TRUE)
 }
 }
