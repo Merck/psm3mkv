@@ -422,6 +422,7 @@ calc_rmd_first <- function(ds, cuttime) {
 #' @param discrate Discount rate (% per year)
 #' @param rmdmethod can be "int" (default for full integral calculations) or "disc" for approximate discretized calculations
 #' @param timestep required if method=="int", default being 1
+#' @param boot logical flag to indicate whether abbreviated output is required (default = FALSE), for example for bootstrapping
 #' @return List of detailed numeric results
 #' - cutadj indicates the survival function and area under the curves for PFS and OS up to the cutpoint
 #' - results provides results of the restricted means calculations, by model and state.
@@ -430,7 +431,7 @@ calc_rmd_first <- function(ds, cuttime) {
 #' \donttest{
 #' # Create dataset and fit survival models (splines)
 #' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
+#' fits <- fit_ends_mods_par(bosonc)
 #' # Pick out best distribution according to min AIC
 #' params <- list(
 #'   ppd = find_bestfit(fits$ppd, "aic")$fit,
@@ -443,7 +444,7 @@ calc_rmd_first <- function(ds, cuttime) {
 #' # RMD using default "int" method, no lifetable constraint
 #' calc_allrmds(bosonc, dpam=params)
 #' # RMD using discretized ("disc") method, no lifetable constraint
-#' calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1)
+#' calc_allrmds(bosonc, dpam=params, rmdmethod="disc", timestep=1, boot=TRUE)
 #' }
 calc_allrmds <- function(ptdata,
                          inclset = 0,
@@ -454,9 +455,8 @@ calc_allrmds <- function(ptdata,
                          lifetable = NA,
                          discrate = 0,
                          rmdmethod = "int",
-                         timestep = 1) {
-  # Set-up variables
-  
+                         timestep = 1,
+                         boot = FALSE) {
   # Check calculations valid
   chvalid <- is.na(dpam[1])==FALSE
   if (chvalid==FALSE) stop("No validly fitted endpoints")
@@ -508,43 +508,9 @@ calc_allrmds <- function(ptdata,
   rmdres$pf <- rmdres$pf + first$pfarea
   rmdres$pd <- rmdres$pd + first$osarea - first$pfarea
   rmdres$os <- rmdres$os + first$osarea
-  return(list(cutadj=first, results=rmdres))
-}
-
-#' Wrapper to enable bootstrap sampling of restricted mean durations for each health state and all three models.
-#' @description Wrapper function to [calc_allrmds] to enable bootstrap sampling of calculations of restricted mean durations for each health state (progression free and progressed disease) for all three models (partitioned survival, clock forward state transition model, clock reset state transition model).
-#' @inheritParams calc_allrmds
-#' @return Numeric vector of restricted mean durations - PF for each model (PSM, STM-CF, STM-CR), then PD, then OS.
-#' @export
-#' @examples
-#' \donttest{
-#' bosonc <- create_dummydata("flexbosms")
-#' fits <- fit_ends_mods_spl(bosonc)
-#' # Pick out best distribution according to min AIC
-#' params <- list(
-#'   ppd = find_bestfit(fits$ppd, "aic")$fit,
-#'   ttp = find_bestfit(fits$ttp, "aic")$fit,
-#'   pfs = find_bestfit(fits$pfs, "aic")$fit,
-#'   os = find_bestfit(fits$os, "aic")$fit,
-#'   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
-#'   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
-#' )
-#' calc_allrmds_boot(ptdata=bosonc, dpam=params)
-#' }
-calc_allrmds_boot <- function(ptdata,
-                              inclset = 0,
-                              dpam,
-                              cuttime = 0,
-                              Ty = 10,
-                              lifetable = NA,
-                              discrate = 0) {
-  if (inclset[1]==0) {inclset <- 1:length(ptdata$ptid)}
-  mb <- calc_allrmds(ptdata = ptdata,
-                     inclset = inclset,
-                     dpam = dpam,
-                     cuttime = cuttime,
-                     Ty = Ty,
-                     lifetable = lifetable,
-                     discrate = discrate)
-  c(mb$results$pf, mb$results$pd, mb$results$os)
+  if (boot==TRUE) {
+    c(rmdres$pf, rmdres$pd, rmdres$os)
+  } else {
+      list(cutadj=first, results=rmdres)
+  }
 }
