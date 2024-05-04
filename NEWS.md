@@ -1,3 +1,5 @@
+# psm3mkv 0.3.0
+
 # psm3mkv 0.2.2 (4 May 2024)
 
 Several minor changes to ready the package for CRAN.
