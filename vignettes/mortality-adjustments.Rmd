@@ -145,7 +145,7 @@ mort <- readHMDweb(
 mort <- add_row(mort, Age = 111, lx = 0, Timey = 60)
 ```
 
-You will see that the above code cannot run without a login for the [Human Mortality Database](www.mortality.org). Alternatively, we could just make up a mortality table.
+You will see that the above code cannot run without a login for the [Human Mortality Database](https://www.mortality.org). Alternatively, we could just make up a mortality table.
 
 ```{r ltable2}
 mort <- tibble(
