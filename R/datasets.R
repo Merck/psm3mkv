@@ -37,6 +37,7 @@
 #' @examples
 #' create_dummydata("survcan") |> head()
 #' create_dummydata("flexbosms") |> head()
+#' create_dummydata("pharmaonc") |> head()
 create_dummydata <- function(dsname) {
   dsname <- stringr::str_to_lower(dsname)
   if (dsname=="survcan") {create_dummydata_survcan()}
@@ -136,7 +137,7 @@ create_dummydata_pharmaonc <- function() {
       source_datasets = list(adsl = adsl, adrs = adrs),
       set_values_to = exprs(PARAMCD = "TTP", PARAM = "Time to Progression")
     ) |>
-  # Derive durations
+  # Derive durations of TTP and PFS
     dplyr::mutate(
       DURN = compute_duration(
           start_date = STARTDT,
@@ -149,7 +150,7 @@ create_dummydata_pharmaonc <- function() {
     ) |>
   # Keep only necessary fields
     dplyr::select(USUBJID, PARAMCD, DURN, EVFLAG) |>
-  # Pivot wide
+  # Pivot wide the duration and event flag fields
     tidyr::pivot_wider(
       id_cols = "USUBJID",
       names_from = "PARAMCD",
@@ -162,5 +163,32 @@ create_dummydata_pharmaonc <- function() {
       os.flag = EVFLAG_OS,
       ttp.durn = DURN_TTP,
       ttp.flag = EVFLAG_TTP
+    ) |>
+  # Add a PFS field
+    dplyr::mutate(
+      pfs.durn = pmin(ttp.durn, os.durn),
+      pfs.flag = 1-(1-ttp.flag)*(1-os.flag)
     )
 }
+
+#' Check consistency of PFS definition
+#' Check that PFS is defined consistently with TTP and OS in a dataset. This convenience function compares `pfs.durn` with the lower of `ttp.durn` and `os.durn`, and checks that the event field `pfs.flag` is consistent with `ttp.flag` and `os.flag` (is 1 when either `ttp.flag` or `os.flag` is one).
+#' @param ds Tibble of complete patient-level dataset
+#' - `ttp.durn`, `pfs.durn`, and `os.durn` are the durations of TTP (time to progression), PFS (progression-free survival), and OS (overall survival).
+#' - `ttp.flag`, `pfs.flag`, and `os.flag`, and `pps.flag` are event flag indicators for TTP, PFS, and OS respectively (1=event, 0=censoring).
+#' @export
+#' @return List containing:
+#' - `durn`: Logical vector comparing expected and actual PFS durations
+#' - `flag`: Logical vector comparing expected and actual PFS event flags
+#' - `all`: Single logical value of TRUE if all durations and flags match as expected, FALSE otherwise
+#' @export
+#' @examples
+#' ponc <- create_dummydata("pharmaonc")
+#' check_consistent_pfs(ponc)
+check_consistent_pfs <- function(ds) {
+  durn <- flag <- NULL
+  durn <- ds$pfs.durn==pmin(ds$ttp.durn, ds$os.durn)
+  flag <- ds$pfs.flag==1-(1-ds$ttp.flag)*(1-ds$os.flag)
+  list(durn=durn, flag=flag, all=all(c(durn,flag)))
+}
+

@@ -23,4 +23,5 @@ Create dummy dataset to illustrate \link{psm3mkv}
 \examples{
 create_dummydata("survcan") |> head()
 create_dummydata("flexbosms") |> head()
+create_dummydata("pharmaonc") |> head()
 }
