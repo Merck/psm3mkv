@@ -21,6 +21,7 @@
 # These functions are used to create dummy datasets to illustrate package use
 # create_dummydata
 # create_dummydata_survcan
+# create_dummydata_pharmaonc
 # create_dummydata_flexbosms
 #
 # ======================================
@@ -28,16 +29,19 @@
 #' Create dummy dataset for illustration
 #' @description Create dummy dataset to illustrate [psm3mkv]
 #' @param dsname Dataset name, as follows:
-#' * 'flexbosms' provides a dataset based on [flexsurv::bosms3()]. This contains all the fields necessary for [psm3mkv]. Durations have been converted from months in the original dataset to weeks.
-#' * 'survcan' provides a dataset based on [survival::cancer()]. This contains the necessary ID and overall survival fields only. Durations have been converted from days in the original dataset to weeks. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use [psm3mkv].
+#' * `flexbosms` provides a dataset based on [flexsurv::bosms3()]. This contains all the fields necessary for [psm3mkv]. Durations have been converted from months in the original dataset to weeks.
+#' * `pharmaonc` provides a dataset based on [pharmaverseadam::adsl] and [pharmaverseadam::adrs_onco] to demonstrate how this package can be used with ADaM ADTTE datasets.
+#' * `survcan` provides a dataset based on [survival::cancer()]. This contains the necessary ID and overall survival fields only. Durations have been converted from days in the original dataset to weeks. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use [psm3mkv].
 #' @return Tibble dataset, for use with [psm3mkv] functions
 #' @export
 #' @examples
 #' create_dummydata("survcan") |> head()
 #' create_dummydata("flexbosms") |> head()
 create_dummydata <- function(dsname) {
+  dsname <- stringr::str_to_lower(dsname)
   if (dsname=="survcan") {create_dummydata_survcan()}
   else if (dsname=="flexbosms") {create_dummydata_flexbosms()}
+  else if (dsname=="pharmaonc") {create_dummydata_pharmaonc()}
   else {stop("Incorrect dataset specified. Must be survcan or flexbosms.")}
 }
 
@@ -102,4 +106,61 @@ create_dummydata_flexbosms <- function() {
   attr(ds$ttp.durn, "label") <- "Duration of TTP"
   attr(ds$ttp.flag, "label") <- "Event flag for TTP (1=event, 0=censor)"
   return(ds)
+}
+
+#' Create pharmaonc dataset for illustration
+#' @description Create 'pharmaonc' dummy dataset to illustrate [psm3mkv]. This dataset is derived from `pharmaverse::adsl` and `pharmaverse::adrs_onco`. Overall Survival and Time To Progression are derived using `admiral::derive_param_tte()`, then durations are calculated in weeks.
+#' @return Tibble dataset, for use with [psm3mkv] functions
+#' @seealso [create_dummydata()]
+#' @importFrom rlang .data
+#' @noRd
+create_dummydata_pharmaonc <- function() {
+  # Obtain ADSL and ADRS datsets from pharmaverseadam
+  adsl <- pharmaverseadam::adsl
+  adrs <- pharmaverseadam::adrs_onco
+  # Derive OS date
+  admiral::derive_param_tte(
+    dataset_adsl = adsl,
+    start_date = RANDDT,
+    event_conditions = list(death_event),
+    censor_conditions = list(lastalive_censor, rand_censor),
+    source_datasets = list(adsl = adsl, adrs = adrs),
+    set_values_to = exprs(PARAMCD = "OS", PARAM = "Overall Survival")
+  ) |>
+    # Derive TTP date
+    admiral::derive_param_tte(
+      dataset_adsl = adsl,
+      start_date = RANDDT,
+      event_conditions = list(pd_event),
+      censor_conditions = list(lastalive_censor, rand_censor),
+      source_datasets = list(adsl = adsl, adrs = adrs),
+      set_values_to = exprs(PARAMCD = "TTP", PARAM = "Time to Progression")
+    ) |>
+  # Derive durations
+    dplyr::mutate(
+      DURN = compute_duration(
+          start_date = STARTDT,
+          end_date = ADT,
+          trunc_out = FALSE,
+          out_unit = "weeks",
+          add_one = FALSE
+          ),
+      EVFLAG = 1-CNSR
+    ) |>
+  # Keep only necessary fields
+    dplyr::select(USUBJID, PARAMCD, DURN, EVFLAG) |>
+  # Pivot wide
+    tidyr::pivot_wider(
+      id_cols = "USUBJID",
+      names_from = "PARAMCD",
+      values_from = c("DURN", "EVFLAG")
+    ) |>
+  # Rename to required field names
+    dplyr::rename(
+      ptid = USUBJID,
+      os.durn = DURN_OS,
+      os.flag = EVFLAG_OS,
+      ttp.durn = DURN_TTP,
+      ttp.flag = EVFLAG_TTP
+    )
 }
