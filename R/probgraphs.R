@@ -422,7 +422,6 @@ prob_os_stm_cf <- function(time, dpam, starting=c(1, 0, 0)) {
 #' gs$graph$pd
 #' }
 graph_survs <- function(ptdata, dpam, cuttime=0){
-  cat("Creating KM \n")
   # Declare local variables
   ds <- dspps <- pfsfit <- osfit <- ppsfit <- NULL
   rnding <- kmpfs <- kmos <- kmpps <- kmdata <- gdata <- NULL
@@ -467,7 +466,6 @@ graph_survs <- function(ptdata, dpam, cuttime=0){
   cut_os <- min(kmdata$km_os[kmdata$time<=timecut])
   starting <- c(cut_pf, cut_os-cut_pf, 1-cut_os)
   # Calculate fitted survival values
-  cat("Calculating fitted curves \n")
   gdata <- kmdata |>
     dplyr::mutate(
       timeplus = pmax(0, .data$time-cuttime),
@@ -510,7 +508,6 @@ graph_survs <- function(ptdata, dpam, cuttime=0){
   gdata$stm_cr[gdata$Time < cuttime] <- NA
   gdata$stm_cf[gdata$Time < cuttime] <- NA
   # Internal function to draw graphic
-  cat("Drawing plots \n")
   draw_2pgraphic <- function(graphds, xlabel="Time from baseline") {
     # Declare local variables
     endp <- Time <- Probability <- Method <- NULL

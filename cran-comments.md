@@ -1,3 +1,10 @@
+## Resubmission
+
+This is a resubmission. In this version I have:
+- Shortened the package title in DESCRIPTION as requested
+- Edited the citation as requested in the Description field of DESCRIPTION
+- Removed information messages from graph_survs() in probgraphs.R
+
 ## Test environments
 
 * win-builder (devel)
@@ -15,6 +22,5 @@
 
 * This is a new release.
 
-* An article describring the methods implemented in this package has been accepted for journal publication. This is currently in press and not yet published.
-* Muston, D. Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit. Applied Health Economics and Health Policy, 2024. In press.
+
 
