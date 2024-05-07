@@ -4,11 +4,11 @@
 \name{psm3mkv-package}
 \alias{psm3mkv}
 \alias{psm3mkv-package}
-\title{psm3mkv: Fit and Evaluate Three-State Partitioned Survival Analysis and Markov Models to Progression-Free and Overall Survival Data}
+\title{psm3mkv: Evaluate Partitioned Survival and State Transition Models}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Fits and evaluates three-state partitioned survival analyses (PartSAs) and Markov models (clock forward or clock reset) to progression and overall survival data typically collected in oncology clinical trials. These model structures are typically considered in cost-effectiveness modeling in advanced/metastatic cancer indications. Muston, D. Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit. Applied Health Economics and Health Policy, 2024. In press.
+Fits and evaluates three-state partitioned survival analyses (PartSAs) and Markov models (clock forward or clock reset) to progression and overall survival data typically collected in oncology clinical trials. These model structures are typically considered in cost-effectiveness modeling in advanced/metastatic cancer indications. Muston (2024). "Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit". Applied Health Economics and Health Policy. In press.
 }
 \seealso{
 Useful links:
