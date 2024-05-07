@@ -5,6 +5,8 @@
 [![R-CMD-check](https://github.com/Merck/psm3mkv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Merck/psm3mkv/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/Merck/psm3mkv/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Merck/psm3mkv?branch=main)
+[![CRAN status](https://www.r-pkg.org/badges/version/psm3mkv)](https://cran.r-project.org/package=psm3mkv)
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/psm3mkv)](https://cran.r-project.org/package=psm3mkv)
 <!-- badges: end -->
 
 The goal of psm3mkv is to evaluate the efficiency and fit of certain
