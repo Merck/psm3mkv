@@ -17,6 +17,7 @@ BugReports: https://github.com/Merck/psm3mkv/issues
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
 Imports:
+    admiral,
     dplyr,
     flexsurv,
     ggplot2,
