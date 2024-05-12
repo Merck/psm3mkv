@@ -1,4 +1,5 @@
 #' Compare likelihoods of PSMs
+#' 
 #' Compare the total log-likelihood values for the patient-level dataset after fitting PSM-simple and PSM-complex models to each combination of endpoint distributions
 #' @inheritParams calc_allrmds
 #' @param fitslist List of distribution fits to relevant endpoints, after calling `fit_ends_mods_par()` or `fit_ends_mods_spl()`

@@ -2,8 +2,7 @@
 % Please edit documentation in R/likepsm.R
 \name{compare_psm_likes}
 \alias{compare_psm_likes}
-\title{Compare likelihoods of PSMs
-Compare the total log-likelihood values for the patient-level dataset after fitting PSM-simple and PSM-complex models to each combination of endpoint distributions}
+\title{Compare likelihoods of PSMs}
 \usage{
 compare_psm_likes(ptdata, fitslist, cuttime = 0)
 }
@@ -34,7 +33,6 @@ List containing
 }
 }
 \description{
-Compare likelihoods of PSMs
 Compare the total log-likelihood values for the patient-level dataset after fitting PSM-simple and PSM-complex models to each combination of endpoint distributions
 }
 \examples{
