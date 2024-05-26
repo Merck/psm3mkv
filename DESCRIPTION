@@ -1,6 +1,6 @@
 Package: psm3mkv
 Title: Evaluate Partitioned Survival and State Transition Models
-Version: 0.3.1
+Version: 0.3.1.9000
 Authors@R: c(
     person("Dominic", "Muston", , "dominic.muston@merck.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4876-7940")),
@@ -10,16 +10,18 @@ Description: Fits and evaluates three-state partitioned survival analyses
     (PartSAs) and Markov models (clock forward or clock reset) to
     progression and overall survival data typically collected in oncology clinical trials. These model structures are typically considered in
     cost-effectiveness modeling in advanced/metastatic cancer indications.
-    Muston (2024). "Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit". Applied Health Economics and Health Policy. In press.
+    Muston (2024). "Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit". Applied Health Economics and Health Policy. DOI 10.1007/s40258-024-00884-2 
 License: GPL (>= 3)
 URL: https://merck.github.io/psm3mkv/, https://github.com/Merck/psm3mkv
 BugReports: https://github.com/Merck/psm3mkv/issues
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
 Imports:
+    admiral,
     dplyr,
     flexsurv,
     ggplot2,
+    pharmaverseadam,
     purrr,
     rlang,
     SimplicialCubature,

@@ -71,22 +71,15 @@ calc_haz_psm <- function(timevar, ptdata, dpam, psmtype) {
   # OS
   hos <- calc_haz(timevar, survobj=dpam$os)
   sos <- calc_surv(timevar, survobj=dpam$os)
-  # TTP complex
-  http_complex <- calc_haz(timevar, survobj=dpam$ttp)
-  # TTP simple
-  ne_pfs <- sum(ptdata$pfs.flag)
-  ne_ttp <- sum(ptdata$ttp.flag)
-  progfrac <- max(0, min(1, ne_ttp/ne_pfs))
-  http_simple <- progfrac*hpf
-  # TTP
-  typeflag <- ifelse(psmtype=="simple", 1, 0)
-  http <- http_simple*typeflag + http_complex*(1-typeflag)
+  # TTP depends on psmtype
+  if (psmtype=="simple") {
+    http <- hpf * max(0, min(1, sum(ptdata$ttp.flag) / sum(ptdata$pfs.flag)))
+  } else {
+    http <- calc_haz(timevar, survobj=dpam$ttp)
+  }
   # PPD
-  hppd_unadj <- hpf-http
-  hppd_simple <- pmax(0, pmin((1-progfrac)*hpf, sos*hos/spf))
-  hppd_complex <- pmax(0, pmin(hpf-http, sos*hos/spf))
-  hppd <- hppd_simple*typeflag + hppd_complex*(1-typeflag)
-  # PPS
+  hppd <- pmax(0, pmin(hpf-http, sos*hos/spf))
+  # PPS, capped at 5000
   hpps_unadj <- (sos*hos-spf*hppd)/(sos-spf)
   hpps <- pmax(0, pmin(hpps_unadj, 5000))
   hpps[timevar==0] <- 0
