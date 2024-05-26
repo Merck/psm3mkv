@@ -116,6 +116,10 @@ create_dummydata_flexbosms <- function() {
 #' @importFrom rlang .data
 #' @noRd
 create_dummydata_pharmaonc <- function() {
+  # Create local variables
+  DTHFL <- DTHDT <- LSTALVDT <- AVALC <- ADT <- ASEQ <- RANDDT <- STARTDT <- NULL
+  CNSR <- USUBJID <- PARAMCD <- DURN <- EVFLAG <- DURN_OS <- EVFLAG_OS <- DURN_TTP <- EVFLAG_TTP <- NULL
+  ttp.durn <- os.durn <- ttp.flag <- os.flag <- ptid <- pfs.durn <- pfs.flag <- NULL
   # Obtain ADSL and ADRS datsets from pharmaverseadam
   adsl <- pharmaverseadam::adsl
   adrs <- pharmaverseadam::adrs_onco
