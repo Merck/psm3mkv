@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,8 +126,9 @@ be using <span class="citation">Angelo Canty and B. D. Ripley
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3    0.452        1    8.81       1    0.452        1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     4    9.07         1   52.7        1    9.07         1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5   47.7          0   47.7        0   47.7          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6    3.26         1   13.1        1    3.26         1</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6    3.26         1   13.1        1    3.26         1</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       ptid           pfs.durn          pfs.flag         os.durn      </span></span>
 <span><span class="co">#&gt;  Min.   :  1.00   Min.   : 0.1071   Min.   :0.0000   Min.   : 0.881  </span></span>
 <span><span class="co">#&gt;  1st Qu.: 51.75   1st Qu.: 4.2381   1st Qu.:0.0000   1st Qu.: 7.893  </span></span>
@@ -167,7 +168,7 @@ function <code><a href="../reference/fit_ends_mods_par.html">fit_ends_mods_par()
 through fitting endpoints and models. The original dataset contained
 only three of these endpoints, the other three endpoints are calculated
 within the function.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a vector of distributions of interest (flexsurv notation)</span></span>
 <span><span class="va">alldists</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exp"</span>, <span class="st">"weibullPH"</span>, <span class="st">"llogis"</span>, <span class="st">"lnorm"</span>, <span class="st">"gamma"</span>, <span class="st">"gompertz"</span>, <span class="st">"gengamma"</span><span class="op">)</span></span>
 <span></span>
@@ -196,14 +197,16 @@ within the function.</p>
 <span><span class="co">#&gt; N = 204,  Events: 132,  Censored: 72</span></span>
 <span><span class="co">#&gt; Total time at risk: 2358.845</span></span>
 <span><span class="co">#&gt; Log-likelihood = -512.0729, df = 2</span></span>
-<span><span class="co">#&gt; AIC = 1028.146</span></span>
-<span></span>
+<span><span class="co">#&gt; AIC = 1028.146</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Example 2 - Parameter values for PPS-CF and PPS-CR endpoints for distribution 3 (llogis)</span></span>
 <span><span class="va">allfits_par</span><span class="op">$</span><span class="va">pps_cf</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">res</span></span>
 <span><span class="co">#&gt;             est     L95%     U95%        se</span></span>
 <span><span class="co">#&gt; shape  1.625037 1.264658  2.08811 0.2078833</span></span>
-<span><span class="co">#&gt; scale 12.184292 8.588947 17.28465 2.1737642</span></span>
-<span><span class="va">allfits_par</span><span class="op">$</span><span class="va">pps_cr</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">res</span></span>
+<span><span class="co">#&gt; scale 12.184292 8.588947 17.28465 2.1737642</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">allfits_par</span><span class="op">$</span><span class="va">pps_cr</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">res</span></span>
 <span><span class="co">#&gt;             est     L95%      U95%        se</span></span>
 <span><span class="co">#&gt; shape  1.602773 1.321696  1.943626 0.1576797</span></span>
 <span><span class="co">#&gt; scale 11.031674 8.769443 13.877487 1.2917274</span></span></code></pre></div>
@@ -211,7 +214,7 @@ within the function.</p>
 only need to retain the best-fitting distribution, which we select using
 <code>find_bestfit_par()</code> on the basis of the distribution having
 the lowest Akaike Information Criterion (AIC).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Pick out best distribution according to min AIC</span></span>
 <span><span class="va">fitpar.ppd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits_par</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span></span>
 <span><span class="va">fitpar.ttp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits_par</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span></span>
@@ -259,7 +262,7 @@ Royston-Parmar splines <span class="citation">(Royston and Parmar
 best-fitting spline distributions. To the six endpoints, we fit 9 spline
 models: 1, 2 or 3 (internal) knots with either odds, hazard or normal
 scales. This uses <code><a href="../reference/fit_ends_mods_spl.html">fit_ends_mods_spl()</a></code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fit 1-3 knot splines with all 3 scales (odds, hazard, normal) to each endpoint</span></span>
 <span><span class="va">allfits_spl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span>
 <span></span>
@@ -277,17 +280,19 @@ scales. This uses <code><a href="../reference/fit_ends_mods_spl.html">fit_ends_m
 <span><span class="co">#&gt; N = 204,  Events: 132,  Censored: 72</span></span>
 <span><span class="co">#&gt; Total time at risk: 2358.845</span></span>
 <span><span class="co">#&gt; Log-likelihood = -511.7148, df = 3</span></span>
-<span><span class="co">#&gt; AIC = 1029.43</span></span>
-<span><span class="va">allfits_spl</span><span class="op">$</span><span class="va">pfs</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">aux</span><span class="op">$</span><span class="va">scale</span> <span class="co"># Scale</span></span>
-<span><span class="co">#&gt; [1] "odds"</span></span>
-<span><span class="va">allfits_spl</span><span class="op">$</span><span class="va">pfs</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">aux</span><span class="op">$</span><span class="va">knots</span> <span class="co"># Knot locations (log time)</span></span>
+<span><span class="co">#&gt; AIC = 1029.43</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">allfits_spl</span><span class="op">$</span><span class="va">pfs</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">aux</span><span class="op">$</span><span class="va">scale</span> <span class="co"># Scale</span></span>
+<span><span class="co">#&gt; [1] "odds"</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">allfits_spl</span><span class="op">$</span><span class="va">pfs</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">aux</span><span class="op">$</span><span class="va">knots</span> <span class="co"># Knot locations (log time)</span></span>
 <span><span class="co">#&gt;                 50%           </span></span>
 <span><span class="co">#&gt; -2.233592  2.008522  3.882300</span></span></code></pre></div>
 <p>We have fitted multiple splines to each endpoint. We only need to
 retain the best-fitting distribution, which we select on the basis of
 the distribution having the lowest Akaike Information Criterion (AIC).
 We use <code><a href="../reference/find_bestfit.html">find_bestfit()</a></code> for this.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Pick out best distribution according to min AIC</span></span>
 <span><span class="va">fitspl.ppd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits_spl</span><span class="op">$</span><span class="va">ppd</span>, <span class="st">"aic"</span><span class="op">)</span></span>
 <span><span class="va">fitspl.ttp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_bestfit.html">find_bestfit</a></span><span class="op">(</span><span class="va">allfits_spl</span><span class="op">$</span><span class="va">ttp</span>, <span class="st">"aic"</span><span class="op">)</span></span>
@@ -337,7 +342,7 @@ or may not be those selected as the minimum AIC and may be parametric
 fits or spline fits. This list is deliberately programmed manually - and
 carefully. Our example does not use the best fits in each case but
 merely illustrates the options available to the modeler.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Bring together our preferred fits for each endpoint in a list</span></span>
 <span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  ppd <span class="op">=</span> <span class="va">fitpar.ppd</span><span class="op">$</span><span class="va">fit</span>,</span>
@@ -348,18 +353,20 @@ merely illustrates the options available to the modeler.</p>
 <span>  pps_cr <span class="op">=</span> <span class="va">allfits_spl</span><span class="op">$</span><span class="va">pps_cr</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">result</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Let us count how many parameters we are using in each model.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Pull out number of parameters used for each endpoint</span></span>
 <span><span class="va">count_npar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_vec</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">~</span> <span class="va">params</span><span class="op">[[</span><span class="va">.x</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">npars</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># PSM uses PFS (3) and OS (4) endpoints</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 6</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] 6</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># STM_CF uses PPD (1), TTP (2) and PPS_CF (5) endpoints</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 6</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] 6</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># STM_CR uses PPD (1), TTP (2) and PPS_CR (6) endpoints</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">count_npar</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">6</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7</span></span></code></pre></div>
@@ -373,7 +380,7 @@ calculate and compare the (log-)likelihood of each of the three model
 structures. We can also check this output to ensure that the number of
 parameters used in each model structure matches what we derived
 earlier.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ll_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_likes.html">calc_likes</a></span><span class="op">(</span><span class="va">bosonc</span>, <span class="va">params</span><span class="op">)</span></span>
 <span><span class="va">ll_all</span></span>
 <span><span class="co">#&gt; $all</span></span>
@@ -426,7 +433,7 @@ important for bootstrapping later) and the time horizon. The units for
 the time horizon are 52.18 times shorter than the units for the output
 because - the time horizon can be considered to be in units of years,
 whereas the output is in units of weeks.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Call the RMD functions</span></span>
 <span><span class="va">rmd_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam <span class="op">=</span> <span class="va">params</span><span class="op">)</span></span>
 <span></span>
@@ -446,7 +453,7 @@ of time in the PD state and overall.</p>
 Here we use just 10 boostrap samples (<code>R=10</code>) just to
 illustrate the process. In practice, we would want to use far more than
 10 samples.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Bootstrap to calculate SE over 10 bootstrap samples</span></span>
 <span><span class="fu">boot</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">bosonc</span>,</span>
@@ -488,12 +495,12 @@ case.</p>
 <h2 id="visual-inspection-of-model-fits">Visual inspection of model fits<a class="anchor" aria-label="anchor" href="#visual-inspection-of-model-fits"></a>
 </h2>
 <p>Creating the four graphics of model fit is straightforward.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generate graphs (can take time)</span></span>
 <span><span class="va">ptdgraphs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_survs.html">graph_survs</a></span><span class="op">(</span><span class="va">bosonc</span>, <span class="va">params</span><span class="op">)</span></span></code></pre></div>
 <p>We can then compare state membership probabilities for the PF and PD
 states.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for PF state</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pf</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
@@ -501,7 +508,7 @@ states.</p>
 <p><img src="example_files/figure-html/graph_pf-1.png" width="700"></p>
 <p>The PF curves fully overlap with each other in the observed period,
 and appear to fit well visually to the observed PF data.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for PD state</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pd</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
@@ -513,7 +520,7 @@ STMs estimate a higher probability of PD membership at later times than
 was observed. The highest probabilities are from the STM-CF model.</p>
 <p>Next, we can look at probabilities of being alive (i.e: membership in
 either PF or PD state).</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># State membership probabilities for OS</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">os</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="example_files/figure-html/graph_os-1.png" width="700"></p>
@@ -529,7 +536,7 @@ This is observed and fitted for the STMs not the the PSM. The STM-CR
 estimate follows directly from the fitted PPS-CR survival curve. The
 STM-CF estimate is derived based on the average, across patients, of
 patients’ expected PPS-CF survival relative to their TTP timepoint.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Probabilities of PPS</span></span>
 <span><span class="va">ptdgraphs</span><span class="op">$</span><span class="va">graph</span><span class="op">$</span><span class="va">pps</span> <span class="op">+</span> <span class="fu"><a href="https://nanx.me/ggsci/reference/scale_npg.html" class="external-link">scale_color_npg</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 393 rows containing missing values or values outside the scale range</span></span>

@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -431,8 +431,9 @@ lifetable constraints.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     274.2      91.9     366.1 PSM    disc   yes   simple </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     230.4     108.0     338.4 STM-CF disc   yes   simple </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.4     111.2     341.6 STM-CR disc   yes   simple</span></span>
-<span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.4     111.2     341.6 STM-CR disc   yes   simple</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Proportion of time alive spent in PF</span></span>
 <span><span class="va">proppf3</span> <span class="op">&lt;-</span> <span class="va">res3</span><span class="op">$</span><span class="va">pf</span> <span class="op">/</span> <span class="va">res3</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
 <p>There is now a large difference between the STM-CR compared to the
@@ -451,7 +452,7 @@ model mortality based on time from baseline.</p>
 <p>We can check whether using a ‘complex’ type of PSM structure rather
 than the default ‘simple’ affects RMD estimates from the PSM
 structure.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the calculations</span></span>
 <span><span class="va">proj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_allrmds.html">calc_allrmds</a></span><span class="op">(</span><span class="va">bosonc</span>, dpam <span class="op">=</span> <span class="va">params</span>, Ty <span class="op">=</span> <span class="va">thoz</span>, psmtype <span class="op">=</span> <span class="st">"complex"</span>, rmdmethod <span class="op">=</span> <span class="st">"disc"</span>, lifetable <span class="op">=</span> <span class="va">ltable</span><span class="op">)</span></span>
 <span></span>
@@ -466,8 +467,9 @@ structure.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     272.9      93.2     366.1 PSM    disc   yes   complex</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     230.4     108.0     338.4 STM-CF disc   yes   complex</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.4     111.2     341.6 STM-CR disc   yes   complex</span></span>
-<span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.4     111.2     341.6 STM-CR disc   yes   complex</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Proportion of time alive spent in PF</span></span>
 <span><span class="va">proppf4</span> <span class="op">&lt;-</span> <span class="va">res4</span><span class="op">$</span><span class="va">pf</span> <span class="op">/</span> <span class="va">res4</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
 <p>All structures estimate fairly similar RMD estimates of being alive

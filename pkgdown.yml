@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   example: example.html
   mortality-adjustments: mortality-adjustments.html
-last_built: 2024-05-07T13:32Z
+last_built: 2024-05-26T17:05Z
 urls:
   reference: https://merck.github.io/psm3mkv/reference
   article: https://merck.github.io/psm3mkv/articles

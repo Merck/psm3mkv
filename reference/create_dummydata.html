@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,8 +64,9 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>dsname</dt>
-<dd><p>Dataset name, as follows:</p><ul><li><p>'flexbosms' provides a dataset based on <code><a href="http://chjackson.github.io/flexsurv-dev/reference/bos.html" class="external-link">flexsurv::bosms3()</a></code>. This contains all the fields necessary for <a href="psm3mkv-package.html">psm3mkv</a>. Durations have been converted from months in the original dataset to weeks.</p></li>
-<li><p>'survcan' provides a dataset based on <code><a href="https://rdrr.io/pkg/survival/man/lung.html" class="external-link">survival::cancer()</a></code>. This contains the necessary ID and overall survival fields only. Durations have been converted from days in the original dataset to weeks. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use <a href="psm3mkv-package.html">psm3mkv</a>.</p></li>
+<dd><p>Dataset name, as follows:</p><ul><li><p><code>flexbosms</code> provides a dataset based on <code><a href="http://chjackson.github.io/flexsurv-dev/reference/bos.html" class="external-link">flexsurv::bosms3()</a></code>. This contains all the fields necessary for <a href="psm3mkv-package.html">psm3mkv</a>. Durations have been converted from months in the original dataset to weeks.</p></li>
+<li><p><code>pharmaonc</code> provides a dataset based on <a href="https://rdrr.io/pkg/pharmaverseadam/man/adsl.html" class="external-link">pharmaverseadam::adsl</a> and <a href="https://rdrr.io/pkg/pharmaverseadam/man/adrs_onco.html" class="external-link">pharmaverseadam::adrs_onco</a> to demonstrate how this package can be used with ADaM ADTTE datasets.</p></li>
+<li><p><code>survcan</code> provides a dataset based on <code><a href="https://rdrr.io/pkg/survival/man/lung.html" class="external-link">survival::cancer()</a></code>. This contains the necessary ID and overall survival fields only. Durations have been converted from days in the original dataset to weeks. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use <a href="psm3mkv-package.html">psm3mkv</a>.</p></li>
 </ul></dd>
 
 </dl></div>
@@ -96,6 +97,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     4    9.07         1   52.7        1    9.07         1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     5   47.7          0   47.7        0   47.7          0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     6    3.26         1   13.1        1    3.26         1</span>
+<span class="r-in"><span><span class="fu">create_dummydata</span><span class="op">(</span><span class="st">"pharmaonc"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ptid        ttp.durn ttp.flag pfs.durn pfs.flag os.durn os.flag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 01-701-1015    25.9         0    25.9         0   25.9        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 01-701-1023     4           0     4           0    4          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 01-701-1028     6           1     6           1   25.6        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 01-701-1033     3.86        0     3.86        0    3.86       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 01-701-1034    26           0    26           0   26          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 01-701-1047     7.71        0     7.71        0    7.71       0</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

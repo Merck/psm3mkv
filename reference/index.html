@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,6 +86,16 @@
           <code><a href="calc_surv_psmpps.html">calc_surv_psmpps()</a></code> 
         </dt>
         <dd>Derive PPS survival function under a PSM</dd>
+      </dl><dl><dt>
+          
+          <code><a href="check_consistent_pfs.html">check_consistent_pfs()</a></code> 
+        </dt>
+        <dd>Check consistency of PFS definition Check that PFS is defined consistently with TTP and OS in a dataset. This convenience function compares <code>pfs.durn</code> with the lower of <code>ttp.durn</code> and <code>os.durn</code>, and checks that the event field <code>pfs.flag</code> is consistent with <code>ttp.flag</code> and <code>os.flag</code> (is 1 when either <code>ttp.flag</code> or <code>os.flag</code> is one).</dd>
+      </dl><dl><dt>
+          
+          <code><a href="compare_psm_likes.html">compare_psm_likes()</a></code> 
+        </dt>
+        <dd>Compare likelihoods of PSMs</dd>
       </dl><dl><dt>
           
           <code><a href="constrain_survprob.html">constrain_survprob()</a></code> 
