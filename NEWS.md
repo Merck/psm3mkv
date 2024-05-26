@@ -2,7 +2,11 @@
 
 # psm3mkv 0.3.1
 
+- Submission to CRAN, including changes requested by CRAN
+
 # psm3mkv 0.3.0
+
+- First submission to CRAN, not accepted
 
 # psm3mkv 0.2.2 (4 May 2024)
 
