@@ -9,8 +9,9 @@ create_dummydata(dsname)
 \arguments{
 \item{dsname}{Dataset name, as follows:
 \itemize{
-\item 'flexbosms' provides a dataset based on \code{\link[flexsurv:bos]{flexsurv::bosms3()}}. This contains all the fields necessary for \link{psm3mkv}. Durations have been converted from months in the original dataset to weeks.
-\item 'survcan' provides a dataset based on \code{\link[survival:lung]{survival::cancer()}}. This contains the necessary ID and overall survival fields only. Durations have been converted from days in the original dataset to weeks. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use \link{psm3mkv}.
+\item \code{flexbosms} provides a dataset based on \code{\link[flexsurv:bos]{flexsurv::bosms3()}}. This contains all the fields necessary for \link{psm3mkv}. Durations have been converted from months in the original dataset to weeks.
+\item \code{pharmaonc} provides a dataset based on \link[pharmaverseadam:adsl]{pharmaverseadam::adsl} and \link[pharmaverseadam:adrs_onco]{pharmaverseadam::adrs_onco} to demonstrate how this package can be used with ADaM ADTTE datasets.
+\item \code{survcan} provides a dataset based on \code{\link[survival:lung]{survival::cancer()}}. This contains the necessary ID and overall survival fields only. Durations have been converted from days in the original dataset to weeks. You will additionally need to supply PFS and TTP data (fields pfs.durn, pfs.flag, ttp.durn and ttp.flag) to use \link{psm3mkv}.
 }}
 }
 \value{
@@ -22,4 +23,5 @@ Create dummy dataset to illustrate \link{psm3mkv}
 \examples{
 create_dummydata("survcan") |> head()
 create_dummydata("flexbosms") |> head()
+create_dummydata("pharmaonc") |> head()
 }
