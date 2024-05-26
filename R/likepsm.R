@@ -22,6 +22,7 @@ compare_psm_likes <- function(ptdata, fitslist, cuttime=0) {
   if (length(fitslist)!=6) {stop("The list provided to fitslist must contain all 6 endpoints")}
   # Create local variables
   eps <- ndists <- aic_indbest <- bic_indbest <- bests <- res <- thisfit <- aic_jtbest <- bic_jtbest <- NULL
+  ll <- rank_aic <- ttp_meth <- pfs_dist <- os_dist <- rank_bic <- NULL
   # TTP, PFS and OS are endpoints 1, 3 and 4
   eps <- c(1, 3, 4)
   # Number of distributions for each endpoint
