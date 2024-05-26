@@ -21,7 +21,7 @@ compare_psm_likes <- function(ptdata, fitslist, cuttime=0) {
   # Check that fitslist is a list of 6 endpoints
   if (length(fitslist)!=6) {stop("The list provided to fitslist must contain all 6 endpoints")}
   # Create local variables
-  eps <- ndists <- aic_nbest <- bic_nbest <- res <- thisfit <- aic_jtbest <- bic_jtbest <- NULL
+  eps <- ndists <- aic_indbest <- bic_indbest <- bests <- res <- thisfit <- aic_jtbest <- bic_jtbest <- NULL
   # TTP, PFS and OS are endpoints 1, 3 and 4
   eps <- c(1, 3, 4)
   # Number of distributions for each endpoint
@@ -33,6 +33,15 @@ compare_psm_likes <- function(ptdata, fitslist, cuttime=0) {
   # Best fits for each endpoint - BIC
   bic_indbest <- eps |>
     purrr::map_vec(~find_bestfit(fitslist[[.x]], crit="bic")$fit$dlist$name)
+  # Join as a tibble
+  bests <- rbind(aic_indbest, bic_indbest)
+  bests <- tibble::tibble(
+    ttp_meth = bests[,1],
+    pfs_dist = bests[,2],
+    os_dist = bests[,3],
+    meth = "ind",
+    ic = c("aic", "bic")
+  )
   # Create results table for each model combination
   res <- tibble::tibble(
     id = 1:(ndists[3]*ndists[2]*(ndists[1]+1)),
@@ -58,7 +67,7 @@ compare_psm_likes <- function(ptdata, fitslist, cuttime=0) {
       cuttime=cuttime)$ll[2],
     otherwise = NA)
   # Compute results for PSM-simple models
-  message("PSM simple")
+  message("Calculating PSM simple")
   thisfit <- list(ttp=NA, pfs=NA, os=NA)
   for (p in 1:ndists[2]) {
     thisfit$pfs <- fitslist$pfs[[p]]$result
@@ -73,7 +82,7 @@ compare_psm_likes <- function(ptdata, fitslist, cuttime=0) {
     }
   }
   # Compute results for PSM-complex models
-  message("PSM complex")
+  message("Calculating PSM complex")
   thisfit <- list(ttp=NA, pfs=NA, os=NA)
   for (t in 1:ndists[1]) {
     thisfit$ttp <- fitslist$ttp[[t]]$result
@@ -110,13 +119,15 @@ compare_psm_likes <- function(ptdata, fitslist, cuttime=0) {
   aic_jtbest <- res |>
     dplyr::filter(rank_aic==1) |>
     dplyr::select(ttp_meth, pfs_dist, os_dist) |>
-    purrr::as_vector()
+    dplyr::mutate(meth="joint", ic="aic")
   bic_jtbest <- res |>
     dplyr::filter(rank_bic==1) |>
     dplyr::select(ttp_meth, pfs_dist, os_dist) |>
-    purrr::as_vector()
-  # Set names
-  names(aic_best) <- names(bic_best) <- names(aic_jtbest) <- names(bic_jtbest) <- c("ttp", "pfs", "os")
+    dplyr::mutate(meth="joint", ic="aic")
+  # Join together
+  bests <- bests |>
+    tibble::add_row(aic_jtbest) |>
+    tibble::add_row(bic_jtbest)
   # Return
-  return(list(results=res, ind_aic=aic_indbest, ind_bic=bic_indbest, jt_aic=aic_jtbest, jt_bic=bic_jtbest))
+  return(list(results=res, bests=bests))
 }
