@@ -39,8 +39,10 @@
 #' parfits <- fit_ends_mods_par(bosonc)
 #' splfits <- fit_ends_mods_spl(bosonc)
 #' # Present comparison of likelihood calculations
+#' \donttest{
 #' compare_psm_likes(bosonc, parfits)
-#' # compare_psm_likes(bosonc, splfits)
+#' compare_psm_likes(bosonc, splfits)
+#' }
 compare_psm_likes <- function(ptdata, fitslist, cuttime=0) {
   # Determine whether fit is a spline, then call the right function
   if (fitslist$pfs[[1]]$result$dlist$name=="survspline") {
@@ -181,7 +183,7 @@ compare_psm_likes_spl <- function(ptdata, fitslist, cuttime=0) {
   if (length(fitslist)!=6) {stop("The list provided to fitslist must contain all 6 endpoints")}
   # Create local variables
   eps <- ndists <- aic_indbest <- bic_indbest <- bests <- res <- thisfit <- aic_jtbest <- bic_jtbest <- NULL
-  ll <- rank_aic <- ttp_meth <- pfs_dist <- os_dist <- rank_bic <- NULL
+  ll <- rank_aic <- ttp_meth <- ttp_knots <- pfs_scales <- pfs_knots <- os_scales <- os_knots <- rank_bic <- NULL
   # Best fits by AIC or BIC
   eps <- c(1, 3, 4)
   fits_aic <- eps |>

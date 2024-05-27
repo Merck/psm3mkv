@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Fits and evaluates three-state partitioned survival analyses (PartSAs) and Markov models (clock forward or clock reset) to progression and overall survival data typically collected in oncology clinical trials. These model structures are typically considered in cost-effectiveness modeling in advanced/metastatic cancer indications. Muston (2024). "Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit". Applied Health Economics and Health Policy. DOI 10.1007/s40258-024-00884-2
+Fits and evaluates three-state partitioned survival analyses (PartSAs) and Markov models (clock forward or clock reset) to progression and overall survival data typically collected in oncology clinical trials. These model structures are typically considered in cost-effectiveness modeling in advanced/metastatic cancer indications. Muston (2024). "Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit". Applied Health Economics and Health Policy.
 }
 \seealso{
 Useful links:

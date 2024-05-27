@@ -38,6 +38,8 @@ bosonc <- create_dummydata("flexbosms")
 parfits <- fit_ends_mods_par(bosonc)
 splfits <- fit_ends_mods_spl(bosonc)
 # Present comparison of likelihood calculations
+\donttest{
 compare_psm_likes(bosonc, parfits)
-# compare_psm_likes(bosonc, splfits)
+compare_psm_likes(bosonc, splfits)
+}
 }
