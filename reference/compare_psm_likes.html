@@ -87,10 +87,7 @@
     
 
 <p>List containing</p><ul><li><p><code>res</code>: Dataset of calculation results for each model</p></li>
-<li><p><code>ind_aic</code>: Set of statistical distributions for TTP, PFS and OS which individually fit each endpoint with the best (lowest) AIC</p></li>
-<li><p><code>ind_bic</code>: Set of statistical distributions for TTP, PFS and OS which individually fit each endpoint with the best (lowest) BIC</p></li>
-<li><p><code>jt_aic</code>:  Set of statistical distributions for TTP, PFS and OS which overall fit a PSM with the best (lowest) AIC</p></li>
-<li><p><code>jt_bic</code>:  Set of statistical distributions for TTP, PFS and OS which overall fit a PSM with the best (lowest) BIC</p></li>
+<li><p><code>best</code>: Tibble indicating which is the best fitting model individually or jointly, to each endpoint, according to AIC or BIC</p></li>
 </ul></div>
 
     <div class="section level2">
@@ -98,7 +95,9 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Fit parametric distributions to a dataset</span></span></span>
 <span class="r-in"><span><span class="va">bosonc</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_dummydata.html">create_dummydata</a></span><span class="op">(</span><span class="st">"flexbosms"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">parfits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_par.html">fit_ends_mods_par</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">splfits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_ends_mods_spl.html">fit_ends_mods_spl</a></span><span class="op">(</span><span class="va">bosonc</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Present comparison of likelihood calculations</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu">compare_psm_likes</span><span class="op">(</span><span class="va">bosonc</span>, <span class="va">parfits</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating PSM simple</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating PSM complex</span>
@@ -108,15 +107,15 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>       id ttp_meth pfs_dist  os_dist      ll  npar  npts   aic   bic rank_aic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1 simple   exp       exp       -<span style="color: #BB0000;">859.</span>     3   204 <span style="text-decoration: underline;">1</span>725. <span style="text-decoration: underline;">1</span>735.      139</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2 simple   exp       weibullPH -<span style="color: #BB0000;">834.</span>     4   204 <span style="text-decoration: underline;">1</span>676. <span style="text-decoration: underline;">1</span>690.       38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3 simple   exp       llogis    -<span style="color: #BB0000;">839.</span>     4   204 <span style="text-decoration: underline;">1</span>687. <span style="text-decoration: underline;">1</span>700.       93</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 simple   exp       lnorm     -<span style="color: #BB0000;">839.</span>     4   204 <span style="text-decoration: underline;">1</span>686. <span style="text-decoration: underline;">1</span>699.       91</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5 simple   exp       gamma     -<span style="color: #BB0000;">835.</span>     4   204 <span style="text-decoration: underline;">1</span>677. <span style="text-decoration: underline;">1</span>690.       42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6 simple   exp       gompertz  -<span style="color: #BB0000;">830.</span>     4   204 <span style="text-decoration: underline;">1</span>668. <span style="text-decoration: underline;">1</span>682.       24</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2 simple   exp       weibullPH -<span style="color: #BB0000;">834.</span>     4   203 <span style="text-decoration: underline;">1</span>676. <span style="text-decoration: underline;">1</span>689.       38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3 simple   exp       llogis    -<span style="color: #BB0000;">839.</span>     4   203 <span style="text-decoration: underline;">1</span>687. <span style="text-decoration: underline;">1</span>700.       93</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 simple   exp       lnorm     -<span style="color: #BB0000;">839.</span>     4   203 <span style="text-decoration: underline;">1</span>686. <span style="text-decoration: underline;">1</span>699.       91</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5 simple   exp       gamma     -<span style="color: #BB0000;">835.</span>     4   203 <span style="text-decoration: underline;">1</span>677. <span style="text-decoration: underline;">1</span>690.       42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6 simple   exp       gompertz  -<span style="color: #BB0000;">830.</span>     4   203 <span style="text-decoration: underline;">1</span>668. <span style="text-decoration: underline;">1</span>682.       24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7 simple   weibullPH exp       -<span style="color: #BB0000;">851.</span>     4   204 <span style="text-decoration: underline;">1</span>711. <span style="text-decoration: underline;">1</span>724.      126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8 simple   weibullPH weibullPH -<span style="color: #BB0000;">835.</span>     5   204 <span style="text-decoration: underline;">1</span>680. <span style="text-decoration: underline;">1</span>696.       53</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9 simple   weibullPH llogis    -<span style="color: #BB0000;">841.</span>     5   204 <span style="text-decoration: underline;">1</span>692. <span style="text-decoration: underline;">1</span>709.      108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 simple   weibullPH lnorm     -<span style="color: #BB0000;">839.</span>     5   204 <span style="text-decoration: underline;">1</span>687. <span style="text-decoration: underline;">1</span>704.       95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8 simple   weibullPH weibullPH -<span style="color: #BB0000;">835.</span>     5   203 <span style="text-decoration: underline;">1</span>680. <span style="text-decoration: underline;">1</span>696.       53</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9 simple   weibullPH llogis    -<span style="color: #BB0000;">841.</span>     5   203 <span style="text-decoration: underline;">1</span>692. <span style="text-decoration: underline;">1</span>709.      108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 simple   weibullPH lnorm     -<span style="color: #BB0000;">839.</span>     5   203 <span style="text-decoration: underline;">1</span>687. <span style="text-decoration: underline;">1</span>704.       95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 242 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: rank_bic &lt;dbl&gt;, best_aic &lt;dbl&gt;, best_bic &lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -127,8 +126,40 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> gompertz exp      weibullPH ind   aic  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> gompertz exp      weibullPH ind   bic  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> gompertz lnorm    gamma     joint aic  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> gompertz lnorm    gamma     joint aic  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> gompertz lnorm    gamma     joint bic  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu">compare_psm_likes</span><span class="op">(</span><span class="va">bosonc</span>, <span class="va">splfits</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating PSM simple</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating PSM complex</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Wrapping up</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 810 × 16</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       id ttp_meth ttp_knots pfs_scales pfs_knots os_scales os_knots    ll  npar</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1 simple           0 hazard             3 hazard           3 -<span style="color: #BB0000;">835.</span>     7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2 simple           0 hazard             3 odds             3 -<span style="color: #BB0000;">840.</span>     7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3 simple           0 hazard             3 normal           3 -<span style="color: #BB0000;">838.</span>     7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 simple           0 hazard             3 hazard           4 -<span style="color: #BB0000;">833.</span>     8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5 simple           0 hazard             3 odds             4 -<span style="color: #BB0000;">833.</span>     8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6 simple           0 hazard             3 normal           4 -<span style="color: #BB0000;">832.</span>     8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7 simple           0 hazard             3 hazard           5 -<span style="color: #BB0000;">833.</span>     9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8 simple           0 hazard             3 odds             5 -<span style="color: #BB0000;">832.</span>     9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9 simple           0 hazard             3 normal           5 -<span style="color: #BB0000;">832.</span>     9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 simple           0 odds               3 hazard           3 -<span style="color: #BB0000;">825.</span>     7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 800 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: npts &lt;int&gt;, aic &lt;dbl&gt;, bic &lt;dbl&gt;, rank_aic &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   rank_bic &lt;dbl&gt;, best_aic &lt;dbl&gt;, best_bic &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $bests</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ttp_meth ttp_knots pfs_scales pfs_knots os_scales os_knots meth  ic   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> normal           3 normal             3 hazard           3 ind   aic  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> normal           3 normal             3 hazard           3 ind   bic  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> odds             3 normal             4 hazard           4 joint aic  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> simple           0 odds               3 normal           4 joint bic  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
