@@ -26,10 +26,7 @@ compare_psm_likes(ptdata, fitslist, cuttime = 0)
 List containing
 \itemize{
 \item \code{res}: Dataset of calculation results for each model
-\item \code{ind_aic}: Set of statistical distributions for TTP, PFS and OS which individually fit each endpoint with the best (lowest) AIC
-\item \code{ind_bic}: Set of statistical distributions for TTP, PFS and OS which individually fit each endpoint with the best (lowest) BIC
-\item \code{jt_aic}:  Set of statistical distributions for TTP, PFS and OS which overall fit a PSM with the best (lowest) AIC
-\item \code{jt_bic}:  Set of statistical distributions for TTP, PFS and OS which overall fit a PSM with the best (lowest) BIC
+\item \code{best}: Tibble indicating which is the best fitting model individually or jointly, to each endpoint, according to AIC or BIC
 }
 }
 \description{
@@ -39,6 +36,10 @@ Compare the total log-likelihood values for the patient-level dataset after fitt
 # Fit parametric distributions to a dataset
 bosonc <- create_dummydata("flexbosms")
 parfits <- fit_ends_mods_par(bosonc)
+splfits <- fit_ends_mods_spl(bosonc)
 # Present comparison of likelihood calculations
+\donttest{
 compare_psm_likes(bosonc, parfits)
+compare_psm_likes(bosonc, splfits)
+}
 }
