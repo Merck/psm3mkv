@@ -79,9 +79,8 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
   )
   # Obtain all the hazards
   allh <- calc_haz_psm(timevar=ds$tmid, ptdata=ptdata, dpam=dpam, psmtype=psmtype)$adj
-  # Derive the unconstrained mortality hazards
+  # Derive the unconstrained PPD mortality probability
   ds$q_ppd <- 1-exp(-allh$ppd)
-  ds$q_pps <- 1-exp(-allh$pps)
   # Derive the constrained life table
   ds$clx <- calc_ltsurv(convert_wks2yrs(ds$tzero), lifetable)
   # Other calculations on the dataset
@@ -92,7 +91,15 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
       # Derive the TTP probability (balancing item)
       q_pfs = 1 - dplyr::lead(u_pf)/u_pf,
       q_ttp = q_pfs-q_ppd,
+      d_pf = u_pf * q_ppd,
       c_qpfs = q_ttp + pmax(q_ppd, cqx),
+      # Derive the PPS mortality probability
+      d_pfpd = u_pf + u_pd - dplyr::lead(u_pf) - dplyr::lead(u_pd),
+      d_pps = d_pfpd - d_pf,
+      q_pps = dplyr::if_else(u_pd==0, 0, d_pps / u_pd),
+      # Constrained probabilities
+      cqpfs = q_ttp + pmax(q_ppd, cqx),
+      cqpps = pmax(q_pps, cqx),
       # Derive the constrained PF and PD memberships
       c_pf = u_pf,
       c_pd = u_pd,
@@ -100,7 +107,7 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
   # Derive the constrained PF and PD memberships
   for (t in 2:(Tw)) {
       ds$c_pf[t] = ds$c_pf[t-1] * (1-ds$cqpfs[t-1])
-      ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - pmax(ds$q_pps[t-1], ds$cqx[t-1]))
+      ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - ds$cqpps[t-1])
   }
   # The final membership probabilities are zero
   ds$c_pf[Tw+1] <- ds$c_pd[Tw+1] <- 0
@@ -160,13 +167,13 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
     h_ppd = calc_haz(tmid, survobj=dpam$ppd),
     q_ppd = 1-exp(-h_ppd),
     # Derive the constrained life table
-    clx = calc_ltsurv(convert_wks2yrs(ds$tzero), lifetable),
+    clx = calc_ltsurv(convert_wks2yrs(tzero), lifetable),
     # Derive the background mortality for this timepoint
     cqx = 1 - dplyr::lead(clx)/clx,
     # Derive the TTP probability (balancing item for PFS)
     q_pfs = 1 - dplyr::lead(u_pf)/u_pf,
     q_ttp = q_pfs-q_ppd,
-    cqpfs = q_ttp + pmax(q_ppd, cqx),
+    d_pf = u_pf * q_ppd,
     # Derive the PPS mortality probability
     d_pfpd = u_pf + u_pd - dplyr::lead(u_pf) - dplyr::lead(u_pd),
     d_pps = d_pfpd - d_pf,
@@ -181,7 +188,7 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Derive the constrained PF and PD memberships
   for (t in 2:(Tw)) {
     ds$c_pf[t] = ds$c_pf[t-1] * (1-ds$cqpfs[t-1])
-    ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - pmax(ds$q_pps[t-1], ds$cqx[t-1]))
+    ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - ds$cqpps[t-1])
   }
   # The final membership probabilities are zero
   ds$c_pf[Tw+1] <- ds$c_pd[Tw+1] <- 0
@@ -201,8 +208,6 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Return values
   return(list(pf=pf, pd=pd, os=pf+pd, calc=ds))
 }
-
-
 
 #' Discretized Restricted Mean Duration calculation for State Transition Model Clock Reset structure
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Reset structure.
@@ -246,7 +251,7 @@ drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
     h_ppd = calc_haz(tmid, survobj=dpam$ppd),
     q_ppd = 1-exp(-h_ppd),
     # Derive the constrained life table
-    clx = calc_ltsurv(convert_wks2yrs(ds$tzero), lifetable),
+    clx = calc_ltsurv(convert_wks2yrs(tzero), lifetable),
     cqx = 1 - dplyr::lead(clx)/clx,
     # Derive the TTP probability (balancing item for PF)
     q_pfs = 1 - dplyr::lead(u_pf)/u_pf,
