@@ -128,7 +128,7 @@ If you use this software, please cite it as below.
 
 > Muston, D. 2024. "Informing Structural Assumptions for Three State Oncology
 > Cost-Effectiveness Models through Model Efficiency and Fit."
-> _Appl Health Econ Health Policy_. DOI: 10.1007/s40258-024-00884-2
+> _Applied Health Economics and Health Policy_. DOI: 10.1007/s40258-024-00884-2
 
 A BibTeX entry for LaTeX users is
 
