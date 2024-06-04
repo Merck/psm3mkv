@@ -408,12 +408,12 @@ still without any lifetable constraints.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
 <span><span class="co">#&gt;          pf        pd        os model  method lxadj psmmeth</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     274.2     118.5     392.7 PSM    disc   no    simple </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     270.2     120.1     390.3 STM-CF disc   no    simple </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     270.2     123.8     394.0 STM-CR disc   no    simple</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     274.3     118.3     392.6 PSM    disc   no    simple </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     270.1     119.7     389.8 STM-CF disc   no    simple </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     270.1     119.7     389.8 STM-CR disc   no    simple</span></span></code></pre></div>
 <p>Discretization has proven fairly accurate. The STM-CR estimate of
-mean time alive has reduced by just -0.1 weeks for example, from 393.9
-to 394 weeks.</p>
+mean time alive has reduced by just 4.2 weeks for example, from 393.9 to
+389.8 weeks.</p>
 <p>Finally, we use a discretization approximation and apply the
 lifetable constraints.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -429,20 +429,20 @@ lifetable constraints.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
 <span><span class="co">#&gt;          pf        pd        os model  method lxadj psmmeth</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     274.2      91.9     366.1 PSM    disc   yes   simple </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     230.4     108.0     338.4 STM-CF disc   yes   simple </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.4     111.2     341.6 STM-CR disc   yes   simple</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     235.4     105.5     340.9 PSM    disc   yes   simple </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     230.1     107.6     337.7 STM-CF disc   yes   simple </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.1     107.6     337.7 STM-CR disc   yes   simple</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Proportion of time alive spent in PF</span></span>
 <span><span class="va">proppf3</span> <span class="op">&lt;-</span> <span class="va">res3</span><span class="op">$</span><span class="va">pf</span> <span class="op">/</span> <span class="va">res3</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
 <p>There is now a large difference between the STM-CR compared to the
 STM-CF and PSM structures. All structures estimate fairly similar RMD
-estimates of being alive (range: 338.4 to 366.1 weeks). The estimate of
-mean time alive in the STM-CR structure has reduced by 52.4 weeks from
-393.9 to 341.6 weeks.</p>
+estimates of being alive (range: 337.7 to 340.9 weeks). The estimate of
+mean time alive in the STM-CR structure has reduced by 56.2 weeks from
+393.9 to 337.7 weeks.</p>
 <p>The proportion of that time in the PF rather than PD state varies
-considerably (PSM: 74.9%, STM-CF: 68.1%, STM-CR: 67.5%). Given that the
+considerably (PSM: 69%, STM-CF: 68.1%, STM-CR: 68.1%). Given that the
 hazard of mortality would typically be lower before rather than after
 progression, the pre-progression mortality is likely to be more affected
 by any mortality constraint that post-progression mortality. The STM-CR
@@ -465,17 +465,17 @@ structure.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
 <span><span class="co">#&gt;          pf        pd        os model  method lxadj psmmeth</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;num:.1!&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     272.9      93.2     366.1 PSM    disc   yes   complex</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     230.4     108.0     338.4 STM-CF disc   yes   complex</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.4     111.2     341.6 STM-CR disc   yes   complex</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     231.0     103.7     334.7 PSM    disc   yes   complex</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     230.1     107.6     337.7 STM-CF disc   yes   complex</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     230.1     107.6     337.7 STM-CR disc   yes   complex</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Proportion of time alive spent in PF</span></span>
 <span><span class="va">proppf4</span> <span class="op">&lt;-</span> <span class="va">res4</span><span class="op">$</span><span class="va">pf</span> <span class="op">/</span> <span class="va">res4</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
 <p>All structures estimate fairly similar RMD estimates of being alive
-(range: 338.4 to 366.1 weeks). The proportion of that time in the PF
+(range: 334.7 to 337.7 weeks). The proportion of that time in the PF
 rather than PD state varied again considerably by model structure (PSM:
-74.5%, STM-CF: 68.1%, STM-CR: 67.5%).</p>
+69%, STM-CF: 68.1%, STM-CR: 68.1%).</p>
 </div>
 <div class="section level3">
 <h3 id="comparing-the-results">Comparing the results<a class="anchor" aria-label="anchor" href="#comparing-the-results"></a>
@@ -507,17 +507,17 @@ time alive is given in the table below.</p>
 </tr>
 <tr class="even">
 <td align="left">No lifetable constraint, discretized calculation</td>
-<td align="left">270.2</td>
-<td align="left">0.1</td>
-<td align="left">390.3</td>
-<td align="left">0.4</td>
+<td align="left">270.1</td>
+<td align="left">-0.1</td>
+<td align="left">389.8</td>
+<td align="left">-0.1</td>
 </tr>
 <tr class="odd">
 <td align="left">With lifetable constraint, discretized calculation</td>
-<td align="left">230.4</td>
-<td align="left">-39.8</td>
-<td align="left">338.4</td>
-<td align="left">-51.5</td>
+<td align="left">230.1</td>
+<td align="left">-40.1</td>
+<td align="left">337.7</td>
+<td align="left">-52.2</td>
 </tr>
 </tbody>
 </table>
@@ -551,17 +551,17 @@ time alive is given in the table below.</p>
 </tr>
 <tr class="even">
 <td align="left">No lifetable constraint, discretized calculation</td>
-<td align="left">270.2</td>
-<td align="left">0.1</td>
-<td align="left">394</td>
-<td align="left">0.1</td>
+<td align="left">270.1</td>
+<td align="left">-0.1</td>
+<td align="left">389.8</td>
+<td align="left">-4.2</td>
 </tr>
 <tr class="odd">
 <td align="left">With lifetable constraint, discretized calculation</td>
-<td align="left">230.4</td>
-<td align="left">-39.8</td>
-<td align="left">341.6</td>
-<td align="left">-52.4</td>
+<td align="left">230.1</td>
+<td align="left">-40.1</td>
+<td align="left">337.7</td>
+<td align="left">-56.2</td>
 </tr>
 </tbody>
 </table>
@@ -596,32 +596,32 @@ PSM</td>
 <tr class="even">
 <td align="left">No lifetable constraint, discretized calculation,
 simple PSM</td>
-<td align="left">274.2</td>
-<td align="left">-0.2</td>
-<td align="left">392.7</td>
-<td align="left">0</td>
+<td align="left">274.3</td>
+<td align="left">-0.1</td>
+<td align="left">392.6</td>
+<td align="left">-0.1</td>
 </tr>
 <tr class="odd">
 <td align="left">With lifetable constraint, discretized calculation,
 simple PSM</td>
-<td align="left">274.2</td>
-<td align="left">-0.2</td>
-<td align="left">366.1</td>
-<td align="left">-26.6</td>
+<td align="left">235.4</td>
+<td align="left">-39</td>
+<td align="left">340.9</td>
+<td align="left">-51.8</td>
 </tr>
 <tr class="even">
 <td align="left">With lifetable constraint, discretized calculation,
 complex PSM</td>
-<td align="left">272.9</td>
-<td align="left">-1.5</td>
-<td align="left">366.1</td>
-<td align="left">-26.6</td>
+<td align="left">231</td>
+<td align="left">-43.4</td>
+<td align="left">334.7</td>
+<td align="left">-58.1</td>
 </tr>
 </tbody>
 </table>
 <p>The change in the RMDs for the ‘complex’ PSM structure compared to
-the ‘simple’ PSM structure were -1.3, 1.3 and 0 weeks respectively for
-time in PF state, PD state and time alive.</p>
+the ‘simple’ PSM structure were -4.3, -1.9 and -6.2 weeks respectively
+for time in PF state, PD state and time alive.</p>
 </div>
 <div class="section level3">
 <h3 id="for-further-investigation">For further investigation<a class="anchor" aria-label="anchor" href="#for-further-investigation"></a>
