@@ -44,6 +44,7 @@
 #' - pf: RMD in PF state
 #' - pd: RMD in PD state
 #' - os: RMD in either alive state
+#' @importFrom rlang .data
 #' @seealso [drmd_stm_cf()] [drmd_stm_cr()]
 #' @noRd
 # Examples
@@ -67,32 +68,72 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
   # Declare local variables
   Tw <- tvec <- pfprob <- osprob <- adjosprob <- adjfac <- adjprob <- vn <- NULL
   # Time horizon in weeks (ceiling)
-  Tw <- convert_yrs2wks(Ty)
-  # Create time vector, with half-cycle addition
-  tvec <- timestep*(0:floor(Tw/timestep)) + timestep/2
+  Tw <- ceiling(convert_yrs2wks(Ty)/timestep)
+  # Create dataset, starting with time vector, with half-cycle addition, and unconstrained probs
+  ds <- tibble::tibble(
+    tzero = timestep*(0:Tw),
+    tmid = .data$tzero + timestep/2,
+    pfprob = prob_pf_psm(.data$tzero, dpam),
+    osprob = prob_os_psm(.data$tzero, dpam),
+    u_pf = .data$pfprob,
+    u_pd = .data$osprob - .data$pfprob
+  )
   # Obtain all the hazards
-  allh <- calc_haz_psm(timevar=tvec, ptdata=ptdata, dpam=dpam, psmtype=psmtype)$adj
-  # PFS and OS probabilties from PSM
-  pfprob <- prob_pf_psm(tvec, dpam)
-  osprob <- prob_os_psm(tvec, dpam)
-  # OS and PFS may be constrained already by definitions of PPD and PPS
-  maxos <- exp(-cumsum(allh$os))
-  maxpfs <- exp(-cumsum(allh$pfs))
-  # Further constrain OS by lifetable
-  conos <- constrain_survprob(survprob1=maxos, survprob2=osprob, lifetable=lifetable, timevec=tvec)
-  conpfs <- constrain_survprob(survprob1=maxpfs, survprob2=pmin(pfprob, osprob), lifetable=lifetable, timevec=tvec)
-  # Discount factor
-  vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
+  allh <- calc_haz_psm(timevar=ds$tmid, ptdata=ptdata, dpam=dpam, psmtype=psmtype)$adj
+  # Derive the unconstrained PPD mortality probability
+  ds$q_ppd <- 1-exp(-allh$ppd)
+  # Derive the constrained life table
+  ds$clx <- calc_ltsurv(convert_wks2yrs(ds$tzero), lifetable)
+  # Other calculations on the dataset
+  ds <- ds |>
+    dplyr::mutate(
+      # Derive the background mortality for this timepoint
+      cqx = 1 - dplyr::lead(.data$clx)/.data$clx,
+      # Derive the TTP probability (balancing item)
+      q_pfs = 1 - dplyr::lead(.data$u_pf)/.data$u_pf,
+      q_ttp = .data$q_pfs - .data$q_ppd,
+      d_pf = .data$u_pf * .data$q_ppd,
+      c_qpfs = .data$q_ttp + pmax(.data$q_ppd, .data$cqx),
+      # Derive the PPS mortality probability
+      d_pfpd = .data$u_pf + .data$u_pd - dplyr::lead(.data$u_pf) - dplyr::lead(.data$u_pd),
+      d_pps = .data$d_pfpd - .data$d_pf,
+      q_pps = dplyr::if_else(.data$u_pd==0, 0, .data$d_pps / .data$u_pd),
+      # Constrained probabilities
+      cqpfs = .data$q_ttp + pmax(.data$q_ppd, .data$cqx),
+      cqpps = pmax(.data$q_pps, .data$cqx),
+      # Derive the constrained PF and PD memberships
+      c_pf = .data$u_pf,
+      c_pd = .data$u_pd,
+    )
+  # Derive the constrained PF and PD memberships
+  for (t in 2:(Tw)) {
+      ds$c_pf[t] = ds$c_pf[t-1] * (1-ds$cqpfs[t-1])
+      ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - ds$cqpps[t-1])
+  }
+  # The final membership probabilities are zero
+  ds$c_pf[Tw+1] <- ds$c_pd[Tw+1] <- 0
+  # Final calculations on the dataset
+  ds <- ds |>
+      dplyr::mutate(
+        # Discount factor
+        vn = (1+discrate)^(-convert_wks2yrs(.data$tmid)),
+        # RMD components in each timestep
+        rmd_pf = (.data$c_pf + dplyr::lead(.data$c_pf))/2 * .data$vn * timestep,
+        rmd_pd = (.data$c_pd + dplyr::lead(.data$c_pd))/2 * .data$vn * timestep
+      )
+  ds$rmd_pf[Tw+1] <- ds$rmd_pd[Tw+1] <- 0
   # Calculate RMDs
-  pf <- sum(conpfs*vn) * timestep
-  os <- sum(conos*vn) * timestep
+  pf <- sum(ds$rmd_pf)
+  pd <- sum(ds$rmd_pd)
   # Return values
-  return(list(pf=pf, pd=os-pf, os=os))
+  return(list(pf=pf, pd=pd, os=pf+pd, calc=ds))
 }
+
 
 #' Discretized Restricted Mean Duration calculation for State Transition Model Clock Forward structure
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Forward structure.
 #' @inherit drmd_psm params return
+#' @importFrom rlang .data
 #' @seealso [drmd_psm()] [drmd_stm_cr()]
 #' @noRd
 # Examples
@@ -117,35 +158,63 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   Tw <- tvec <- sppd <- sttp <- sos <- NULL
   adjsppd <- adjos <- vn <- pf <- os <- NULL
   # Time horizon in weeks (ceiling)
-  Tw <- convert_yrs2wks(Ty)
-  # Create time vector, with half-cycle addition
-  tvec <- timestep*(0:floor(Tw/timestep)) + timestep/2
-  # Obtain hazard and survival functions
-  hppd <- tvec |> purrr::map_dbl(~calc_haz(.x, survobj=dpam$ppd))
-  http <- tvec |> purrr::map_dbl(~calc_haz(.x, survobj=dpam$ttp))
-  hpps <- tvec |> purrr::map_dbl(~calc_haz(.x, survobj=dpam$pps_cf))
-  sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$ppd))
-  sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$ttp))
-  spps <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$pps_cf))
-  # Derive the constrained S_PPD and S_PFS
-  con.sppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
-  con.spps <- constrain_survprob(spps, lifetable=lifetable, timevec=tvec)
-  # Partial prob PD
-  con.partprobpd <- sttp*con.sppd*http/con.spps
-  con.partprobpd[con.spps==0] <- 0
-  con.probpd <- con.spps * cumsum(con.partprobpd)
-  # Discount factor
-  vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
+  Tw <- ceiling(convert_yrs2wks(Ty)/timestep)
+  # Create dataset, starting with time vector, with half-cycle addition, and unconstrained probs
+  ds <- tibble::tibble(
+    tzero = timestep*(0:Tw),
+    tmid = .data$tzero + timestep/2,
+    u_pf = prob_pf_stm(.data$tzero, dpam),
+    u_pd = prob_pd_stm_cf(.data$tzero, dpam),
+    # Calculate PPD hazard and probability
+    h_ppd = calc_haz(.data$tmid, survobj=dpam$ppd),
+    q_ppd = 1-exp(-.data$h_ppd),
+    # Derive the constrained life table
+    clx = calc_ltsurv(convert_wks2yrs(.data$tzero), lifetable),
+    # Derive the background mortality for this timepoint
+    cqx = 1 - dplyr::lead(.data$clx)/.data$clx,
+    # Derive the TTP probability (balancing item for PFS)
+    q_pfs = 1 - dplyr::lead(.data$u_pf)/.data$u_pf,
+    q_ttp = .data$q_pfs-.data$q_ppd,
+    d_pf = .data$u_pf * .data$q_ppd,
+    # Derive the PPS mortality probability
+    d_pfpd = .data$u_pf + .data$u_pd - dplyr::lead(.data$u_pf) - dplyr::lead(.data$u_pd),
+    d_pps = .data$d_pfpd - .data$d_pf,
+    q_pps = dplyr::if_else(.data$u_pd==0, 0, .data$d_pps / .data$u_pd),
+    # Constrained probabilities
+    cqpfs = .data$q_ttp + pmax(.data$q_ppd, .data$cqx),
+    cqpps = pmax(.data$q_pps, .data$cqx),
+    # Initial constrained PF and PD
+    c_pf = .data$u_pf,
+    c_pd = .data$u_pd
+  )
+  # Derive the constrained PF and PD memberships
+  for (t in 2:(Tw)) {
+    ds$c_pf[t] = ds$c_pf[t-1] * (1-ds$cqpfs[t-1])
+    ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - ds$cqpps[t-1])
+  }
+  # The final membership probabilities are zero
+  ds$c_pf[Tw+1] <- ds$c_pd[Tw+1] <- 0
+  # Final calculations on the dataset
+  ds <- ds |>
+    dplyr::mutate(
+      # Discount factor
+      vn = (1+discrate)^(-convert_wks2yrs(tmid)),
+      # RMD components in each timestep
+      rmd_pf = (.data$c_pf + dplyr::lead(.data$c_pf))/2 * .data$vn * timestep,
+      rmd_pd = (.data$c_pd + dplyr::lead(.data$c_pd))/2 * .data$vn * timestep
+    )
+  ds$rmd_pf[Tw+1] <- ds$rmd_pd[Tw+1] <- 0
   # Calculate RMDs
-  pf <- sum(sttp*con.sppd*vn) * timestep
-  pd <- sum(con.probpd*vn) * timestep
+  pf <- sum(ds$rmd_pf)
+  pd <- sum(ds$rmd_pd)
   # Return values
-  return(list(pf=pf, pd=pd, os=pf+pd))
+  return(list(pf=pf, pd=pd, os=pf+pd, calc=ds))
 }
 
 #' Discretized Restricted Mean Duration calculation for State Transition Model Clock Reset structure
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Reset structure.
 #' @inherit drmd_psm params return
+#' @importFrom rlang .data
 #' @seealso [drmd_stm_cf()] [drmd_psm()]
 #' @noRd
 # Examples
@@ -170,42 +239,58 @@ drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   Tw <- tvec <- sppd <- sttp <- sos <- NULL
   adjsppd <- adjos <- vn <- pf <- os <- NULL
   # Time horizon in weeks (ceiling)
-  Tw <- convert_yrs2wks(Ty)
-  # Create time vector, with half-cycle addition
-  tvec <- timestep*(0:floor(Tw/timestep)) + timestep/2
-  # Obtain unconstrained survival functions
-  sppd <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$ppd))
-  sttp <- tvec |> purrr::map_dbl(~calc_surv(.x, survobj=dpam$ttp))
-  # Derive the constrained S_PPD
-  c.sppd <- constrain_survprob(sppd, lifetable=lifetable, timevec=tvec)
-  # Integrand with constraints on S_PPD and S_PPS
-  integrand <- function(u, t) {
-    i.http <- calc_haz(u, survobj=dpam$ttp)
-    i.sttp <- calc_surv(u, survobj=dpam$ttp)
-    i.u.sppd <- calc_surv(u, survobj=dpam$ppd)
-    i.u.spps <- calc_surv(t-u, survobj=dpam$pps_cr)
-    i.slxu <- calc_ltsurv(convert_wks2yrs(u), lifetable=lifetable)
-    i.slxt <- calc_ltsurv(convert_wks2yrs(t), lifetable=lifetable)
-    i.c.sppd <- pmin(i.u.sppd, i.slxu)
-    i.c.spps <- pmin(i.u.spps, i.slxt/i.slxu)
-    i.c.spps[i.slxu==0] <- 0
-    i.c.sppd * i.sttp * i.http * i.c.spps
+  Tw <- ceiling(convert_yrs2wks(Ty)/timestep)
+  # Create dataset, starting with time vector, with half-cycle addition, and unconstrained probs
+  ds <- tibble::tibble(
+    tzero = timestep*(0:Tw),
+    tmid = .data$tzero + timestep/2,
+    u_pf = prob_pf_stm(.data$tzero, dpam),
+    u_pd = prob_pd_stm_cf(.data$tzero, dpam)
+  )
+  # Keep calculating membership probabilities
+  ds <- ds |>
+    dplyr::mutate(
+    # Calculate PPD hazard and probability
+    h_ppd = calc_haz(.data$tmid, survobj=dpam$ppd),
+    q_ppd = 1-exp(-h_ppd),
+    # Derive the constrained life table
+    clx = calc_ltsurv(convert_wks2yrs(.data$tzero), lifetable),
+    cqx = 1 - dplyr::lead(.data$clx)/.data$clx,
+    # Derive the TTP probability (balancing item for PF)
+    q_pfs = 1 - dplyr::lead(.data$u_pf)/.data$u_pf,
+    q_ttp = .data$q_pfs - .data$q_ppd,
+    d_pf = .data$u_pf * .data$q_ppd,
+    # Derive the PPS mortality probability
+    d_pfpd = .data$u_pf + .data$u_pd - dplyr::lead(.data$u_pf) - dplyr::lead(.data$u_pd),
+    d_pps = .data$d_pfpd - .data$d_pf,
+    q_pps = dplyr::if_else(.data$u_pd==0, 0, .data$d_pps / .data$u_pd),
+    # Constrained probabilities
+    cqpfs = .data$q_ttp + pmax(.data$q_ppd, .data$cqx),
+    cqpps = pmax(.data$q_pps, .data$cqx),
+    # Initial constrained PF and PD
+    c_pf = .data$u_pf,
+    c_pd = .data$u_pd
+  )
+  # Derive the constrained PF and PD memberships
+  for (t in 2:(Tw)) {
+    ds$c_pf[t] = ds$c_pf[t-1] * (1-ds$cqpfs[t-1])
+    ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - ds$cqpps[t-1])
   }
-  integrand <- Vectorize(integrand, "u")
-  # PD membership probability is the integral
-  probpd <- function(t) {
-    stats::integrate(integrand, lower=0, upper=t, t=t)$value
-  }
-  probpd <- Vectorize(probpd, "t")
-  # Calculate the PD membership probability for each time
-  c.probpd <- probpd(tvec)
-  # Discount factor
-  vn <- (1+discrate)^(-convert_wks2yrs(tvec+timestep/2))
+  # The final membership probabilities are zero
+  ds$c_pf[Tw+1] <- ds$c_pd[Tw+1] <- 0
+  # Final calculations on the dataset
+  ds <- ds |>
+    dplyr::mutate(
+      # Discount factor
+      vn = (1+discrate)^(-convert_wks2yrs(.data$tmid)),
+      # RMD components in each timestep
+      rmd_pf = (.data$c_pf + dplyr::lead(.data$c_pf))/2 * .data$vn * timestep,
+      rmd_pd = (.data$c_pd + dplyr::lead(.data$c_pd))/2 * .data$vn * timestep
+    )
+  ds$rmd_pf[Tw+1] <- ds$rmd_pd[Tw+1] <- 0
   # Calculate RMDs
-  pf <- sum(sttp*c.sppd*vn) * timestep
-  pd <- sum(c.probpd*vn) * timestep
+  pf <- sum(ds$rmd_pf)
+  pd <- sum(ds$rmd_pd)
   # Return values
-  return(list(pf=pf, pd=pd, os=pf+pd))
+  return(list(pf=pf, pd=pd, os=pf+pd, calc=ds))
 }
-
-
