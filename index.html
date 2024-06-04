@@ -82,13 +82,13 @@
 </div>
 <!-- badges: start -->
 
-<p>The goal of psm3mkv is to evaluate the efficiency and fit of certain three state model structures to data typical from an oncology clinical trial, as described in an accompanying article [1]. The package evaluates the following structures:</p>
+<p>The goal of psm3mkv is to evaluate the efficiency and fit of certain three state model structures to data typical from an oncology clinical trial, as described in an accompanying article (Muston 2024). The package evaluates the following structures:</p>
 <ul>
 <li><p>Partitioned Survival Model/analysis (PSM),</p></li>
 <li><p>Clock-forward State Transition Model (STM-CF), and</p></li>
 <li><p>Clock-reset State Transition Model (STM-CR).</p></li>
 </ul>
-<p>The state transition models differ from each other in that the transition from progressive disease to death is a function of time from baseline in the STM-CF and time from progression in the STM-CR [2, 3].</p>
+<p>The state transition models differ from each other in that the transition from progressive disease to death is a function of time from baseline in the STM-CF and time from progression in the STM-CR (Jackson 2016; Woods et al. 2020).</p>
 <p>The package requires a patient-level dataset of time to progression (TTP), progression-free survival (PFS) and overall survival (OS).</p>
 <p>Given this, the package enables:</p>
 <ul>
@@ -96,7 +96,7 @@
 <p>Fitting a range of models to endpoints relevant each model type:</p>
 <ul>
 <li><p>One piece parametric (distributions according to flexsurv).</p></li>
-<li><p>Royston-Parmar splines (1-3 internal knots, hazard/odds/normal scales, again as per flexsurv) [4].</p></li>
+<li><p>Royston-Parmar splines (1-3 internal knots, hazard/odds/normal scales, again as per flexsurv) (Royston and Parmar 2002).</p></li>
 <li><p>Two piece parametric (given a time cutoff).</p></li>
 </ul>
 </li>
@@ -144,30 +144,33 @@
 <div class="section level3">
 <h3 id="additional-dependencies">Additional dependencies<a class="anchor" aria-label="anchor" href="#additional-dependencies"></a>
 </h3>
-<p>Running the vignettes requires additional dependencies, which are all either imported by or suggested by <em>psm3mkv</em>. Thus you can ensure they are all installed by specifying <code>dependencies = TRUE</code>.</p>
+<p>Running the vignettes requires additional dependencies, which are all either imported by or suggested by psm3mkv. Thus you can ensure they are all installed by specifying <code>dependencies = TRUE</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Merck/psm3mkv@*release"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="licensing">Licensing<a class="anchor" aria-label="anchor" href="#licensing"></a>
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>Copyright (c) 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
-<p>This file is part of the psm3mkv program.</p>
-<p>psm3mkv is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/" class="external-link uri">http://www.gnu.org/licenses/</a>.</p>
-<p>psm3mkv uses third-party R packages which may be distributed under different licenses.</p>
+<p>If you use this software, please cite it as below.</p>
+<blockquote>
+<p>Muston, D. 2024. “Informing Structural Assumptions for Three State Oncology Cost-Effectiveness Models through Model Efficiency and Fit.” <em>Applied Health Economics and Health Policy</em>. DOI: 10.1007/s40258-024-00884-2</p>
+</blockquote>
+<p>A BibTeX entry for LaTeX users is</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">muston2024informing</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="dt">author</span>  = {Dominic Muston},</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="dt">title</span>   = {Informing structural assumptions for three state oncology cost-effectiveness models through model efficiency and fit},</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="dt">journal</span> = {Applied Health Economics and Health Policy},</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="dt">year</span>    = {2024},</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="dt">doi</span>     = {10.1007/s40258-024-00884-2}</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<ol style="list-style-type: decimal">
-<li><p>Muston, D. 2024. “Informing Structural Assumptions for Three State Oncology Cost-Effectiveness Models through Model Efficiency and Fit.” <em>Appl Health Econ Health Policy</em>. DOI: 10.1007/s40258-024-00884-2</p></li>
-<li><p>Jackson, Christopher. 2016. “flexsurv: A Platform for Parametric Survival Modeling in R.” <em>Journal of Statistical Software</em> 70 (8): 1–33.</p></li>
-<li><p>Woods, Beth S, Eleftherios Sideris, Stephen Palmer, Nick Latimer, and Marta Soares. 2020. “Partitioned Survival and State Transition Models for Healthcare Decision Making in Oncology: Where Are We Now?” <em>Value in Health</em> 23 (12): 1613–1621.</p></li>
-<li><p>Royston, Patrick, and Mahesh KB Parmar. 2002. “Flexible Parametric Proportional-Hazards and Proportional-Odds Models for Censored Survival Data, with Application to Prognostic Modelling and Estimation of Treatment Effects.” <em>Statistics in Medicine</em> 21 (15): 2175–2197.</p></li>
-</ol>
+<p>Jackson, Christopher. 2016. “flexsurv: A Platform for Parametric Survival Modeling in R.” <em>Journal of Statistical Software</em> 70 (8): 1–33.</p>
+<p>Woods, Beth S, Eleftherios Sideris, Stephen Palmer, Nick Latimer, and Marta Soares. 2020. “Partitioned Survival and State Transition Models for Healthcare Decision Making in Oncology: Where Are We Now?” <em>Value in Health</em> 23 (12): 1613–1621.</p>
+<p>Royston, Patrick, and Mahesh KB Parmar. 2002. “Flexible Parametric Proportional-Hazards and Proportional-Odds Models for Censored Survival Data, with Application to Prognostic Modelling and Estimation of Treatment Effects.” <em>Statistics in Medicine</em> 21 (15): 2175–2197.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
