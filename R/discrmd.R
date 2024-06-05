@@ -22,10 +22,6 @@
 # =====================================
 #
 
-
-
-
-
 #' Discretized Restricted Mean Duration calculation for Partitioned Survival Model
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a Partitioned Survival Model structure.
 #' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
@@ -70,7 +66,7 @@
 # drmd_psm(ptdata=bosonc, dpam=params, lifetable=ltable)
 drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
-  Tw <- tvec <- pfprob <- osprob <- adjosprob <- adjfac <- adjprob <- vn <- NULL
+  Tw <- NULL
   # Time horizon in weeks (ceiling)
   Tw <- ceiling(convert_yrs2wks(Ty)/timestep)
   # Create dataset, starting with time vector, with half-cycle addition, and unconstrained probs
@@ -116,8 +112,7 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
 # drmd_stm_cf(dpam=params, lifetable=ltable)
 drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
-  Tw <- tvec <- sppd <- sttp <- sos <- NULL
-  adjsppd <- adjos <- vn <- pf <- os <- NULL
+  Tw <- NULL
   # Time horizon in weeks (ceiling)
   Tw <- ceiling(convert_yrs2wks(Ty)/timestep)
   # Create dataset, starting with time vector, with half-cycle addition, and unconstrained probs
@@ -160,8 +155,7 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
 # drmd_stm_cr(dpam=params, lifetable=ltable)
 drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
   # Declare local variables
-  Tw <- tvec <- sppd <- sttp <- sos <- NULL
-  adjsppd <- adjos <- vn <- pf <- os <- NULL
+  Tw <- NULL
   # Time horizon in weeks (ceiling)
   Tw <- ceiling(convert_yrs2wks(Ty)/timestep)
   # Create dataset, starting with time vector, with half-cycle addition, and unconstrained probs
@@ -173,7 +167,7 @@ drmd_stm_cr <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
     u_pd = prob_pd_stm_cr(.data$tzero, dpam),
     # Calculate PPD hazard and probability
     h_ppd = calc_haz(.data$tmid, survobj=dpam$ppd),
-    q_ppd = 1-exp(-h_ppd)
+    q_ppd = 1-exp(-.data$h_ppd)
   )
   # Call routine to run calculations
   calc_drmd(ds, Tw, discrate, lifetable, timestep)
