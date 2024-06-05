@@ -20,12 +20,16 @@ MIT / X11 License (or adaptations) (https://www.opensource.org/licenses/MIT)
   * tidyr - https://tidyr.tidyverse.org/LICENSE.html
 
 L-GPL3 License (https://cran.r-project.org/web/licenses/LGPL-3)
-  * survival - https://cran.r-project.org/web/packages/survival/index.html 
-  * flexsurv - https://cran.r-project.org/web/packages/flexsurv/index.html
-  * SimplicialCubature - https://cran.r-project.org/web/packages/SimplicialCubature/index.html
+  * survival - https://CRAN.R-project.org/package=survival 
+  * flexsurv - https://CRAN.R-project.org/package=flexsurv
+  * SimplicialCubature - https://CRAN.R-project.org/package=SimplicialCubature
+
+Apache License (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  * admiral - https://CRAN.R-project.org/package=admiral
+  * pharmaverseadam - https://CRAN.R-project.org/package=pharmaverseadam 
 
 Part of R v4.2.1
-  * stats - part of R 4.2.1 - see `r library(help = "stats")'
+  * stats - part of R 4.3.1 - see `r library(help = "stats")'
 
     
 
