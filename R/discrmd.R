@@ -22,6 +22,56 @@
 # =====================================
 #
 
+
+calc_drmd <- function(ds, Tw, discrate, lifetable, timestep) {
+  # Derive the constrained life table
+  ds$clx <- calc_ltsurv(convert_wks2yrs(ds$tzero), lifetable)
+  # Other calculations on the dataset
+  ds <- ds |>
+    dplyr::mutate(
+      # Derive the background mortality for this timepoint
+      cqx = 1 - dplyr::lead(.data$clx)/.data$clx,
+      # Derive the TTP probability (balancing item)
+      q_pfs = 1 - dplyr::lead(.data$u_pf)/.data$u_pf,
+      q_ttp = .data$q_pfs - .data$q_ppd,
+      d_pf = .data$u_pf * .data$q_ppd,
+      c_qpfs = .data$q_ttp + pmax(.data$q_ppd, .data$cqx),
+      # Derive the PPS mortality probability
+      d_pfpd = .data$u_pf + .data$u_pd - dplyr::lead(.data$u_pf) - dplyr::lead(.data$u_pd),
+      d_pps = .data$d_pfpd - .data$d_pf,
+      q_pps = dplyr::if_else(.data$u_pd==0, 0, .data$d_pps / .data$u_pd),
+      # Constrained probabilities
+      cqpfs = .data$q_ttp + pmax(.data$q_ppd, .data$cqx),
+      cqpps = pmax(.data$q_pps, .data$cqx),
+      # Derive the constrained PF and PD memberships
+      c_pf = .data$u_pf,
+      c_pd = .data$u_pd,
+    )
+  # Derive the constrained PF and PD memberships
+  for (t in 2:(Tw)) {
+    ds$c_pf[t] = ds$c_pf[t-1] * (1-ds$cqpfs[t-1])
+    ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - ds$cqpps[t-1])
+  }
+  # The final membership probabilities are zero
+  ds$c_pf[Tw+1] <- ds$c_pd[Tw+1] <- 0
+  # Final calculations on the dataset
+  ds <- ds |>
+    dplyr::mutate(
+      # Discount factor
+      vn = (1+discrate)^(-convert_wks2yrs(.data$tmid)),
+      # RMD components in each timestep
+      rmd_pf = (.data$c_pf + dplyr::lead(.data$c_pf))/2 * .data$vn * timestep,
+      rmd_pd = (.data$c_pd + dplyr::lead(.data$c_pd))/2 * .data$vn * timestep
+    )
+  ds$rmd_pf[Tw+1] <- ds$rmd_pd[Tw+1] <- 0
+  # Calculate RMDs
+  pf <- sum(ds$rmd_pf)
+  pd <- sum(ds$rmd_pd)
+  # Return values
+  return(list(pf=pf, pd=pd, os=pf+pd, calc=ds))
+}
+
+
 #' Discretized Restricted Mean Duration calculation for Partitioned Survival Model
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a Partitioned Survival Model structure.
 #' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
@@ -53,12 +103,12 @@
 # fits <- fit_ends_mods_spl(bosonc)
 # # Pick out best distribution according to min AIC
 # params <- list(
-#   ppd = find_bestfit_spl(fits$ppd, "aic")$fit,
-#   ttp = find_bestfit_spl(fits$ttp, "aic")$fit,
-#   pfs = find_bestfit_spl(fits$pfs, "aic")$fit,
-#   os = find_bestfit_spl(fits$os, "aic")$fit,
-#   pps_cf = find_bestfit_spl(fits$pps_cf, "aic")$fit,
-#   pps_cr = find_bestfit_spl(fits$pps_cr, "aic")$fit
+#   ppd = find_bestfit(fits$ppd, "aic")$fit,
+#   ttp = find_bestfit(fits$ttp, "aic")$fit,
+#   pfs = find_bestfit(fits$pfs, "aic")$fit,
+#   os = find_bestfit(fits$os, "aic")$fit,
+#   pps_cf = find_bestfit(fits$pps_cf, "aic")$fit,
+#   pps_cr = find_bestfit(fits$pps_cr, "aic")$fit
 # )
 # drmd_psm(ptdata=bosonc, dpam=params)
 # # Add a lifetable constraint
@@ -82,51 +132,8 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
   allh <- calc_haz_psm(timevar=ds$tmid, ptdata=ptdata, dpam=dpam, psmtype=psmtype)$adj
   # Derive the unconstrained PPD mortality probability
   ds$q_ppd <- 1-exp(-allh$ppd)
-  # Derive the constrained life table
-  ds$clx <- calc_ltsurv(convert_wks2yrs(ds$tzero), lifetable)
-  # Other calculations on the dataset
-  ds <- ds |>
-    dplyr::mutate(
-      # Derive the background mortality for this timepoint
-      cqx = 1 - dplyr::lead(.data$clx)/.data$clx,
-      # Derive the TTP probability (balancing item)
-      q_pfs = 1 - dplyr::lead(.data$u_pf)/.data$u_pf,
-      q_ttp = .data$q_pfs - .data$q_ppd,
-      d_pf = .data$u_pf * .data$q_ppd,
-      c_qpfs = .data$q_ttp + pmax(.data$q_ppd, .data$cqx),
-      # Derive the PPS mortality probability
-      d_pfpd = .data$u_pf + .data$u_pd - dplyr::lead(.data$u_pf) - dplyr::lead(.data$u_pd),
-      d_pps = .data$d_pfpd - .data$d_pf,
-      q_pps = dplyr::if_else(.data$u_pd==0, 0, .data$d_pps / .data$u_pd),
-      # Constrained probabilities
-      cqpfs = .data$q_ttp + pmax(.data$q_ppd, .data$cqx),
-      cqpps = pmax(.data$q_pps, .data$cqx),
-      # Derive the constrained PF and PD memberships
-      c_pf = .data$u_pf,
-      c_pd = .data$u_pd,
-    )
-  # Derive the constrained PF and PD memberships
-  for (t in 2:(Tw)) {
-      ds$c_pf[t] = ds$c_pf[t-1] * (1-ds$cqpfs[t-1])
-      ds$c_pd[t] = ds$c_pf[t-1] * ds$q_ttp[t-1] + ds$c_pd[t-1] * (1 - ds$cqpps[t-1])
-  }
-  # The final membership probabilities are zero
-  ds$c_pf[Tw+1] <- ds$c_pd[Tw+1] <- 0
-  # Final calculations on the dataset
-  ds <- ds |>
-      dplyr::mutate(
-        # Discount factor
-        vn = (1+discrate)^(-convert_wks2yrs(.data$tmid)),
-        # RMD components in each timestep
-        rmd_pf = (.data$c_pf + dplyr::lead(.data$c_pf))/2 * .data$vn * timestep,
-        rmd_pd = (.data$c_pd + dplyr::lead(.data$c_pd))/2 * .data$vn * timestep
-      )
-  ds$rmd_pf[Tw+1] <- ds$rmd_pd[Tw+1] <- 0
-  # Calculate RMDs
-  pf <- sum(ds$rmd_pf)
-  pd <- sum(ds$rmd_pd)
-  # Return values
-  return(list(pf=pf, pd=pd, os=pf+pd, calc=ds))
+  # Call routine to run calculations
+  calc_drmd(ds, Tw, discrate, lifetable, timestep)
 }
 
 
