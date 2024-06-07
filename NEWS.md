@@ -3,6 +3,7 @@
 # psm3mkv 0.3.2
 
 - Revised calculations of constrained restricted mean durations in internal function `calc_drmd()` and the accompanying `vignette("background-mortality")`.
+- Provide a convenience function, `compare_psm_likes()`, to compare the total log-likelihood values for the patient-level dataset after fitting PSM-simple and PSM-complex models to each combination of endpoint distributions.
 - Add citation to publication in *Applied Health Economics and Health Policy*, [DOI: 10.1007/s40258-024-00884-2 ](https://doi.org/10.1007/s40258-024-00884-2).
 - Updated license statements to 2024
 
