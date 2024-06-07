@@ -1,4 +1,11 @@
-# psm3mkv (development version)
+# psm3mkv 0.3.2
+
+# psm3mkv 0.3.2
+
+- Revised calculations of constrained restricted mean durations in internal function `calc_drmd()` and the accompanying `vignette("background-mortality")`.
+- Provide a convenience function, `compare_psm_likes()`, to compare the total log-likelihood values for the patient-level dataset after fitting PSM-simple and PSM-complex models to each combination of endpoint distributions.
+- Add citation to publication in *Applied Health Economics and Health Policy*, [DOI: 10.1007/s40258-024-00884-2 ](https://doi.org/10.1007/s40258-024-00884-2).
+- Updated license statements to 2024
 
 # psm3mkv 0.3.1
 
@@ -20,7 +27,7 @@ Several minor changes to ready the package for CRAN.
 
 # psm3mkv 0.2.1 (14 Apr 2024)
 
-Constraining calculations of restricted mean durations and the accompanying `vignette("background-mortality")` has been reworked. The calculations using integral/continuous methods was not reliable. Instead, `calc_allrmds` now has a `rmdmethod="disc"` option to allow for discretized calculations for a given timestep (defaulting at one week). There is a new collection of functions in `discrmd.R` to provide for this, as well as `constrain_survprob()` function, which constrains a vector of survival estimates at given times such that the underlying hazard is at least as great as in an accompanying lifetable.
+Constraining calculations of restricted mean durations and the accompanying `vignette("background-mortality")` has been reworked. The calculations using integral/continuous methods was not reliable. Instead, `calc_allrmds()` now has a `rmdmethod="disc"` option to allow for discretized calculations for a given timestep (defaulting at one week). There is a new collection of functions in `discrmd.R` to provide for this, as well as `constrain_survprob()` function, which constrains a vector of survival estimates at given times such that the underlying hazard is at least as great as in an accompanying lifetable.
 
 # psm3mkv 0.2.0 (26 Jan 2024)
 
