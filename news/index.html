@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,8 +52,15 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="psm3mkv-development-version">psm3mkv (development version)<a class="anchor" aria-label="anchor" href="#psm3mkv-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.2" id="psm3mkv-032">psm3mkv 0.3.2<a class="anchor" aria-label="anchor" href="#psm3mkv-032"></a></h2>
 </div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.2" id="psm3mkv-032-1">psm3mkv 0.3.2<a class="anchor" aria-label="anchor" href="#psm3mkv-032-1"></a></h2>
+<ul><li>Revised calculations of constrained restricted mean durations in internal function <code>calc_drmd()</code> and the accompanying <code>vignette("background-mortality")</code>.</li>
+<li>Provide a convenience function, <code><a href="../reference/compare_psm_likes.html">compare_psm_likes()</a></code>, to compare the total log-likelihood values for the patient-level dataset after fitting PSM-simple and PSM-complex models to each combination of endpoint distributions.</li>
+<li>Add citation to publication in <em>Applied Health Economics and Health Policy</em>, <a href="https://doi.org/10.1007/s40258-024-00884-2" class="external-link">DOI: 10.1007/s40258-024-00884-2</a>.</li>
+<li>Updated license statements to 2024</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="psm3mkv-031">psm3mkv 0.3.1<a class="anchor" aria-label="anchor" href="#psm3mkv-031"></a></h2><p class="text-muted">CRAN release: 2024-05-07</p>
 <ul><li>Submission to CRAN, including changes requested by CRAN</li>
@@ -73,7 +80,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="psm3mkv-021-14-apr-2024">psm3mkv 0.2.1 (14 Apr 2024)<a class="anchor" aria-label="anchor" href="#psm3mkv-021-14-apr-2024"></a></h2>
-<p>Constraining calculations of restricted mean durations and the accompanying <code>vignette("background-mortality")</code> has been reworked. The calculations using integral/continuous methods was not reliable. Instead, <code>calc_allrmds</code> now has a <code>rmdmethod="disc"</code> option to allow for discretized calculations for a given timestep (defaulting at one week). There is a new collection of functions in <code>discrmd.R</code> to provide for this, as well as <code><a href="../reference/constrain_survprob.html">constrain_survprob()</a></code> function, which constrains a vector of survival estimates at given times such that the underlying hazard is at least as great as in an accompanying lifetable.</p>
+<p>Constraining calculations of restricted mean durations and the accompanying <code>vignette("background-mortality")</code> has been reworked. The calculations using integral/continuous methods was not reliable. Instead, <code><a href="../reference/calc_allrmds.html">calc_allrmds()</a></code> now has a <code>rmdmethod="disc"</code> option to allow for discretized calculations for a given timestep (defaulting at one week). There is a new collection of functions in <code>discrmd.R</code> to provide for this, as well as <code><a href="../reference/constrain_survprob.html">constrain_survprob()</a></code> function, which constrains a vector of survival estimates at given times such that the underlying hazard is at least as great as in an accompanying lifetable.</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="psm3mkv-020-26-jan-2024">psm3mkv 0.2.0 (26 Jan 2024)<a class="anchor" aria-label="anchor" href="#psm3mkv-020-26-jan-2024"></a></h2>
