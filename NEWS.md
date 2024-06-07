@@ -1,4 +1,4 @@
-# psm3mkv (development version)
+# psm3mkv 0.3.2
 
 # psm3mkv 0.3.2
 
