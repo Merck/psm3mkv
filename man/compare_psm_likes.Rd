@@ -25,8 +25,8 @@ compare_psm_likes(ptdata, fitslist, cuttime = 0)
 \value{
 List containing
 \itemize{
-\item \code{res}: Dataset of calculation results for each model
-\item \code{best}: Tibble indicating which is the best fitting model individually or jointly, to each endpoint, according to AIC or BIC
+\item \code{results}: Dataset of calculation results for each model
+\item \code{bests}: Tibble indicating which is the best fitting model individually or jointly, to each endpoint, according to AIC or BIC
 }
 }
 \description{
