@@ -436,14 +436,14 @@ lifetable constraints.</p>
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Proportion of time alive spent in PF</span></span>
 <span><span class="va">proppf3</span> <span class="op">&lt;-</span> <span class="va">res3</span><span class="op">$</span><span class="va">pf</span> <span class="op">/</span> <span class="va">res3</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
-<p>There is now a large difference between the STM-CR compared to the
+<p>There is now some difference between the STM-CR compared to the
 STM-CF and PSM structures. All structures estimate fairly similar RMD
 estimates of being alive (range: 337.7 to 341.6 weeks). The estimate of
 mean time alive in the STM-CR structure has reduced by 52.3 weeks from
 393.9 to 341.6 weeks.</p>
 <p>The proportion of that time in the PF rather than PD state varies
-considerably (PSM: 69%, STM-CF: 68.1%, STM-CR: 67.3%). Given that the
-hazard of mortality would typically be lower before rather than after
+somewhat (PSM: 69%, STM-CF: 68.1%, STM-CR: 67.3%). Given that the hazard
+of mortality would typically be lower before rather than after
 progression, the pre-progression mortality is likely to be more affected
 by any mortality constraint that post-progression mortality. The STM-CR
 model of post-progression survival depends on time from progression and
@@ -474,8 +474,8 @@ structure.</p>
 <span><span class="va">proppf4</span> <span class="op">&lt;-</span> <span class="va">res4</span><span class="op">$</span><span class="va">pf</span> <span class="op">/</span> <span class="va">res4</span><span class="op">$</span><span class="va">os</span></span></code></pre></div>
 <p>All structures estimate fairly similar RMD estimates of being alive
 (range: 334.7 to 341.6 weeks). The proportion of that time in the PF
-rather than PD state varied again considerably by model structure (PSM:
-69%, STM-CF: 68.1%, STM-CR: 67.3%).</p>
+rather than PD state varied a little by model structure (PSM: 69%,
+STM-CF: 68.1%, STM-CR: 67.3%).</p>
 </div>
 <div class="section level3">
 <h3 id="comparing-the-results">Comparing the results<a class="anchor" aria-label="anchor" href="#comparing-the-results"></a>
@@ -624,15 +624,13 @@ the ‘simple’ PSM structure were -4.3, -1.9 and -6.2 weeks respectively
 for time in PF state, PD state and time alive.</p>
 </div>
 <div class="section level3">
-<h3 id="for-further-investigation">For further investigation<a class="anchor" aria-label="anchor" href="#for-further-investigation"></a>
+<h3 id="possible-extensions">Possible extensions<a class="anchor" aria-label="anchor" href="#possible-extensions"></a>
 </h3>
-<ul>
-<li>The effect of the lifetable constraint on the STMs was much greater
-- especially to time in the PF state - in the STMs rather than the
-PSM.</li>
-<li>The package also allows application of discounting through the
-<code>discrate</code> optional call to <code>calc_allrnds()</code>.</li>
-</ul>
+<p>Not applied here, the package also allows application of discounting
+through the <code>discrate</code> optional call to
+<code>calc_allrnds()</code>. This work could also be easily extended
+through calculating RMDs or Life Years that are Quality Adjusted
+(QALYs).</p>
 </div>
 </div>
 <div class="section level2 unnumbered">
