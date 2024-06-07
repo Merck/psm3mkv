@@ -260,9 +260,9 @@ res3 |> mutate(
 proppf3 <- res3$pf / res3$os
 ```
 
-There is now a large difference between the STM-CR compared to the STM-CF and PSM structures. All structures estimate fairly similar RMD estimates of being alive (range: `r round(min(res3$os),1)` to `r round(max(res3$os),1)` weeks). The estimate of mean time alive in the STM-CR structure has reduced by `r round(res1$os[3]-res3$os[3],1)` weeks from `r round(res1$os[3],1)` to `r round(res3$os[3],1)` weeks.
+There is now some difference between the STM-CR compared to the STM-CF and PSM structures. All structures estimate fairly similar RMD estimates of being alive (range: `r round(min(res3$os),1)` to `r round(max(res3$os),1)` weeks). The estimate of mean time alive in the STM-CR structure has reduced by `r round(res1$os[3]-res3$os[3],1)` weeks from `r round(res1$os[3],1)` to `r round(res3$os[3],1)` weeks.
 
-The proportion of that time in the PF rather than PD state varies considerably (PSM: `r round(100*proppf3[1], 1)`%, STM-CF: `r round(100*proppf3[2], 1)`%, STM-CR: `r round(100*proppf3[3], 1)`%). Given that the hazard of mortality would typically be lower before rather than after progression, the pre-progression mortality is likely to be more affected by any mortality constraint that post-progression mortality. The STM-CR model of post-progression survival depends on time from progression and is therefore rather different from the STM-CF and PSM structures, which model mortality based on time from baseline.
+The proportion of that time in the PF rather than PD state varies somewhat (PSM: `r round(100*proppf3[1], 1)`%, STM-CF: `r round(100*proppf3[2], 1)`%, STM-CR: `r round(100*proppf3[3], 1)`%). Given that the hazard of mortality would typically be lower before rather than after progression, the pre-progression mortality is likely to be more affected by any mortality constraint that post-progression mortality. The STM-CR model of post-progression survival depends on time from progression and is therefore rather different from the STM-CF and PSM structures, which model mortality based on time from baseline.
 
 We can check whether using a 'complex' type of PSM structure rather than the default 'simple' affects RMD estimates from the PSM structure.
 
@@ -281,7 +281,7 @@ res4 |> mutate(
 proppf4 <- res4$pf / res4$os
 ```
 
-All structures estimate fairly similar RMD estimates of being alive (range: `r round(min(res4$os),1)` to `r round(max(res4$os),1)` weeks). The proportion of that time in the PF rather than PD state varied again considerably by model structure (PSM: `r round(100*proppf4[1], 1)`%, STM-CF: `r round(100*proppf4[2], 1)`%, STM-CR: `r round(100*proppf4[3], 1)`%).
+All structures estimate fairly similar RMD estimates of being alive (range: `r round(min(res4$os),1)` to `r round(max(res4$os),1)` weeks). The proportion of that time in the PF rather than PD state varied a little by model structure (PSM: `r round(100*proppf4[1], 1)`%, STM-CF: `r round(100*proppf4[2], 1)`%, STM-CR: `r round(100*proppf4[3], 1)`%).
 
 ### Comparing the results
 
@@ -316,9 +316,8 @@ A summary of the PSM estimates of mean time in PF state and mean time alive is g
 
 The change in the RMDs for the 'complex' PSM structure compared to the 'simple' PSM structure were `r round(res4$pf[1]-res3$pf[1], 1)`, `r round(res4$pd[1]-res3$pd[1], 1)` and `r round(res4$os[1]-res3$os[1], 1)` weeks respectively for time in PF state, PD state and time alive.
 
-### For further investigation
+### Possible extensions
 
-- The effect of the lifetable constraint on the STMs was much greater - especially to time in the PF state - in the STMs rather than the PSM.
-- The package also allows application of discounting through the `discrate` optional call to `calc_allrnds()`.
+Not applied here, the package also allows application of discounting through the `discrate` optional call to `calc_allrnds()`. This work could also be easily extended through calculating RMDs or Life Years that are Quality Adjusted (QALYs).
 
 ## References
