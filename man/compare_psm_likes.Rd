@@ -25,8 +25,8 @@ compare_psm_likes(ptdata, fitslist, cuttime = 0)
 \value{
 List containing
 \itemize{
-\item \code{res}: Dataset of calculation results for each model
-\item \code{best}: Tibble indicating which is the best fitting model individually or jointly, to each endpoint, according to AIC or BIC
+\item \code{results}: Dataset of calculation results for each model
+\item \code{bests}: Tibble indicating which is the best fitting model individually or jointly, to each endpoint, according to AIC or BIC
 }
 }
 \description{
@@ -36,9 +36,9 @@ Compare the total log-likelihood values for the patient-level dataset after fitt
 # Fit parametric distributions to a dataset
 bosonc <- create_dummydata("flexbosms")
 parfits <- fit_ends_mods_par(bosonc)
+\donttest{
 splfits <- fit_ends_mods_spl(bosonc)
 # Present comparison of likelihood calculations
-\donttest{
 compare_psm_likes(bosonc, parfits)
 compare_psm_likes(bosonc, splfits)
 }

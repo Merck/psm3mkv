@@ -53,7 +53,7 @@ Once we have a suitable dataset, we will fit statistical models to these six end
 
 ### Parametric distributions
 
-Let us start by considering parametric distributions. This uses the function `fit_ends_mods_par()`, so called because it cycles through fitting endpoints and models. The original dataset contained only three of these endpoints, the other three endpoints are calculated within the function.
+Let us start by considering parametric distributions. This uses the function `fit_ends_mods()`, so called because it cycles through fitting endpoints and models. The original dataset contained only three of these endpoints, the other three endpoints are calculated within the function.
 
 ```{r fit_ends_mods_par}
 # Create a vector of distributions of interest (flexsurv notation)

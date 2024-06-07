@@ -30,16 +30,16 @@
 #' @param fitslist List of distribution fits to relevant endpoints, after calling `fit_ends_mods_par()` or `fit_ends_mods_spl()`
 #' @importFrom rlang .data
 #' @return List containing
-#' - `res`: Dataset of calculation results for each model
-#' - `best`: Tibble indicating which is the best fitting model individually or jointly, to each endpoint, according to AIC or BIC
+#' - `results`: Dataset of calculation results for each model
+#' - `bests`: Tibble indicating which is the best fitting model individually or jointly, to each endpoint, according to AIC or BIC
 #' @export
 #' @examples
 #' # Fit parametric distributions to a dataset
 #' bosonc <- create_dummydata("flexbosms")
 #' parfits <- fit_ends_mods_par(bosonc)
+#' \donttest{
 #' splfits <- fit_ends_mods_spl(bosonc)
 #' # Present comparison of likelihood calculations
-#' \donttest{
 #' compare_psm_likes(bosonc, parfits)
 #' compare_psm_likes(bosonc, splfits)
 #' }
