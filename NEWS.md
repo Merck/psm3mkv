@@ -1,3 +1,5 @@
+# psm3mkv 0.3.3
+
 # psm3mkv 0.3.2 (7 June 2024)
 
 - Revised calculations of constrained restricted mean durations in internal function `calc_drmd()` and the accompanying `vignette("background-mortality")`.
