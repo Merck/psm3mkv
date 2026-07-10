@@ -22,7 +22,7 @@
 # ==================================================================
 
 #' Calculate likelihood for a simple three-state partitioned survival model
-#' @description Calculate likelihood values and other summary output for a simple three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes].x three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes]. Unlike [calc_likes_psm_complex], this likelihood function assumes a progression hazard can be derived from the PFS hazard function and the ratio of progression to PFS events from PF patients.
+#' @description Calculate likelihood values and other summary output for a simple three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [psm3mkv::calc_likes].x three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [psm3mkv::calc_likes]. Unlike [psm3mkv::calc_likes_psm_complex], this likelihood function assumes a progression hazard can be derived from the PFS hazard function and the ratio of progression to PFS events from PF patients.
 #' @param ptdata Dataset of patient level data. Must be a tibble with columns named:
 #' - `ptid`: patient identifier
 #' - `pfs.durn`: duration of PFS from baseline
@@ -45,7 +45,7 @@
 #' - `npts`: Number of patients analysed for each endpoint.
 #' - `npar`: Number of parameters used in this model.
 #' - `data`: A tibble of detailed likelihood calculations, where each row represents a patient.
-#' @seealso [calc_likes()], [calc_likes_psm_complex()], [calc_likes_stm_cf()], [calc_likes_stm_cr()]
+#' @seealso [psm3mkv::calc_likes()], [psm3mkv::calc_likes_psm_complex()], [psm3mkv::calc_likes_stm_cf()], [psm3mkv::calc_likes_stm_cr()]
 #' @importFrom rlang .data
 #' @noRd
 # Examples
@@ -131,10 +131,10 @@ calc_likes_psm_simple <- function(ptdata, dpam, cuttime=0) {
 }
 
 #' Calculate likelihood for a more complex three-state partitioned survival model
-#' @description Calculate likelihood values and other summary output for a more complex three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes()]. Unlike [calc_likes_psm_simple()], this likelihood function requires fitting to TTP.
+#' @description Calculate likelihood values and other summary output for a more complex three-state partitioned survival model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [psm3mkv::calc_likes()]. Unlike [psm3mkv::calc_likes_psm_simple()], this likelihood function requires fitting to TTP.
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
-#' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
+#' @seealso [psm3mkv::calc_likes()], [psm3mkv::calc_likes_psm_simple()], [psm3mkv::calc_likes_psm_complex()], [psm3mkv::calc_likes_stm_cr()]
 #' @importFrom rlang .data
 #' @noRd
 # Examples
@@ -221,7 +221,7 @@ calc_likes_psm_complex <- function(ptdata, dpam, cuttime=0) {
 #' @description Calculate likelihood values and other summary output for a three-state clock forward state transition model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes].
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
-#' @seealso [calc_likes()], [calc_likes_psm_simple()], [calc_likes_psm_complex()], [calc_likes_stm_cr()]
+#' @seealso [psm3mkv::calc_likes()], [psm3mkv::calc_likes_psm_simple()], [psm3mkv::calc_likes_psm_complex()], [psm3mkv::calc_likes_stm_cr()]
 #' @importFrom rlang .data
 #' @noRd
 # Examples
@@ -296,7 +296,7 @@ calc_likes_stm_cf <- function(ptdata, dpam, cuttime=0) {
 #' @description Calculate likelihood values and other summary output for a three-state clock reset model, given appropriately formatted patient-level data, a set of fitted survival regressions, and the time cut-off (if two-piece modeling is used). This function is called by [calc_likes].
 #' @inheritParams calc_likes_psm_simple
 #' @inherit calc_likes_psm_simple return
-#' @seealso [calc_likes()], [calc_likes_stm_cf()], [calc_likes_psm_simple()], [calc_likes_psm_complex()]
+#' @seealso [psm3mkv::calc_likes()], [psm3mkv::calc_likes_stm_cf()], [psm3mkv::calc_likes_psm_simple()], [psm3mkv::calc_likes_psm_complex()]
 #' @importFrom rlang .data
 #' @noRd
 # Examples

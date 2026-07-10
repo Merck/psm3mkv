@@ -20,7 +20,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Dominic Muston \email{dominic.muston@merck.com} (\href{https://orcid.org/0000-0003-4876-7940}{ORCID})
+\strong{Maintainer}: Dominic Muston \email{dom.muston@gmail.com} (\href{https://orcid.org/0000-0003-4876-7940}{ORCID})
+
+Authors:
+\itemize{
+  \item Dominic Muston \email{dom.muston@gmail.com} (\href{https://orcid.org/0000-0003-4876-7940}{ORCID})
+}
 
 Other contributors:
 \itemize{

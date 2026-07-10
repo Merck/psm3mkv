@@ -41,5 +41,5 @@ vlookup(c(7, 7.5), times, survival)
 # observed survival values at times 7 and 8.
 }
 \seealso{
-\link[HMDHFDplus:readHMDweb]{HMDHFDplus::readHMDweb} can be used to obtain lifetables from the Human Mortality Database
+\code{HMDHFDplus::readHMDweb()} can be used to obtain lifetables from the Human Mortality Database
 }

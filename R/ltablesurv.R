@@ -63,7 +63,7 @@ vonelookup <- function(oneindexval, indexvec, valvec, method="geom") {
 #' - `ceiling`: Ceiling (maximum) value, where interpolation is required between measured values
 #' - `arith`: Arithmetic mean, where interpolation is required between measured values
 #' - `geom`: Geometric mean, where interpolation is required between measured values
-#' @seealso [HMDHFDplus::readHMDweb] can be used to obtain lifetables from the Human Mortality Database
+#' @seealso `HMDHFDplus::readHMDweb()` can be used to obtain lifetables from the Human Mortality Database
 #' @export
 #' @examples
 #' # Suppose we have survival probabilities at times 0 to 20

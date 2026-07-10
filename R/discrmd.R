@@ -45,7 +45,7 @@
 #' - pd: RMD in PD state
 #' - os: RMD in either alive state
 #' @importFrom rlang .data
-#' @seealso [drmd_stm_cf()] [drmd_stm_cr()]
+#' @seealso [psm3mkv::drmd_stm_cf()] [psm3mkv::drmd_stm_cr()]
 #' @noRd
 # Examples
 # # Create dataset and fit survival models (splines)
@@ -91,7 +91,7 @@ drmd_psm <- function(ptdata, dpam, psmtype="simple", Ty=10, discrate=0, lifetabl
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Forward structure.
 #' @inherit drmd_psm params return
 #' @importFrom rlang .data
-#' @seealso [drmd_psm()] [drmd_stm_cr()]
+#' @seealso [psm3mkv::drmd_psm()] [psm3mkv::drmd_stm_cr()]
 #' @noRd
 # Examples
 # # Create dataset and fit survival models (splines)
@@ -134,7 +134,7 @@ drmd_stm_cf <- function(dpam, Ty=10, discrate=0, lifetable=NA, timestep=1) {
 #' Calculate restricted mean duration (RMD) in PF, PD and OS states under a State Transition Model Clock Reset structure.
 #' @inherit drmd_psm params return
 #' @importFrom rlang .data
-#' @seealso [drmd_stm_cf()] [drmd_psm()]
+#' @seealso [psm3mkv::drmd_stm_cf()] [psm3mkv::drmd_psm()]
 #' @noRd
 # Examples
 # # Create dataset and fit survival models (splines)
