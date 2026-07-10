@@ -48,7 +48,7 @@ chosen:
 
 ## See also
 
-[HMDHFDplus::readHMDweb](https://rdrr.io/pkg/HMDHFDplus/man/readHMDweb.html)
+[`HMDHFDplus::readHMDweb()`](https://rdrr.io/pkg/HMDHFDplus/man/readHMDweb.html)
 can be used to obtain lifetables from the Human Mortality Database
 
 ## Examples
