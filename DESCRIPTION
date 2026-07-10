@@ -2,7 +2,7 @@ Package: psm3mkv
 Title: Evaluate Partitioned Survival and State Transition Models
 Version: 0.3.3
 Authors@R: c(
-    person("Dominic", "Muston", , "dominic.muston@merck.com", role = c("aut", "cre"),
+    person("Dominic", "Muston", , "dom.muston@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4876-7940")),
     person("Merck & Co., Inc., Rahway, NJ, USA and its affiliates", role = c("cph", "fnd"))
     )
