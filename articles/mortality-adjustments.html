@@ -6,15 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Mortality adjustments • psm3mkv</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Mortality adjustments">
@@ -27,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">psm3mkv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,9 +88,9 @@ background mortality from a given life table.</p>
 <h3 id="notation">Notation<a class="anchor" aria-label="anchor" href="#notation"></a>
 </h3>
 <p>We denote functions of survival, hazard and cumulative hazard as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S(t), h(t)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mi>h</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(t), h(t)</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H(t)</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">H(t)</annotation></semantics></math>.
 There are ‘unadjusted’ values for relevant endpoints (e.g. PFS)
 dependent on the model structure (PSM, STM-CF or STM-CR). We assume that
 there is a ‘general background mortality’, against which any
@@ -109,7 +108,7 @@ values at points between
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>l</mi><msub><mi>t</mi><mrow><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">l_{t_{max}}=0</annotation></semantics></math>.
 Let us define the background mortality survival function as follows.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn><mo>−</mo><mi>R</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><msub><mi>l</mi><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>+</mo><mi>t</mi></mrow></msub><msub><mi>l</mi><msub><mi>x</mi><mn>0</mn></msub></msub></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mi>R</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><msub><mi>l</mi><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>+</mo><mi>t</mi></mrow></msub><msub><mi>l</mi><msub><mi>x</mi><mn>0</mn></msub></msub></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 S_{gen}(t) = 1 - R \left(1 - \frac{l_{x_0 + t}}{l_{x_0}} \right)
 </annotation></semantics></math></p>
 <p>where
@@ -124,7 +123,7 @@ is an appropriate lifetable.</p>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
 in the range
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><msub><mi>t</mi><mn>1</mn></msub><mo>,</mo><msub><mi>t</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[t_1, t_2)</annotation></semantics></math>.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>S</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mn>1</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>S</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><mrow><msub><mi>t</mi><mn>2</mn></msub><mo>−</mo><msub><mi>t</mi><mn>1</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">[</mo><msub><mi>S</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>t</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>−</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">[</mo><msub><mi>S</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>t</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo></mrow><mrow><msub><mi>t</mi><mn>2</mn></msub><mo>−</mo><msub><mi>t</mi><mn>1</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 h_{gen}(t) = \frac{\log[S_{gen}(t_1)] - \log[S_{gen}(t_2)]}{t_2 - t_1}
 </annotation></semantics></math></p>
 </div>
@@ -140,7 +139,7 @@ submissions, so it could mean several things!</p>
 <p>Under this approach, the background mortality is assumed to limit the
 survival function as follows. There is no direct constraint to the
 hazard.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>S</mi><mrow><mi>a</mi><mi>d</mi><mi>j</mi></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>min</mo><mrow><mo stretchy="true" form="prefix">[</mo><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><msub><mi>S</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>S</mi><mrow><mi>a</mi><mi>d</mi><mi>j</mi></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">min</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><msub><mi>S</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 S^{adj}(t) = \min \left[ S(t), S_{gen}(t) \right]
 </annotation></semantics></math></p>
 <p>This is a simple approach, and has been used at least one NICE
@@ -160,9 +159,9 @@ great as the hazard of background mortality.</p>
 </h3>
 <p>A more rigorous adjustment would be that the hazard of background
 mortality acts as a constraint to the unadjusted hazard <span class="citation">(Sweeting et al. 2023)</span>.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>h</mi><mrow><mi>a</mi><mi>d</mi><mi>j</mi></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>max</mo><mrow><mo stretchy="true" form="prefix">[</mo><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><msub><mi>h</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>h</mi><mrow><mi>a</mi><mi>d</mi><mi>j</mi></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>h</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><msub><mi>h</mi><mrow><mi>g</mi><mi>e</mi><mi>n</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 h^{adj}(t) = \max \left[ h(t), h_{gen}(t) \right]
-</annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⟹</mo><msup><mi>S</mi><mrow><mi>a</mi><mi>d</mi><mi>j</mi></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">[</mo><mo>−</mo><msubsup><mo>∫</mo><mn>0</mn><mi>t</mi></msubsup><msup><mi>h</mi><mrow><mi>a</mi><mi>d</mi><mi>j</mi></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi><mi>u</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+</annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⟹</mo><msup><mi>S</mi><mrow><mi>a</mi><mi>d</mi><mi>j</mi></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><msubsup><mo>∫</mo><mn>0</mn><mi>t</mi></msubsup><msup><mi>h</mi><mrow><mi>a</mi><mi>d</mi><mi>j</mi></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>u</mi><mo stretchy="false" form="postfix">)</mo><mi>d</mi><mi>u</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 \implies S^{adj}(t) = \exp \left[ - \int_0^t h^{adj}(u) du \right]
 </annotation></semantics></math></p>
 <p>In either case, we must assume that the original dataset was NOT
@@ -217,8 +216,8 @@ time into timesteps rather than follow the integral formulas described
 above for continuous time. As long as timesteps are reasonably short,
 restricted mean duration results should remain reasonably accurate.
 Derided as a “kludge”, half-cycle corrections are nevertheless
-recommended <span class="citation">(Naimark, Kabboul, and Krahn
-2013)</span>. The package provides discretized calculations.</p>
+recommended <span class="citation">(Naimark et al. 2013)</span>. The
+package provides discretized calculations.</p>
 </div>
 <div class="section level2">
 <h2 id="application-to-partitioned-survival-models-psm">Application to Partitioned Survival Models (PSM)<a class="anchor" aria-label="anchor" href="#application-to-partitioned-survival-models-psm"></a>
@@ -260,8 +259,6 @@ making further use of <span class="citation">Wickham et al.
 (2023)</span>, <span class="citation">Riffe (2015)</span> and <span class="citation">Müller and Wickham (2023)</span>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://dplyr.tidyverse.org" class="external-link">"dplyr"</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://merck.github.io/psm3mkv/">"psm3mkv"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://tibble.tidyverse.org/" class="external-link">"tibble"</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -276,7 +273,7 @@ The lifetable will need to start from an assumed age at baseline.
 Lifetables are constructed by time in years.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># HMD HFD package</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/timriffe/TR1" class="external-link">"HMDHFDplus"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/timriffe/HMDHFDplus" class="external-link">"HMDHFDplus"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Assumed population age at baseline (time=0)</span></span>
 <span><span class="va">baseage</span> <span class="op">&lt;-</span> <span class="fl">51.0</span></span>
@@ -635,7 +632,7 @@ through calculating RMDs or Life Years that are Quality Adjusted
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-jackson2016flexsurv" class="csl-entry">
 Jackson, Christopher. 2016. <span>“<span class="nocase">flexsurv</span>:
 A Platform for Parametric Survival Modeling in <span>R</span>.”</span>
@@ -647,7 +644,8 @@ Müller, Kirill, and Hadley Wickham. 2023. <em><span class="nocase">tibble</span
 <div id="ref-muston2024informing" class="csl-entry">
 Muston, Dominic. 2024. <span>“Informing Structural Assumptions for Three
 State Oncology Cost-Effectiveness Models Through Model Efficiency and
-Fit.”</span> <em>Applied Health Economics and Health Policy</em>. <a href="https://doi.org/10.1007/s40258-024-00884-2" class="external-link">https://doi.org/10.1007/s40258-024-00884-2</a>.
+Fit.”</span> <em>Applied Health Economics and Health Policy</em>, ahead
+of print. <a href="https://doi.org/10.1007/s40258-024-00884-2" class="external-link">https://doi.org/10.1007/s40258-024-00884-2</a>.
 </div>
 <div id="ref-naimark2013half" class="csl-entry">
 Naimark, David MJ, Nader N Kabboul, and Murray D Krahn. 2013. <span>“The
@@ -656,18 +654,16 @@ Half-Cycle Correction Revisited: Redemption of a Kludge.”</span>
 </div>
 <div id="ref-nice2022" class="csl-entry">
 National Institute for Health and Care Excellence. 2022.
-<span>“Avalglucosidase Alfa for Treating <span>Pompe</span>
-Disease.”</span> Technology appraisal guidance TA821. London, UK:
-National Institute for Health; Care Excellence. <a href="https://www.nice.org.uk/guidance/ta821/documents/committee-papers" class="external-link">https://www.nice.org.uk/guidance/ta821/documents/committee-papers</a>.
+<em>Avalglucosidase Alfa for Treating <span>Pompe</span> Disease</em>.
+Technology Appraisal Guidance No. TA821. National Institute for Health;
+Care Excellence. <a href="https://www.nice.org.uk/guidance/ta821/documents/committee-papers" class="external-link">https://www.nice.org.uk/guidance/ta821/documents/committee-papers</a>.
 </div>
 <div id="ref-pack_HMDHFDplus" class="csl-entry">
-Riffe, Tim. 2015. <span>“Reading Human Fertility Database and Human
-Mortality Database Data into <span>R</span>.”</span> TR-2015-004. MPIDR.
-<a href="https://doi.org/10.4054/MPIDR-TR-2015-004" class="external-link">https://doi.org/10.4054/MPIDR-TR-2015-004</a>.
+Riffe, Tim. 2015. <em>Reading Human Fertility Database and Human
+Mortality Database Data into <span>R</span></em>. TR-2015-004. MPIDR. <a href="https://doi.org/10.4054/MPIDR-TR-2015-004" class="external-link">https://doi.org/10.4054/MPIDR-TR-2015-004</a>.
 </div>
 <div id="ref-sweeting2023survival" class="csl-entry">
-Sweeting, Michael J, Mark J Rutherford, Dan Jackson, Sangyu Lee,
-Nicholas R Latimer, Robert Hettle, and Paul C Lambert. 2023.
+Sweeting, Michael J, Mark J Rutherford, Dan Jackson, et al. 2023.
 <span>“Survival Extrapolation Incorporating General Population Mortality
 Using Excess Hazard and Cure Models: A Tutorial.”</span> <em>Medical
 Decision Making</em> 43 (6): 737–48.
@@ -686,7 +682,7 @@ Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr" class="ext
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Dominic Muston, Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
+  <p>Developed by Dominic Muston, Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1. <br>Copyright © 2024 Merck &amp; Co., Inc., Rahway, NJ, USA and its affiliates. All rights reserved.</p>
 </div>
 
 <div class="pkgdown-footer-right">

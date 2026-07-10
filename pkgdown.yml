@@ -1,10 +1,10 @@
-pandoc: 3.1.11
-pkgdown: 2.1.1
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   example: example.html
   mortality-adjustments: mortality-adjustments.html
-last_built: 2024-12-18T20:52Z
+last_built: 2026-07-10T16:10Z
 urls:
   reference: https://merck.github.io/psm3mkv/reference
   article: https://merck.github.io/psm3mkv/articles
