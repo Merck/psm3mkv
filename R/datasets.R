@@ -118,64 +118,40 @@ create_dummydata_flexbosms <- function() {
 create_dummydata_pharmaonc <- function() {
   # Create local variables
   DTHFL <- DTHDT <- LSTALVDT <- AVALC <- ADT <- ASEQ <- RANDDT <- STARTDT <- NULL
-  CNSR <- USUBJID <- PARAMCD <- DURN <- EVFLAG <- DURN_OS <- EVFLAG_OS <- DURN_TTP <- EVFLAG_TTP <- NULL
+  CNSR <- USUBJID <- PARAMCD <- DURN <- EVFLAG <- NULL
+  DURN_OS <- EVFLAG_OS <- DURN_TTP <- EVFLAG_TTP <- DURN_PFS <- EVFLAG_PFS <-NULL
   ttp.durn <- os.durn <- ttp.flag <- os.flag <- ptid <- pfs.durn <- pfs.flag <- NULL
   # Obtain ADSL and ADRS datsets from pharmaverseadam
   adsl <- pharmaverseadam::adsl
   adrs <- pharmaverseadam::adrs_onco
-  # Define event: death
-  death <- admiral::event_source(
-    dataset_name = "adsl",
-    filter = DTHFL == "Y",
-    date = DTHDT,
-    set_values_to = admiral::exprs(
-      EVNTDESC = "DEATH",
-      SRCDOM = "ADSL",
-      SRCVAR = "DTHDT"
-    )
-  )
-  # Define event: last date alive
-  last_alive_dt <- admiral::censor_source(
-    dataset_name = "adsl",
-    date = LSTALVDT,
-    set_values_to = admiral::exprs(
-      EVNTDESC = "LAST DATE KNOWN ALIVE",
-      SRCDOM = "ADSL",
-      SRCVAR = "LSTALVDT"
-    )
-  )
-  # Define event: progression
-  pd <- admiral::event_source(
-    dataset_name = "adrs",
-    filter = AVALC == "PD",
-    date = ADT,
-    set_values_to = admiral::exprs(
-      EVENTDESC = "PD",
-      SRCDOM = "ADRS",
-      SRCVAR = "ADTM",
-      SRCSEQ = ASEQ
-    )
-  )
-  # Start creating dataset
-  # Derive OS date
-  admiral::derive_param_tte(
+  # Define OS using standard admiral events
+  adtte <- admiral::derive_param_tte(
     dataset_adsl = adsl,
     start_date = RANDDT,
-    event_conditions = list(death),
-    censor_conditions = list(last_alive_dt),
+    event_conditions = list(admiralonco::death_event),
+    censor_conditions = list(admiralonco::lastalive_censor, admiralonco::rand_censor),
     source_datasets = list(adsl = adsl, adrs = adrs),
     set_values_to = admiral::exprs(PARAMCD = "OS", PARAM = "Overall Survival")
   ) |>
-  # Derive TTP date
+    # Define PFS using standard admiral events
     admiral::derive_param_tte(
       dataset_adsl = adsl,
       start_date = RANDDT,
-      event_conditions = list(pd),
-      censor_conditions = list(last_alive_dt),
+      event_conditions = list(admiralonco::pd_event, admiralonco::death_event),
+      censor_conditions = list(admiralonco::lasta_censor, admiralonco::rand_censor),
       source_datasets = list(adsl = adsl, adrs = adrs),
-      set_values_to = admiral::exprs(PARAMCD = "TTP", PARAM = "Time to Progression")
+      set_values_to = admiral::exprs(PARAMCD = "PFS", PARAM = "Progression Free Survival")
     ) |>
-  # Derive durations of TTP and PFS
+    # Define TTP similarly to PFS, but with event_conditions = pd_event only
+    admiral::derive_param_tte(
+      dataset_adsl = adsl,
+      start_date = RANDDT,
+      event_conditions = list(admiralonco::pd_event),
+      censor_conditions = list(admiralonco::lasta_censor, admiralonco::rand_censor),
+      source_datasets = list(adsl = adsl, adrs = adrs),
+      set_values_to = admiral::exprs(PARAMCD = "TTP", PARAM = "Time To Progression")
+    ) |>
+  # Derive durations
     dplyr::mutate(
       DURN = admiral::compute_duration(
           start_date = STARTDT,
@@ -199,15 +175,11 @@ create_dummydata_pharmaonc <- function() {
       ptid = USUBJID,
       os.durn = DURN_OS,
       os.flag = EVFLAG_OS,
+      pfs.dur = DURN_PFS,
+      pfs.flag = EVFLAG_PFS,
       ttp.durn = DURN_TTP,
       ttp.flag = EVFLAG_TTP
-    ) |>
-  # Add a PFS field
-    dplyr::mutate(
-      pfs.durn = pmin(ttp.durn, os.durn),
-      pfs.flag = 1-(1-ttp.flag)*(1-os.flag)
-    ) |>
-    dplyr::select(ptid, ttp.durn, ttp.flag, pfs.durn, pfs.flag, os.durn, os.flag)
+    )
 }
 
 #' Check consistency of PFS definition

@@ -1,3 +1,9 @@
+# psm3mkv 0.3.3 (July 2026)
+
+- Updated `create_dummydata("pharmaonc")` for breaking changes from new version of `pharmaverseadam`
+- Fix bug in `constrain_survprob()` with thanks to @xm2325
+- Updated author email address
+
 # psm3mkv 0.3.2 (7 June 2024)
 
 - Revised calculations of constrained restricted mean durations in internal function `calc_drmd()` and the accompanying `vignette("background-mortality")`.
