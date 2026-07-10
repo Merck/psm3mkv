@@ -191,7 +191,7 @@ constrain_survprob <- function(survprob1, survprob2=NA, lifetable=NA, timevec=0:
   ltexists <- !is.na(lifetable)[1]
   # Survprob1 and survprob2 must have equal length (when survprob2 is defined)
   if(s2exists) {
-    stopifnot("Survival probability vectors must have equal length" = length(survprob1)==length(survprob1))
+    stopifnot("Survival probability vectors must have equal length" = length(survprob1)==length(survprob2))
     }
   # Vector of lifetables (or ones, if lifetable not specified)
   tN <- length(timevec)
