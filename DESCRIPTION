@@ -29,7 +29,8 @@ Imports:
     survival,
     stringr,
     tibble,
-    tidyr
+    tidyr,
+    admiralonco
 Suggests:
     boot,
     covr,
